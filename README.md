@@ -16,11 +16,11 @@
         <a href=""><strong>Explore the docs »</strong></a>
         <br/>
         <br/>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/error-pattern">Data Analysis</a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/error-pattern">Data Analysis</a>
         ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/fsharp-beautify">VS Code Extension</a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/fsharp-beautify">VS Code Extension</a>
         ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/latex">LaTeX</a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/latex">LaTeX</a>
         ·
         <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
         ·
