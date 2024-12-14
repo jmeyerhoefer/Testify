@@ -264,7 +264,7 @@ let getAllSnapshots (taskInfo: TaskInfo) (groupAndTeamId: string): list<string *
     |> List.map (fun (snapshotTimestamp: string, submissions: list<string>) ->
         let filesToBeDeleted: list<string> =
             deletedFiles
-            |> List.filter (fun (deleteTimestamp: string, _: string) -> deleteTimestamp < snapshotTimestamp)
+            |> List.filter (fun (deleteTimestamp: string, _: string) -> deleteTimestamp <= snapshotTimestamp)
             |> List.map snd
         
         let filteredSubmissions: list<string> =
