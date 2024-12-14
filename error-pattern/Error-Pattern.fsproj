@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <TargetFramework>net8.0</TargetFramework>
+        <Authors>Jakob Meyerhöfer</Authors>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Types.fs" />
+        <Compile Include="DockerController.fs" />
+        <Compile Include="DataProcessor.fs" />
+        <Compile Include="Tests.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+    <ItemGroup>
+        <Content Include="Dockerfile" />
+        <Content Include="custom_entrypoint.sh" />
+        <Content Include=".gitignore" />
+        <Content Include="README.md" />
+        <Content Include="LICENSE" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FSharp.Data" Version="6.4.0" />
+        <PackageReference Include="Docker.DotNet" Version="3.125.15" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+        <PackageReference Include="Microsoft.TestPlatform" Version="17.6.3" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+        <PackageReference Include="FsCheck" Version="2.16.6" />
+        <PackageReference Include="Unquote" Version="6.1.0" />
+    </ItemGroup>
+</Project>
