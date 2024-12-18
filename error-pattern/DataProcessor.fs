@@ -4,33 +4,46 @@ module DataProcessor
 open Docker.DotNet
 open DockerController
 open FSharp.Data
-open System.Diagnostics
 open System.IO
-open System.Threading
 open Types
 
 
-/// The relevant tasks for GdP18 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP18: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP18 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP18: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP18", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
 
 
-/// The relevant tasks for GdP19 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP19: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP19 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP19: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP19", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
 
 
-/// The relevant tasks for GdP20 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP20: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP20 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP20: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP20", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
 
 
-/// The relevant tasks for GdP21 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP21: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP21 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP21: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP21", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
 
 
-/// The relevant tasks for GdP22 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP22: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP22 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP22: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP22", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
 
 
-/// The relevant tasks for GdP23 for analysis stored as <c>TaskInfo</c>.
+/// <summary>The relevant tasks for GdP23 for analysis stored as <c>TaskInfo</c>.</summary>
 let relevantTasksGdP23: list<TaskInfo> = [
     TaskInfo ("GdP23", "02", "4", "Programmieren mit Zahlen", "Zahlen.fs")
     TaskInfo ("GdP23", "03", "2", "Peano Entwurfsmuster", "Peano.fs")
@@ -51,152 +64,53 @@ let relevantTasksGdP23: list<TaskInfo> = [
 ]
 
 
-/// The relevant tasks for GdP24 for analysis stored as <c>TaskInfo</c>.
-let relevantTasksGdP24: list<TaskInfo> = []
+/// <summary>The relevant tasks for GdP24 for analysis stored as <c>TaskInfo</c>.</summary>
+let relevantTasksGdP24: list<TaskInfo> = [
+    // TODO
+    TaskInfo ("GdP24", "sheetId", "assignmentId", "assignmentTitle", "relevantFileName")
+]
+
+
+/// <summary>All relevant tasks for analysis stored as <c>TaskInfo</c></summary>
+let allTasks: list<TaskInfo> =
+    relevantTasksGdP18
+    @ relevantTasksGdP19
+    @ relevantTasksGdP20
+    @ relevantTasksGdP21
+    @ relevantTasksGdP22
+    @ relevantTasksGdP23
+    // @ relevantTasksGdP24
 
 
 /// <summary>
-/// Executes <c>dotnet build</c> or <c>dotnet test</c> at a given path.
-/// </summary>
-/// <param name="arguments">Arguments for <c>ProcessStartInfo</c>.</param>
-/// <param name="projectPath">Path to the project.</param>
-/// <returns>
-/// <c>true</c> if the command was successful;
-/// <c>false</c> if command failed for some reason.
-/// </returns>
-let executeDotnetCommand (arguments: string) (projectPath: string): bool =
-    let processStartInfo: ProcessStartInfo =
-        ProcessStartInfo (
-            FileName = "dotnet",
-            Arguments = arguments,
-            WorkingDirectory = projectPath,
-            UseShellExecute = false,
-            CreateNoWindow = true
-        )
-
-    use buildProcess: Process = new Process (StartInfo=processStartInfo)
-    buildProcess.Start () |> ignore
-    buildProcess.WaitForExit ()
-    buildProcess.ExitCode = 0 // return value
-
-
-/// <summary>
-/// Executes <c>dotnet build</c> at a given path.
-/// </summary>
-/// <param name="projectPath">Path to the project.</param>
-/// <param name="stacktracePath">Path to the destination directory for the stacktrace.</param>
-/// <param name="timestamp">Timestamp of this snapshot.</param>
-/// <returns>
-/// <c>true</c> if the command was successful;
-/// <c>false</c> if command failed for some reason.
-/// </returns>
-let executeDotnetBuild (projectPath: string) (stacktracePath: string) (timestamp: string): bool =
-    let logFilePath: string = Path.Combine (stacktracePath, $"%s{timestamp}-buildResults.log")
-    let arguments: string = $"build -flp:\"Summary;Verbosity=normal;LogFile=%s{logFilePath}\""
-    executeDotnetCommand arguments projectPath
-
-
-/// <summary>
-/// Executes <c>dotnet test</c> at a given path.
-/// <p>Stores the output at <c>RootPath/data/{exerciseId}/Stacktrace/{sheetId}/{groupAndTeamId}/{assignmentId}/{timestamp}-output.xml</c></p>
-/// </summary>
-/// <param name="projectPath">Path to the project</param>
-/// <param name="stacktracePath">Path to the destination directory for the stacktrace.</param>
-/// <param name="timestamp">The timestamp that was assigned to the submission of this project.</param>
-/// <returns>
-/// <c>true</c> if <c>dotnet test</c> was successful;
-/// <c>false</c> if <c>dotnet test</c> failed for some reason.
-/// </returns>
-let executeDotnetTest (projectPath: string) (stacktracePath: string) (timestamp: string): bool =
-    let logFilePath: string = Path.Combine (stacktracePath, $"%s{timestamp}-testResults.xml")
-    let arguments: string = $"test -l:\"trx;LogFileName=%s{logFilePath}\""
-    executeDotnetCommand arguments projectPath
-
-
-/// <summary>
-/// Tries to build and test project.
-/// </summary>
-/// <param name="projectPath">Path to the project.</param>
-/// <param name="taskInfo">Contains the relevant info to the task.</param>
-/// <param name="groupAndTeamId">ID of the group and team to this project.</param>
-/// <param name="timestamp">The timestamp that was assigned to the submission of this project.</param>
-/// <returns>
-/// <c>Success</c> if the build and test were successful;
-/// <c>BuildFailed projectPath</c> if the build failed;
-/// <c>TestFailed projectPath</c> if the test failed;
-/// <c>UnexpectedError projectPath</c> otherwise.
-/// </returns>
-let buildAndTestProject (projectPath: string) (taskInfo: TaskInfo) (groupAndTeamId: string) (timestamp: string): BuildAndTestResult =
-    try
-        let stacktracePath: string = taskInfo.GetStacktracePath groupAndTeamId
-        match executeDotnetBuild projectPath stacktracePath timestamp, executeDotnetTest projectPath stacktracePath timestamp with
-        | false, _ -> BuildFailed
-        | true, false -> TestFailed
-        | true, true -> Success
-    with
-    | ex -> UnexpectedError ex.Message
-
-
-/// <summary>
-/// Retries an <c>action</c> with a maximum of <c>maxRetries</c> and a delay of <c>delayInMillis</c> in between.
-/// </summary>
-/// <param name="action">The action to perform</param>
-/// <param name="maxRetries">Maximum number of attempts.</param>
-/// <param name="delayInMillis">Delay in between the attempts.</param>
-let retryWithDelay (action: unit -> unit) (maxRetries: int) (delayInMillis: int): unit =
-    let rec attempt (count: int): unit =
-        try action () with
-        | :? IOException when count < maxRetries ->
-            Thread.Sleep delayInMillis
-            attempt (count + 1)
-        | ex -> raise ex
-    attempt 0
-
-
-/// <summary>
-/// Deletes all contents of a directory
-/// </summary>
-/// <param name="path">The path to the directory.</param>
-let deleteContents (path: string): unit =
-    if Directory.Exists path then
-        Directory.GetFiles path
-        |> Array.iter (fun (file: string) -> retryWithDelay (fun () -> File.Delete file) 5 1000)
-        
-        Directory.GetDirectories path
-        |> Array.iter (fun (directory: string) -> retryWithDelay (fun () -> Directory.Delete (directory, true)) 5 1000)
-
-
-/// <summary>
-/// Copies the files from <c>templatePath</c> to <c>destinationPath</c> except <c>relevantFileName</c>.
-/// </summary>
-/// <param name="templatePath">The path to the project template.</param>
-/// <param name="destinationPath">The path to the project.</param>
-/// <param name="relevantFileName">The file to exclude.</param>
-let copyTemplate (templatePath: string) (destinationPath: string) (relevantFileName: string): unit =
-    templatePath
-    |> Directory.GetFiles
-    |> Array.iter (fun (filePath: string) ->
-        let fileName: string = Path.GetFileName filePath
-        if fileName <> relevantFileName then
-            File.Copy (filePath, Path.Combine (destinationPath, fileName), true)
-    )
-
-
-/// <summary>
-/// Copies the submissions over to <c>destinationPath</c>.
-/// </summary>
-/// <param name="submissions">Array of the paths to the submissions.</param>
-/// <param name="destinationPath">The path of the project.</param>
-let copySubmissionFiles (submissions: array<string>) (destinationPath: string): unit =
-    submissions
-    |> Array.iter (fun (submission: string) ->
-        let fileName: string = (Path.GetFileName submission)
-        let fileNameWithoutTimestamp: string = fileName.Substring (fileName.IndexOf "-" + 1)
-        File.Copy(submission, Path.Combine (destinationPath, fileNameWithoutTimestamp), true)
-    )
-
-
 /// TODO
+/// </summary>
+/// <param name="fileNameWithTimestamp">TODO</param>
+let getTimestamp (fileNameWithTimestamp: string): string =
+    let timestampOption: option<string> =
+        fileNameWithTimestamp.Split "-"
+        |> Array.tryHead
+    match timestampOption with
+    | Some timestamp -> timestamp
+    | None -> failwith $"Failed to retrieve timestamp from: %s{fileNameWithTimestamp}"
+    
+
+/// <summary>
+/// TODO
+/// </summary>
+/// <param name="fileNameWithTimestamp">TODO</param>
+let getFileNameWithoutTimestamp (fileNameWithTimestamp: string): string =
+    let indexOfSeparator: int = fileNameWithTimestamp.IndexOf "-"
+    if indexOfSeparator = -1 then
+        failwith $"Failed to retrieve file name from: %s{fileNameWithTimestamp}"
+    fileNameWithTimestamp.Substring (indexOfSeparator + 1)
+
+
+/// <summary>
+/// TODO
+/// </summary>
+/// <param name="taskInfo">TODO</param>
+/// <param name="groupAndTeamId">TODO</param>
 let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : list<string> =
     let path: string = Path.Combine (RootPath, "data", "Tests", $"%s{taskInfo.ExerciseId}.csv")
     use csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
@@ -208,10 +122,10 @@ let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : list<s
     
     let filtered: Runtime.CsvFile<CsvRow> =
         csvFile.Filter (fun (row: CsvRow) ->
-            row.GetColumn "SHEET" = taskInfo.SheetId &&
-            row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId &&
-            row.GetColumn "GROUPID" = groupId &&
-            row.GetColumn "TEAMID" = teamId
+            row.GetColumn "SHEET" = taskInfo.SheetId
+            && row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId
+            && row.GetColumn "GROUPID" = groupId
+            && row.GetColumn "TEAMID" = teamId
         )
     
     filtered.Rows
@@ -219,7 +133,11 @@ let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : list<s
     |> Seq.toList
 
 
+/// <summary>
 /// TODO
+/// </summary>
+/// <param name="taskInfo">TODO</param>
+/// <param name="groupAndTeamId">TODO</param>
 let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string): list<string * string> =
     let path: string = Path.Combine (RootPath, "data", "Removed", $"{taskInfo.ExerciseId}.csv")
     use csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
@@ -231,10 +149,10 @@ let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string): list<string *
     
     let filtered: Runtime.CsvFile<CsvRow> =
         csvFile.Filter (fun (row: CsvRow) ->
-            row.GetColumn "SHEET" = taskInfo.SheetId &&
-            row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId &&
-            row.GetColumn "GROUPID" = groupId &&
-            row.GetColumn "TEAMID" = teamId
+            row.GetColumn "SHEET" = taskInfo.SheetId
+            && row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId
+            && row.GetColumn "GROUPID" = groupId
+            && row.GetColumn "TEAMID" = teamId
         )
     
     filtered.Rows
@@ -242,47 +160,46 @@ let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string): list<string *
     |> Seq.toList
 
 
+/// <summary>
 /// TODO
+/// </summary>
+/// <param name="taskInfo">TODO</param>
+/// <param name="groupAndTeamId">TODO</param>
 let getAllSnapshots (taskInfo: TaskInfo) (groupAndTeamId: string): list<string * list<string>> =
     let snapshotTimestamps: list<string> = getSnapshotTimestamps taskInfo groupAndTeamId
     let deletedFiles: list<string * string> = getDeletedFiles taskInfo groupAndTeamId
-    let allSubmissions: list<string> =
-        taskInfo.GetSubmissionsPath groupAndTeamId
-        |> Directory.GetFiles
-        |> Array.toList
-        |> List.map Path.GetFileName
+    let allSubmissions: array<string> = taskInfo.GetSubmissionsPath groupAndTeamId |> Directory.GetFiles
     
     snapshotTimestamps
     // get all relevant submissions
     |> List.map (fun (snapshotTimestamp: string) ->
-        let relevantFiles: list<string> =
+        let relevantFiles: array<string> =
             allSubmissions
-            |> List.filter (fun (submission: string) -> (submission.Split "-" |> Array.item 0) <= snapshotTimestamp)
+            |> Array.filter (fun (submission: string) -> getTimestamp (submission |> Path.GetFileName) <= snapshotTimestamp)
         snapshotTimestamp, relevantFiles
     )
     // remove all files that were deleted before the snapshot timestamp
-    |> List.map (fun (snapshotTimestamp: string, submissions: list<string>) ->
+    |> List.map (fun (snapshotTimestamp: string, submissions: array<string>) ->
         let filesToBeDeleted: list<string> =
             deletedFiles
             |> List.filter (fun (deleteTimestamp: string, _: string) -> deleteTimestamp <= snapshotTimestamp)
             |> List.map snd
-        
-        let filteredSubmissions: list<string> =
+        let filteredSubmissions: array<string> =
             submissions
-            |> List.filter (fun (submission: string) -> not (filesToBeDeleted |> List.contains submission))
-        
+            |> Array.filter (fun (submission: string) ->
+                let fileName: string = submission |> Path.GetFileName
+                not (filesToBeDeleted |> List.contains fileName)
+            )
         snapshotTimestamp, filteredSubmissions
     )
     // only take the latest version of each file
-    |> List.map (fun (snapshotTimestamp: string, submissions: list<string>) ->
-        let onlyLatestFiles: list<string> =
+    |> List.map (fun (snapshotTimestamp: string, submissions: array<string>) ->
+        let onlyLatestFilesAsList: list<string> =
             submissions
-            |> List.groupBy (fun (submission: string) -> submission.Substring (submission.IndexOf "-" + 1))
-            |> List.map (fun (_: string, group: list<string>) ->
-                group
-                |> List.maxBy (fun (submission: string) -> submission.Split "-" |> Array.item 0)
-            )
-        snapshotTimestamp, onlyLatestFiles
+            |> Array.groupBy getFileNameWithoutTimestamp
+            |> Array.map (fun (_: string, group: array<string>) -> group |> Array.maxBy getTimestamp)
+            |> Array.toList
+        snapshotTimestamp, onlyLatestFilesAsList
     )
 
 
@@ -296,14 +213,16 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
     use dockerClient: DockerClient = dockerClientConfiguration.CreateClient ()
     
     let imageId: string = "fsharp-image"
-    let workingDirectory: string = "/home/coder/Error-Pattern"
+    let workingDirectory: string = "/home/coder/Error-Pattern/"
     let command: string = "dotnet"
     
-    let containerBuildResultsPath: string = $"%s{workingDirectory}/buildResults.log"
-    let buildArguments: array<string> = [| "build"; $"-flp:\"Summary;Verbosity=normal;LogFile=%s{containerBuildResultsPath}\"" |]
+    let xunitPackageArguments: array<string> = [| "add"; "package"; "XunitXml.TestLogger"; "--version"; "4.1.0" |]
     
-    let containerTestResultsPath: string = $"%s{workingDirectory}/testResults.trx"
-    let testArguments: array<string> = [| "test"; $"-l:\"trx;LogFileName=%s{containerTestResultsPath}\"" |]
+    let containerBuildResultsPath: string = $"%s{workingDirectory}buildResults.log"
+    let buildArguments: array<string> = [| "build"; "-flp"; $"\"Summary;Verbosity=normal;LogFile=%s{containerBuildResultsPath}\"" |]
+    
+    let containerTestResultsPath: string = $"%s{workingDirectory}testResults.xml"
+    let testArguments: array<string> = [| "test"; "-l"; $"\"xunit;LogFilePath=%s{containerTestResultsPath}\"" |]
     
     let stacktracePath: string = taskInfo.GetStacktracePath groupAndTeamId
 
@@ -315,11 +234,14 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
             printfn $"%s{message}\ntaskInfo: %A{taskInfo}\ngroupAndTeamId: %s{groupAndTeamId}\nsubmissions:%A{submissions}"
         
         // create and run container
-        if not (createAndRunContainer dockerClient imageId snapshotTimestamp submissions |> Async.RunSynchronously) then
+        if not (createAndRunContainer dockerClient imageId snapshotTimestamp taskInfo submissions |> Async.RunSynchronously) then
             log "Failed to create and run container."
+        // execute 'dotnet add package'
+        elif not (executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command xunitPackageArguments |> Async.RunSynchronously) then
+            log "Failed to add 'Xunit.TestLogger' package."
         // execute 'dotnet build'
         elif not (executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command buildArguments |> Async.RunSynchronously) then
-            log "Failed to run 'dotnet build'"
+            log "Failed to run 'dotnet build'."
         else
             // extract build results
             let hostBuildResultsPath: string = Path.Combine (stacktracePath, $"%s{snapshotTimestamp}-buildResults.log")
@@ -327,10 +249,10 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
                 log "Failed to extract build results from container."
             // execute 'dotnet test'
             elif not (executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command testArguments |> Async.RunSynchronously) then
-                log "Failed to run 'dotnet test'"
+                log "Failed to run 'dotnet test'."
             else
                 // extract test results
-                let hostTestResultsPath: string = Path.Combine (stacktracePath, $"%s{snapshotTimestamp}-testResults.trx")
+                let hostTestResultsPath: string = Path.Combine (stacktracePath, $"%s{snapshotTimestamp}-testResults.xml")
                 if not (copyFilesFromContainer dockerClient snapshotTimestamp containerTestResultsPath hostTestResultsPath |> Async.RunSynchronously) then
                     log "Failed to extract test results from container."
     )
@@ -350,14 +272,8 @@ let processTask (taskInfo: TaskInfo): unit =
 /// </summary>
 /// <param name="relevantTasks">The array of relevant tasks in the data set.</param>
 let processData (relevantTasks: list<TaskInfo>): unit =
-    File.Delete (Path.Combine (RootPath, "Output.log"))
-    printfn "Previous log deleted successfully."
-
     relevantTasks
-    |> List.iteri (fun (index: int) (taskInfo: TaskInfo) ->
-        printf $"In progress: %d{index + 1}/%d{relevantTasks.Length}\r"
-        processTask taskInfo
-    )
+    |> List.iter processTask
 
 
 // /// <summary>

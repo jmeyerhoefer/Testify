@@ -5,7 +5,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Authors>Jakob Meyerhöfer</Authors>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup Label="Code">
         <Compile Include="Types.fs" />
         <Compile Include="DockerController.fs" />
         <Compile Include="DataProcessor.fs" />
@@ -13,8 +13,8 @@
         <Compile Include="Program.fs" />
     </ItemGroup>
     <ItemGroup>
-        <Content Include="Dockerfile" />
-        <Content Include="custom_entrypoint.sh" />
+        <Content Include="fsharpdev\Dockerfile" />
+        <Content Include="fsharpdev\Makefile" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
         <Content Include="LICENSE" />

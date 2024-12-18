@@ -5,11 +5,11 @@ module Types
 open System.IO
 
 
-/// Path to the source directory.
+/// <summary>Path to the source directory.</summary>
 let RootPath: string = __SOURCE_DIRECTORY__
 
 
-/// Path to the directory, where they are built and tested.
+/// <summary>Path to the directory, where they are built and tested.</summary>
 let ProjectPath: string = Path.Combine (RootPath, "data", "Project")
 
 

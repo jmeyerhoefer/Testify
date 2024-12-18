@@ -1,6 +1,8 @@
 module DockerController
 
 
+open System.Formats.Tar
+open System.Threading
 open Docker.DotNet
 open Docker.DotNet.Models
 open System.IO
@@ -52,12 +54,12 @@ let executeCommandInsideContainer (dockerClient: DockerClient) (containerId: str
             
             let mutable isRunning: bool = true
             while isRunning do
-                let! inspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync (execCreateContainerResponse.ID) |> Async.AwaitTask
+                let! inspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
                 isRunning <- inspectContainerExecResponse.Running
                 if isRunning then
                     do! Async.Sleep 500
             
-            let! finalInspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync (execCreateContainerResponse.ID) |> Async.AwaitTask
+            let! finalInspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
             return finalInspectContainerExecResponse.ExitCode = 0
         with
         | ex ->
@@ -71,8 +73,10 @@ let executeCommandInsideContainer (dockerClient: DockerClient) (containerId: str
 /// <param name="dockerClient">TODO</param>
 /// <param name="imageId">TODO</param>
 /// <param name="containerId">TODO</param>
+/// <param name="taskInfo">TODO</param>
 /// <param name="submissions">TODO</param>
-let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (containerId: string) (submissions: list<string>) =
+let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (containerId: string) (taskInfo: TaskInfo) (submissions: list<string>) =
+    let workingDirectory: string = "/home/coder/Error-Pattern/"
     let commandArguments: array<string> = [|
         "--auth"; "none"
         "--disable-telemetry"
@@ -80,11 +84,9 @@ let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (contai
         "--disable-workspace-trust"
         "--disable-getting-started-override"
         "--bind-addr=0.0.0.0:8080"
-        "/home/coder/Error-Pattern"
+        workingDirectory
     |]
-    
-    // TODO
-    
+
     async {
         try
             let config: CreateContainerParameters = CreateContainerParameters ()
@@ -94,11 +96,51 @@ let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (contai
             config.ExposedPorts <- dict [ "8080/tcp", EmptyStruct () ]
             config.HostConfig <- HostConfig ()
             config.HostConfig.PortBindings <- dict [ "8080/tcp", [| PortBinding (HostPort="8080") |] ]
-            config.HostConfig.Binds <- [| $"%s{ProjectPath}:/home/coder/Error-Pattern" |]
 
             let! createContainerResponse = dockerClient.Containers.CreateContainerAsync config |> Async.AwaitTask
             let! startContainerResponse = dockerClient.Containers.StartContainerAsync (createContainerResponse.ID, null) |> Async.AwaitTask
-            
+
+            let mutable isRunning: bool = false
+            while not isRunning do
+                let! inspectContainerResponse = dockerClient.Containers.InspectContainerAsync containerId |> Async.AwaitTask
+                isRunning <- inspectContainerResponse.State.Running
+                if isRunning then
+                    do! Async.Sleep 500
+
+            let containerExecCreateParameters: ContainerExecCreateParameters = ContainerExecCreateParameters ()
+            containerExecCreateParameters.Cmd <- [| "mkdir"; "-p"; workingDirectory |]
+            let! execCreateDirectoryResponse = dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters) |> Async.AwaitTask
+            do! dockerClient.Exec.StartContainerExecAsync execCreateDirectoryResponse.ID |> Async.AwaitTask
+
+            let templateFiles: list<string> =
+                taskInfo.GetTemplatePath ()
+                |> Directory.GetFiles
+                |> Array.filter (fun (filePath: string) -> filePath |> Path.GetFileName <> taskInfo.RelevantFileName)
+                |> Array.toList
+
+            for filePath: string in templateFiles do
+                let tarMemoryStream: MemoryStream = new MemoryStream ()
+                use tarArchive = new TarWriter(tarMemoryStream, leaveOpen=true)
+                tarArchive.WriteEntry (filePath, filePath |> Path.GetFileName)
+                tarMemoryStream.Seek (0L, SeekOrigin.Begin) |> ignore
+                let containerPathStatParameters: ContainerPathStatParameters = ContainerPathStatParameters ()
+                containerPathStatParameters.Path <- workingDirectory
+                do! dockerClient.Containers.ExtractArchiveToContainerAsync (containerId, containerPathStatParameters, tarMemoryStream) |> Async.AwaitTask
+
+            for filePath: string in submissions do
+                let tarMemoryStream: MemoryStream = new MemoryStream ()
+                use tarArchive = new TarWriter(tarMemoryStream, leaveOpen=true)
+
+                let fileNameWithoutTimestamp: string =
+                    filePath
+                    |> Path.GetFileName
+                    |> fun (fileName: string) -> fileName.Substring (fileName.IndexOf "-" + 1)
+                tarArchive.WriteEntry (filePath, fileNameWithoutTimestamp)
+                tarMemoryStream.Seek (0L, SeekOrigin.Begin) |> ignore
+                let containerPathStatParameters: ContainerPathStatParameters = ContainerPathStatParameters ()
+                containerPathStatParameters.Path <- workingDirectory
+                do! dockerClient.Containers.ExtractArchiveToContainerAsync (containerId, containerPathStatParameters, tarMemoryStream) |> Async.AwaitTask
+
             return startContainerResponse
         with
         | ex ->
