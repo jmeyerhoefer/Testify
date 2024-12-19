@@ -1,7 +1,6 @@
+.idea/
 bin/
 obj/
 data/
 TestResults/
-.idea/
 .fake
-*.log

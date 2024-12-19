@@ -1,12 +1,22 @@
-FROM ubuntu:24.04
+FROM codercom/code-server:latest
 
-ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update \
- && apt-get -y install ca-certificates dotnet-sdk-6.0 \
- && apt-get -y install ca-certificates dotnet-sdk-7.0 \
- && apt-get -y install ca-certificates dotnet-sdk-8.0 \
- && rm -rf /var/lib/apt/lists/* \
+USER root
+
+
+# Add Microsoft's package repository for .NET
+RUN set -ex \
+ && cd /root \
+ && wget -nv -O packages-microsoft-prod.deb "https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb" \
+ && dpkg -i packages-microsoft-prod.deb \
+ && rm packages-microsoft-prod.deb \
+ && apt-get update \
+ && apt-get install -y dotnet-sdk-6.0 \
+ && apt-get install -y dotnet-sdk-7.0 \
+ && apt-get install -y dotnet-sdk-8.0 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
 
 # Create a warmup project to populate package cache
 RUN mkdir warmup \

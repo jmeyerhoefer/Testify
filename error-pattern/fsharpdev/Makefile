@@ -1,7 +1,7 @@
-tag := pl-git.informatik.uni-kl.de:5050/stats/24-ba-jakob-meyerhoefer/fsharpdev
+tag := meyerhoefer/fsharpdev:latest
 
 build:
-	docker build . -t $(tag)
+	docker build -t $(tag) .
 
 push:
 	docker push $(tag)

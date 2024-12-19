@@ -22,10 +22,10 @@ let copyFilesFromContainer (dockerClient: DockerClient) (containerId: string) (c
             let getArchiveFromContainerParameters: GetArchiveFromContainerParameters = GetArchiveFromContainerParameters ()
             getArchiveFromContainerParameters.Path <- containerPath
             let! getArchiveFromContainerResponse = dockerClient.Containers.GetArchiveFromContainerAsync (containerId, getArchiveFromContainerParameters, false) |> Async.AwaitTask
-            
+
             use fileStream = File.Create hostPath
             do! getArchiveFromContainerResponse.Stream.CopyToAsync fileStream |> Async.AwaitTask
-            
+
             return true
         with
         | ex ->
@@ -44,21 +44,21 @@ let copyFilesFromContainer (dockerClient: DockerClient) (containerId: string) (c
 /// <param name="args">TODO</param>
 let executeCommandInsideContainer (dockerClient: DockerClient) (containerId: string) (workingDirectory: string) (command: string) (args: array<string>) : Async<bool> =
     async {
-        try            
+        try
             let containerExecCreateParameters: ContainerExecCreateParameters = ContainerExecCreateParameters ()
             containerExecCreateParameters.Cmd <- Array.append [| command |] args
             containerExecCreateParameters.WorkingDir <- workingDirectory
 
             let! execCreateContainerResponse = dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters) |> Async.AwaitTask
             let! _startAndAttachContainerExecResponse = dockerClient.Exec.StartAndAttachContainerExecAsync (execCreateContainerResponse.ID, false) |> Async.AwaitTask
-            
+
             let mutable isRunning: bool = true
             while isRunning do
                 let! inspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
                 isRunning <- inspectContainerExecResponse.Running
                 if isRunning then
                     do! Async.Sleep 500
-            
+
             let! finalInspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
             return finalInspectContainerExecResponse.ExitCode = 0
         with
@@ -118,24 +118,23 @@ let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (contai
                 |> Array.filter (fun (filePath: string) -> filePath |> Path.GetFileName <> taskInfo.RelevantFileName)
                 |> Array.toList
 
-            for filePath: string in templateFiles do
+            for filePath: string in submissions do
+                let fileNameWithoutTimestamp: string =
+                    filePath
+                    |> Path.GetFileName
+                    |> fun (fileName: string) -> fileName.Substring (fileName.IndexOf "-" + 1)
                 let tarMemoryStream: MemoryStream = new MemoryStream ()
                 use tarArchive = new TarWriter(tarMemoryStream, leaveOpen=true)
-                tarArchive.WriteEntry (filePath, filePath |> Path.GetFileName)
+                tarArchive.WriteEntry (filePath, fileNameWithoutTimestamp)
                 tarMemoryStream.Seek (0L, SeekOrigin.Begin) |> ignore
                 let containerPathStatParameters: ContainerPathStatParameters = ContainerPathStatParameters ()
                 containerPathStatParameters.Path <- workingDirectory
                 do! dockerClient.Containers.ExtractArchiveToContainerAsync (containerId, containerPathStatParameters, tarMemoryStream) |> Async.AwaitTask
 
-            for filePath: string in submissions do
+            for filePath: string in templateFiles do
                 let tarMemoryStream: MemoryStream = new MemoryStream ()
                 use tarArchive = new TarWriter(tarMemoryStream, leaveOpen=true)
-
-                let fileNameWithoutTimestamp: string =
-                    filePath
-                    |> Path.GetFileName
-                    |> fun (fileName: string) -> fileName.Substring (fileName.IndexOf "-" + 1)
-                tarArchive.WriteEntry (filePath, fileNameWithoutTimestamp)
+                tarArchive.WriteEntry (filePath, filePath |> Path.GetFileName)
                 tarMemoryStream.Seek (0L, SeekOrigin.Begin) |> ignore
                 let containerPathStatParameters: ContainerPathStatParameters = ContainerPathStatParameters ()
                 containerPathStatParameters.Path <- workingDirectory
