@@ -10,11 +10,11 @@ open System.IO
 let testCreateContainer () =
     let imageId: string = "meyerhoefer/fsharpdev:latest"
     let taskInfo: TaskInfo = relevantTasksGdP23 |> List.head
-    let snapshots: list<string * list<string>> =
+    let snapshots: seq<string * list<string>> =
         getAllSnapshots taskInfo "01_17"
-        |> List.sortBy fst
+        |> Seq.sortBy fst
 
-    let snapshotTimestamp, submissions: string * list<string> = snapshots |> List.head
+    let snapshotTimestamp, submissions: string * list<string> = snapshots |> Seq.head
 
     printfn "Template:"
     taskInfo.GetTemplatePath ()

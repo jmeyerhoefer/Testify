@@ -113,7 +113,7 @@ let getFileNameWithoutTimestamp (fileNameWithTimestamp: string): string =
 /// <param name="groupAndTeamId">TODO</param>
 let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : seq<string> =
     let path: string = Path.Combine (RootPath, "data", "Tests", $"%s{taskInfo.ExerciseId}.csv")
-    use csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
+    let csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
 
     let groupId, teamId: string * string =
         match groupAndTeamId.Split "_" with
@@ -138,7 +138,7 @@ let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : seq<st
 /// <param name="snapshotTimestamp">TODO</param>
 let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string) (snapshotTimestamp: string): seq<string> =
     let path: string = Path.Combine (RootPath, "data", "Removed", $"{taskInfo.ExerciseId}.csv")
-    use csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
+    let csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
 
     let groupId, teamId: string * string =
         match groupAndTeamId.Split "_" with
@@ -211,14 +211,10 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
     let buildArguments: array<string> = [| "build"; $"-flp:\"Summary;Verbosity=normal;LogFile=%s{containerBuildResultsPath}\"" |]
     let containerTestResultsPath: string = $"%s{workingDirectory}testResults.xml"
     let testArguments: array<string> = [| "test"; "-l"; $"\"xunit;LogFilePath=%s{containerTestResultsPath}\"" |]
-    let stacktracePath: string = taskInfo.GetStacktracePath groupAndTeamId
+    let stacktracePath: string = taskInfo.GetGroupAndTeamStacktracePath groupAndTeamId
 
     getAllSnapshots taskInfo groupAndTeamId
-    |> Seq.head // TODO revert to Seq.iter
-    |> (fun (snapshotTimestamp: string, submissions: list<string>) ->
-        let log (message: string): unit =
-            printfn $"%s{message}\ntaskInfo: %A{taskInfo}\ngroupAndTeamId: %s{groupAndTeamId}\nsubmissions:%A{submissions}"
-
+    |> Seq.iter (fun (snapshotTimestamp: string, submissions: list<string>) ->
         // snapshotTimestamp <=> containerId
         let createAndRunOperation: Async<bool> = createAndRunContainer dockerClient imageId snapshotTimestamp taskInfo submissions
         let createAndRunFailureMessage: string = "Failed to create and run container."
@@ -229,28 +225,42 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
         let dotnetBuildOperation: Async<bool> = executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command buildArguments
         let _dotnetBuildFailureMessage: string = "Failed to run 'dotnet build'."
 
-        let hostBuildResultsPath: string = Path.Combine (stacktracePath, $"%s{snapshotTimestamp}-buildResults.log")
+        let hostBuildResultsPath: string = Path.Combine (stacktracePath, snapshotTimestamp, $"%s{snapshotTimestamp}-buildResults.log")
         let extractBuildResultsOperation: Async<bool> = copyFilesFromContainer dockerClient snapshotTimestamp containerBuildResultsPath hostBuildResultsPath
         let extractBuildResultsFailureMessage: string = "Failed to extract build results from container."
 
         let dotnetTestOperation: Async<bool> = executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command testArguments
         let _dotnetTestFailureMessage: string = "Failed to run 'dotnet test'."
 
-        let hostTestResultsPath: string = Path.Combine (stacktracePath, $"%s{snapshotTimestamp}-testResults.xml")
+        let hostTestResultsPath: string = Path.Combine (stacktracePath, snapshotTimestamp, $"%s{snapshotTimestamp}-testResults.xml")
         let extractTestResultsOperation: Async<bool> = copyFilesFromContainer dockerClient snapshotTimestamp containerTestResultsPath hostTestResultsPath
         let extractTestResultsFailureMessage: string = "Failed to extract test results from container."
 
-        Directory.CreateDirectory stacktracePath |> ignore
+        let stopAndRemoveOperation: Async<bool> = stopAndRemoveContainer dockerClient snapshotTimestamp
+        let stopAndRemoveFailureMessage: string = "Failed to stop and remove container."
+
+        let log (message: string): unit =
+            let outputLogPath: string = Path.Combine (taskInfo.GetStacktracePath (), "output.log")
+            let logMessage: string = $"taskInfo: %A{taskInfo}\ngroupAndTeamId: %s{groupAndTeamId}\nsubmissions:%A{submissions}\nMessage: %s{message}\n\n"
+            File.AppendAllText (outputLogPath, logMessage)
+
+        Path.Combine (stacktracePath, snapshotTimestamp)
+        |> Directory.CreateDirectory
+        |> ignore
+
         if not (createAndRunOperation |> Async.RunSynchronously) then log createAndRunFailureMessage
         elif not (dotnetBuildOperation |> Async.RunSynchronously) then
             if not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage
+            elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
             else log "Finished after failed build."
         elif not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage
         elif not (addXunitTestLoggerOperation |> Async.RunSynchronously) then log addXunitTestLoggerFailureMessage
         elif not (dotnetTestOperation |> Async.RunSynchronously) then
             if not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage
+            elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
             log "Finished after failed test."
         elif not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage
+        elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
         else log "Finished after successful test."
     )
 
