@@ -31,20 +31,23 @@ type BuildAndTestResult =
 /// <param name="assignmentId">ID of the assignment.</param>
 /// <param name="assignmentTitle">Title of the assignment.</param>
 /// <param name="relevantFileName">The name of the file that should be submitted.</param>
-type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assignmentTitle: string, relevantFileName: string) =
+type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assignmentTitle: string, projectFileName: string, relevantFileName: string) =
     /// ID of the exercise.
     member _.ExerciseId: string = exerciseId
 
     /// ID of the exercise sheet.
     member _.SheetId: string = sheetId
-    
+
     /// ID of the assignment.    
     member _.AssignmentId: string = assignmentId
 
     /// Title of the assignment.
     member _.AssignmentTitle: string = assignmentTitle
 
-    /// The name of the file that should be submitted.
+    /// Name of the F# project file.
+    member _.ProjectFileName: string = projectFileName
+
+    /// Name of the file that should be submitted.
     member _.RelevantFileName: string = relevantFileName
 
     /// <summary>
@@ -92,7 +95,7 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
     /// Determines all group and team ID's that submitted something for this task.
     /// </summary>
     /// <returns>An array of all group and team ID's.</returns>
-    member self.GetGroupAndTeamIds (): array<string> =
+    member self.GetGroupAndTeamIds (): string array =
         self.GetSheetUploadsPath ()
         |> Directory.GetDirectories
         |> Array.map Path.GetFileName
@@ -102,8 +105,9 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
         let sId: string = self.SheetId
         let aId: string = self.AssignmentId
         let aTitle: string = self.AssignmentTitle
-        let fileName: string = self.RelevantFileName
-        $"Exercise: %s{eId}, Sheet %s{sId}, Assignment %s{aId}: %s{aTitle} (%s{fileName})"
+        let projectName: string = self.ProjectFileName
+        let relevantName: string = self.RelevantFileName
+        $"Exercise: %s{eId}, Sheet %s{sId}, Assignment %s{aId}: %s{aTitle} (Project File Name: %s{projectName}, Relevant File Name: %s{relevantName})"
 
 
 // EOF

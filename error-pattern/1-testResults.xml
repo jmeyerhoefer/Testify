@@ -1,0 +1,87 @@
+<assemblies timestamp="12/29/2024 12:13:02">
+  <assembly name="/home/coder/Error-Pattern/bin/Debug/net6.0/Zahlen.dll" run-date="2024-12-29" run-time="12:13:02" total="14" passed="12" failed="2" skipped="0" time="0.974" errors="0">
+    <errors />
+    <collection total="14" passed="1" failed="13" skipped="0" name="Test collection for Tests.Tests" time="0.233">
+      <test name="a) Beispiel 1" type="Tests.Tests" method="a) Beispiel 1" time="0.0651106" result="Pass">
+        <traits />
+      </test>
+      <test name="a) Beispiel 2" type="Tests.Tests" method="a) Beispiel 2" time="0.0007581" result="Pass">
+        <traits />
+      </test>
+      <test name="a) Beispiel 3" type="Tests.Tests" method="a) Beispiel 3" time="0.0006468" result="Pass">
+        <traits />
+      </test>
+      <test name="a) Beispiel 4" type="Tests.Tests" method="a) Beispiel 4" time="0.0006345" result="Pass">
+        <traits />
+      </test>
+      <test name="a) Avg3 Zufallstest" type="Tests.Tests" method="a) Avg3 Zufallstest" time="0.0713921" result="Pass">
+        <output>Ok, passed 100 tests.
+
+</output>
+        <traits />
+      </test>
+      <test name="b) Beispiel 1" type="Tests.Tests" method="b) Beispiel 1" time="0.0011140" result="Pass">
+        <traits />
+      </test>
+      <test name="b) Beispiel 2" type="Tests.Tests" method="b) Beispiel 2" time="0.0006736" result="Pass">
+        <traits />
+      </test>
+      <test name="b) Beispiel 3" type="Tests.Tests" method="b) Beispiel 3" time="0.0164504" result="Fail">
+        <failure>
+          <message>Assert.AreEqual failed. Expected:&lt;42&gt;. Actual:&lt;4711&gt;. </message>
+          <stack-trace>   at Tests.Tests.b) Beispiel 3() in /home/coder/Error-Pattern/Tests.fs:line 59
+</stack-trace>
+        </failure>
+        <traits />
+      </test>
+      <test name="b) Maximum Zufallstest" type="Tests.Tests" method="b) Maximum Zufallstest" time="0.0710734" result="Fail">
+        <failure>
+          <message>Test method Tests.Tests.b) Maximum Zufallstest threw exception: 
+System.Exception: Falsifiable, after 4 tests (11 shrinks) (StdGen (426705260, 297422865)):
+Original:
+186N
+121N
+206N
+Shrunk:
+121N
+0N
+122N
+with exception:
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:&lt;0&gt;. Actual:&lt;122&gt;. 
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 203
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 36
+   at &lt;StartupCode$Zahlen&gt;.$Tests.b) Maximum Zufallstest@63.Invoke(Nat x, Nat y, Nat z) in /home/coder/Error-Pattern/Tests.fs:line 66
+   at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+</message>
+          <stack-trace>    at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+   at &lt;StartupCode$FsCheck&gt;.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+   at FsCheck.Runner.runner[a](Config config, a prop)
+   at FsCheck.Runner.check[a](Config config, a p)
+   at FsCheck.Check.One[Testable](Config config, Testable property)
+   at Tests.Tests.b) Maximum Zufallstest() in /home/coder/Error-Pattern/Tests.fs:line 63
+</stack-trace>
+        </failure>
+        <traits />
+      </test>
+      <test name="c) Beispiel 1" type="Tests.Tests" method="c) Beispiel 1" time="0.0015984" result="Pass">
+        <traits />
+      </test>
+      <test name="c) Beispiel 2" type="Tests.Tests" method="c) Beispiel 2" time="0.0005464" result="Pass">
+        <traits />
+      </test>
+      <test name="c) Beispiel 3" type="Tests.Tests" method="c) Beispiel 3" time="0.0005195" result="Pass">
+        <traits />
+      </test>
+      <test name="c) Beispiel 4" type="Tests.Tests" method="c) Beispiel 4" time="0.0005157" result="Pass">
+        <traits />
+      </test>
+      <test name="c) ceil10 Zufallstest" type="Tests.Tests" method="c) ceil10 Zufallstest" time="0.0017841" result="Pass">
+        <output>Ok, passed 100 tests.
+
+</output>
+        <traits />
+      </test>
+    </collection>
+  </assembly>
+</assemblies>

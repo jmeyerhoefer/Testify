@@ -8,7 +8,9 @@
     <ItemGroup Label="Code">
         <Compile Include="Types.fs" />
         <Compile Include="DockerController.fs" />
+        <Compile Include="RelevantInfo.fs" />
         <Compile Include="DataProcessor.fs" />
+        <Compile Include="Statistics.fs" />
         <Compile Include="Tests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
@@ -27,6 +29,9 @@
         <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
         <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
         <PackageReference Include="FsCheck" Version="2.16.6" />
+        <PackageReference Include="Plotly.NET" Version="5.1.0" />
+        <PackageReference Include="Plotly.NET.ImageExport" Version="6.1.0" />
+        <PackageReference Include="Plotly.NET.Interactive" Version="5.0.0" />
         <PackageReference Include="Unquote" Version="6.1.0" />
     </ItemGroup>
 </Project>
