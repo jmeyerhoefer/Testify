@@ -182,7 +182,7 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
                     elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
                     else log "Finished after failed build."
                 elif not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage
-                elif taskInfo.ExerciseId <> "08" && taskInfo.AssignmentId <> "2" then
+                elif taskInfo.ExerciseId <> "08" || taskInfo.AssignmentId <> "2" then
                     if not (addXunitTestLoggerOperation |> Async.RunSynchronously) then log addXunitTestLoggerFailureMessage
                     elif not (dotnetTestOperation |> Async.RunSynchronously) then
                         if not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage

@@ -38,7 +38,7 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
     /// ID of the exercise sheet.
     member _.SheetId: string = sheetId
 
-    /// ID of the assignment.    
+    /// ID of the assignment.
     member _.AssignmentId: string = assignmentId
 
     /// Title of the assignment.
@@ -52,7 +52,7 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
 
     /// <summary>
     /// Builds the path to the template of a task.
-    /// <p>Path: <c>~/data/{ExerciseId}/Templates/{SheetId}{AssignmentId}/template/</c></p>
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Templates/{SheetId}{AssignmentId}/template/</c></p>
     /// </summary>
     /// <returns>The template path of a task as string.</returns>
     member self.GetTemplatePath (): string =
@@ -60,7 +60,7 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
 
     /// <summary>
     /// Builds the path to the groupAndTeam submissions of a task.
-    /// <p>Path: <c>~/data/{ExerciseId}/Uploads/{SheetId}/</c></p>
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Uploads/{SheetId}/</c></p>
     /// </summary>
     /// <returns>The path to the uploads of a task as string.</returns>
     member self.GetSheetUploadsPath (): string =
@@ -68,23 +68,33 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
 
     /// <summary>
     /// Builds the path to the stacktrace of a groupAndTeam specific submission.
-    /// <p>Path: <c>~/data/{ExerciseId}/Stacktrace/{SheetId}/{groupAndTeamId}/{AssignmentId}/</c></p>
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Stacktrace/{SheetId}/{groupAndTeamId}/{AssignmentId}/</c></p>
     /// </summary>
     /// <param name="groupAndTeamId">ID of a specific group and team.</param>
     /// <returns>The path to the stacktrace of a submission as string.</returns>
     member self.GetGroupAndTeamStacktracePath (groupAndTeamId: string): string =
         Path.Combine (RootPath, "data", "Exercises", self.ExerciseId, "Stacktrace", self.SheetId, groupAndTeamId, self.AssignmentId)/// <summary>
 
+    /// <summary>
     /// Builds the path to the stacktrace directory.
-    /// <p>Path: <c>~/data/{ExerciseId}/Stacktrace/</c></p>
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Stacktrace/</c></p>
     /// </summary>
     /// <returns>The path to the stacktrace directory.</returns>
     member self.GetStacktracePath (): string =
         Path.Combine (RootPath, "data", "Exercises", self.ExerciseId, "Stacktrace")
 
     /// <summary>
+    /// Get all stacktrace path.
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Stacktrace/{SheetId}/{GroupAndTeamId}/{AssignmentId}/</c></p>
+    /// </summary>
+    /// <returns>The path to the stacktrace directory.</returns>
+    member self.GetStacktracePaths (): string seq =
+        let sheetPath: string = Path.Combine (self.GetStacktracePath (), self.SheetId)
+        Directory.GetDirectories (sheetPath, self.AssignmentId, SearchOption.AllDirectories)
+
+    /// <summary>
     /// Builds the path to a groupAndTeam specific submission.
-    /// <p>Path: <c>~/data/{ExerciseId}/Uploads/{SheetId}/{groupAndTeamId}/{AssignmentId}/</c></p>
+    /// <p>Path: <c>~/data/Exercises/{ExerciseId}/Uploads/{SheetId}/{groupAndTeamId}/{AssignmentId}/</c></p>
     /// </summary>
     /// <param name="groupAndTeamId">ID of a specific group and team.</param>
     /// <returns>The path to a specific submission as string.</returns>
