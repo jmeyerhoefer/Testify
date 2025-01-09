@@ -242,6 +242,7 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
                     let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
                     let xmlDocument: XmlDocument = XmlDocument ()
                     xmlDocument.LoadXml cleanedXmlContent
+                    let tmp = LinearAxis ()
                     let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
                     if testResultsCollection.Count = 1 then
                         let testResultsCollectionNode: XmlNode = testResultsCollection[0]
@@ -346,5 +347,6 @@ let generateStatistics (exerciseId: string) (relevantTasks: TaskInfo list): unit
     // generateTestResultsStatisticsTotal exerciseId
     // generateTestResultsStatisticsPerTask exerciseId relevantTasks
     generateTestResultsStatisticsPerTaskCombined exerciseId relevantTasks
+
 
 // EOF
