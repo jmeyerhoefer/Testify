@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <TargetFramework>net8.0</TargetFramework>
+        <Authors>Jakob Meyerhöfer</Authors>
+        <RootNamespace>TestFramework</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup Label="Code">
+        <Compile Include="TestFramework.fs"/>
+        <Compile Include="Tests.fs"/>
+        <Compile Include="Program.fs"/>
+    </ItemGroup>
+    <ItemGroup Label="Other">
+        <Content Include=".gitignore" />
+        <Content Include="README.md" />
+        <Content Include="LICENSE" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FsCheck" Version="2.16.6" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+        <PackageReference Include="Microsoft.TestPlatform" Version="17.6.3" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+        <PackageReference Include="Unquote" Version="6.1.0" />
+    </ItemGroup>
+</Project>
