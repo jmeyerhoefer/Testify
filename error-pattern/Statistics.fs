@@ -26,7 +26,7 @@ let countSuccessfulAndFailedBuildsTotal (buildResults: string seq): int * int =
 
 
 /// <summary>
-/// TODo
+/// TODO
 /// </summary>
 /// <param name="exerciseId">TODO</param>
 let generateBuildResultsStatisticsTotal (exerciseId: string): unit =
@@ -111,16 +111,18 @@ let generateTestResultsStatisticsTotal (exerciseId: string): unit =
                 let xmlDocument: XmlDocument = XmlDocument ()
                 xmlDocument.LoadXml cleanedXmlContent
                 let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
+
                 if testResultsCollection.Count = 1 then
                     let testResultsCollectionNode: XmlNode = testResultsCollection[0]
                     let total: int = int testResultsCollectionNode.Attributes["total"].Value
                     let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
                     let passedPercentage: float = 100.0 * float passed / float total
-                    (totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles)
+
+                    totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
                 else
-                    (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
             else
-                (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
         ) (0.0, 0, 0)
         |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
 
@@ -177,16 +179,18 @@ let generateTestResultsStatisticsPerTask (exerciseId: string) (relevantTasks: Ta
                     let xmlDocument: XmlDocument = XmlDocument ()
                     xmlDocument.LoadXml cleanedXmlContent
                     let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
+
                     if testResultsCollection.Count = 1 then
                         let testResultsCollectionNode: XmlNode = testResultsCollection[0]
                         let total: int = int testResultsCollectionNode.Attributes["total"].Value
                         let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
                         let passedPercentage: float = 100.0 * float passed / float total
-                        (totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles)
+
+                        totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
                     else
-                        (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                        totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
                 else
-                    (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
             ) (0.0, 0, 0)
             |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
 
@@ -225,7 +229,7 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
     relevantTasks
     |> List.filter (fun (taskInfo: TaskInfo) -> taskInfo.SheetId <> "08" || taskInfo.AssignmentId <> "2")
     |> List.map (fun (taskInfo: TaskInfo) ->
-        let averagePassedPercentage, totalFiles, totalInvalidFiles: float * int * int =
+        let averagePassedPercentage, _totalFiles, _totalInvalidFiles: float * int * int =
             taskInfo.GetStacktracePaths ()
             |> Seq.collect (fun (stacktracePath: string) ->
                 (stacktracePath, "*.xml", SearchOption.AllDirectories)
@@ -242,18 +246,19 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
                     let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
                     let xmlDocument: XmlDocument = XmlDocument ()
                     xmlDocument.LoadXml cleanedXmlContent
-                    let tmp = LinearAxis ()
                     let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
+
                     if testResultsCollection.Count = 1 then
                         let testResultsCollectionNode: XmlNode = testResultsCollection[0]
                         let total: int = int testResultsCollectionNode.Attributes["total"].Value
                         let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
                         let passedPercentage: float = 100.0 * float passed / float total
-                        (totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles)
+
+                        totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
                     else
-                        (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                        totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
                 else
-                    (totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1)
+                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
             ) (0.0, 0, 0)
             |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
 

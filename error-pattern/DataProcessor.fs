@@ -39,7 +39,7 @@ let getFileNameWithoutTimestamp (fileNameWithTimestamp: string): string =
 /// <param name="groupAndTeamId">TODO</param>
 let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : string seq =
     let path: string = Path.Combine (RootPath, "data", "Tests", $"%s{taskInfo.ExerciseId}.csv")
-    let csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
+    let csvFile: Runtime.CsvFile<CsvRow> = CsvFile.Load(path).Cache()
 
     let groupId, teamId: string * string =
         match groupAndTeamId.Split "_" with
@@ -64,7 +64,7 @@ let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : string
 /// <param name="snapshotTimestamp">TODO</param>
 let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string) (snapshotTimestamp: string): string seq =
     let path: string = Path.Combine (RootPath, "data", "Removed", $"{taskInfo.ExerciseId}.csv")
-    let csvFile: Runtime.CsvFile<CsvRow> = (CsvFile.Load path).Cache ()
+    let csvFile: Runtime.CsvFile<CsvRow> = CsvFile.Load(path).Cache()
 
     let groupId, teamId: string * string =
         match groupAndTeamId.Split "_" with

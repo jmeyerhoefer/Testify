@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "7ZoTl5RQvgg=",
+  "success": true,
+  "projectFilePath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\beautify-logger\\BeautifyLogger.fsproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jakob\\.nuget\\packages\\fsharp.core\\8.0.102\\fsharp.core.8.0.102.nupkg.sha512",
+    "C:\\Users\\jakob\\.nuget\\packages\\microsoft.testplatform\\17.6.3\\microsoft.testplatform.17.6.3.nupkg.sha512",
+    "C:\\Users\\jakob\\.nuget\\packages\\microsoft.testplatform.objectmodel\\17.12.0\\microsoft.testplatform.objectmodel.17.12.0.nupkg.sha512",
+    "C:\\Users\\jakob\\.nuget\\packages\\system.reflection.metadata\\1.6.0\\system.reflection.metadata.1.6.0.nupkg.sha512"
+  ],
+  "logs": []
+}

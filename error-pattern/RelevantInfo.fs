@@ -94,6 +94,22 @@ let getStatisticsPath (exerciseId: string): string =
     Path.Combine (RootPath, "data", "Exercises", exerciseId, "Statistics")
 
 
+/// <summary>
+/// TODO
+/// </summary>
+/// <param name="exerciseId">TODO</param>
+let getRelevantTasks (exerciseId: string): TaskInfo list =
+    match exerciseId with
+        | "GdP18" -> relevantTasksGdP18
+        | "GdP19" -> relevantTasksGdP19
+        | "GdP20" -> relevantTasksGdP20
+        | "GdP21" -> relevantTasksGdP21
+        | "GdP22" -> relevantTasksGdP22
+        | "GdP23" -> relevantTasksGdP23
+        | "GdP24" -> relevantTasksGdP24
+        | "All" -> allRelevantTasks
+        | _ -> []
+
 
 
 // EOF
