@@ -8,10 +8,12 @@ open System
 type TestLogger (testContext: TestContext) =
     member _.LogSuccess (methodName: string, input: obj array, expected: obj, actual: obj): unit =
         let inputString: string = String.Join (" ", input)
+        testContext.WriteLine $"########################"
         testContext.WriteLine $"✅ %s{methodName} PASSED"
         testContext.WriteLine $"Input: %s{inputString}"
         testContext.WriteLine $"Expected: %O{expected}"
         testContext.WriteLine $"Actual: %O{actual}\n"
+        testContext.WriteLine $"########################"
 
     member _.LogFailure (methodName: string, input: obj array, expected: obj, actual: obj): unit =
         let inputString: string = String.Join (" ", input)

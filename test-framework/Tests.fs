@@ -67,11 +67,12 @@ type Tests () =
                 actual = actual
             )
         | None -> ()
-
+        
         Assert.AreEqual (
             expected = add1 (a, b),
             actual = ExampleImplementation.add1 (a, b)
         )
+        
         // Wrapper.AreEqual (
         //     expected = add1 (a, b),
         //     actual = ExampleImplementation.add1 (a, b),

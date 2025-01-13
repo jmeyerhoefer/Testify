@@ -16,7 +16,6 @@
         <Compile Include="Program.fs"/>
     </ItemGroup>
     <ItemGroup Label="Other">
-        <Content Include="TestWrapper.runsettings" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
         <Content Include="LICENSE" />

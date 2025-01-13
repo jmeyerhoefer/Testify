@@ -1,7 +1,0 @@
-<RunSettings>
-    <LoggerRunSettings>
-        <Loggers>
-            <Logger friendlyName="beautify" uri="logger://jakob/meyerhoefer/beautifylogger"/>
-        </Loggers>
-    </LoggerRunSettings>
-</RunSettings>

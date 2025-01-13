@@ -1,16 +1,11 @@
 namespace BeautifyLogger
 
 
-open System.Runtime.CompilerServices
 open Microsoft.VisualStudio.TestPlatform.ObjectModel
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Client
 open Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging
 open System
 open System.IO
-
-
-[<assembly: InternalsVisibleTo("Microsoft.VisualStudio.TestPlatform")>]
-do ()
 
 
 [<FriendlyName(Constants.friendlyName)>]
