@@ -109,7 +109,7 @@ type Tests () =
         Assertify.Test <@ Reduktionssemantik.isWord ex2 = Some ['a'] @>
         Assertify.Test <@ Reduktionssemantik.isWord ex5 = None @>
         Assertify.Test <@ Reduktionssemantik.isWord ex4 = None @>
-
+    
     [<TestMethod>] [<Timeout(10000)>]
     member _.``isWord Zufall`` (): unit =
         Check.One (

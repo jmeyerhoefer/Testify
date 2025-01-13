@@ -1,12 +1,14 @@
 module Assertify
 
 
+open System.Reflection
 open Decorator
 open System
 open System.Text
 open Microsoft.FSharp.Quotations
 open Microsoft.FSharp.Quotations.DerivedPatterns
 open Microsoft.FSharp.Quotations.Patterns
+open Microsoft.FSharp.Core.Operators
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open Swensen.Unquote
 
@@ -159,6 +161,7 @@ type Assertify =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (=!) (x: 'T when 'T: equality) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) = (%%Expr.Value<'T> y: 'T) @>
 
@@ -168,6 +171,7 @@ let inline (=!) (x: 'T when 'T: equality) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (<!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) < (%%Expr.Value<'T> y: 'T) @>
 
@@ -177,6 +181,7 @@ let inline (<!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (>!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) > (%%Expr.Value<'T> y: 'T) @>
 
@@ -186,6 +191,7 @@ let inline (>!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (<=!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) <= (%%Expr.Value<'T> y: 'T) @>
 
@@ -195,6 +201,7 @@ let inline (<=!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (>=!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) >= (%%Expr.Value<'T> y: 'T) @>
 
@@ -204,5 +211,6 @@ let inline (>=!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
+[<Obsolete("Do not use. Use Assertify.Test instead.")>]
 let inline (<>!) (x: 'T when 'T: equality) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) <> (%%Expr.Value<'T> y: 'T) @>
