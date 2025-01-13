@@ -101,7 +101,7 @@ type Tests () =
     let ex5: RegExp<char> = Star (Lit 'a')
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``isWord Beispiele`` () : Unit =
+    member _.``isWord Beispiele`` () : Unit =
         Assertify.Test <@ Reduktionssemantik.isWord Empty = None @>
         Assertify.Test <@ Reduktionssemantik.isWord Eps = Some [] @>
         Assertify.Test <@ Reduktionssemantik.isWord (Lit 'a') = Some ['a'] @>
@@ -111,7 +111,7 @@ type Tests () =
         Assertify.Test <@ Reduktionssemantik.isWord ex4 = None @>
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``isWord Zufall`` () : Unit =
+    member _.``isWord Zufall`` () : Unit =
         Check.One (
             { Config.QuickThrowOnFailure with MaxTest = 1000 },
             fun (r: SimpleRegExp<char>) ->
@@ -125,7 +125,7 @@ type Tests () =
         )
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``reduceStep Beispiele`` () : Unit =
+    member _.``reduceStep Beispiele`` () : Unit =
         Assertify.Test <@ Reduktionssemantik.reduceStep Empty = [] @>
         Assertify.Test <@ Reduktionssemantik.reduceStep Eps = [] @>
         Assertify.Test <@ Reduktionssemantik.reduceStep (Lit 'a') = [] @>
@@ -136,7 +136,7 @@ type Tests () =
         Assertify.Test <@ Set.ofList (Reduktionssemantik.reduceStep ex5) = Set.ofList [Cat (Lit 'a', ex5); Eps] @>
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``reduceStep Zufall`` () : Unit =
+    member _.``reduceStep Zufall`` () : Unit =
         Check.One (
             { Config.QuickThrowOnFailure with MaxTest = 1000 },
             fun (r: SimpleRegExp<char>) ->
@@ -150,7 +150,7 @@ type Tests () =
         )
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``reduce Beispiele`` () : Unit =
+    member _.``reduce Beispiele`` () : Unit =
         Assertify.Test <@ Reduktionssemantik.reduce Empty 0N = [ Empty ] @>
         Assertify.Test <@ Reduktionssemantik.reduce Eps 0N = [ Eps ] @>
         Assertify.Test <@ Reduktionssemantik.reduce (Lit 'a') 0N = [ Lit 'a' ] @>
@@ -165,7 +165,7 @@ type Tests () =
         Assertify.Test <@ Set.ofList (Reduktionssemantik.reduce (Cat (ex4, Lit 'c')) 2N) = Set.ofList [ Cat (ex4, Lit 'c'); Cat (Lit 'a', Lit 'c'); Cat (Lit 'b', Lit 'c') ] @>
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``reduce Zufall`` () : Unit =
+    member _.``reduce Zufall`` () : Unit =
         Check.One (
             { Config.QuickThrowOnFailure with MaxTest = 1000 },
             fun (r: SimpleRegExp<char>, SmallNat n: SmallNat) ->
@@ -179,7 +179,7 @@ type Tests () =
         )
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``words Beispiele`` () : Unit =
+    member _.``words Beispiele`` () : Unit =
         Assertify.Test <@ Set.ofList (Reduktionssemantik.words Empty 10N) = Set.ofList [] @>
         Assertify.Test <@ Set.ofList (Reduktionssemantik.words Eps 0N) = Set.ofList [ [] ] @>
         Assertify.Test <@ Set.ofList (Reduktionssemantik.words (Lit 'a') 0N) = Set.ofList [ ['a'] ] @>
@@ -194,7 +194,7 @@ type Tests () =
         Assertify.Test <@ Set.ofList (Reduktionssemantik.words (Star ex4) 5N) = Set.ofList [ []; ['a']; ['b']; ['a'; 'a']; ['a'; 'b']; ['b'; 'a']; ['b'; 'b'] ] @>
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``words Zufall`` () : Unit =
+    member _.``words Zufall`` () : Unit =
         Check.One (
             { Config.QuickThrowOnFailure with MaxTest = 1000 },
             fun (r: SimpleRegExp<char>, SmallNat n: SmallNat) ->
@@ -208,7 +208,7 @@ type Tests () =
         )
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``generates Beispiele`` () : Unit =
+    member _.``generates Beispiele`` () : Unit =
         Assertify.Test <@ Reduktionssemantik.generates Empty [] 0N |> not @>
         Assertify.Test <@ Reduktionssemantik.generates Eps [] 0N @>
         Assertify.Test <@ Reduktionssemantik.generates (Lit 'a') [ 'a' ] 0N @>
@@ -230,7 +230,7 @@ type Tests () =
         Assertify.Test <@ Reduktionssemantik.generates (Star ex4) [ 'a'; 'b' ] 5N @>
 
     [<TestMethod>] [<Timeout(10000)>]
-    member self.``generates Zufall`` () : Unit =
+    member _.``generates Zufall`` () : Unit =
         Check.One (
             { Config.QuickThrowOnFailure with MaxTest = 1000 },
             fun (r: SimpleRegExp<char>, word: char list, SmallNat n: SmallNat) ->
@@ -242,3 +242,35 @@ type Tests () =
                     Reduktionssemantik.generates r word n
                 )
         )
+
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsTrue Beispiele 1`` (): unit =
+        Assertify.IsTrue <@ 1N = 1N @>
+        Assertify.IsTrue <@ 1N = 2N @>
+    
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsTrue Beispiele 2`` (): unit =
+        let f (n: Nat): bool = n > 10N
+        Assertify.IsTrue (<@ f 11N @>, f 11N)
+        Assertify.IsTrue (<@ f 9N @>, f 9N)
+    
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsTrue Zufall`` (): unit =
+        // TODO
+        ()
+
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsFalse Beispiele 1`` (): unit =
+        Assertify.IsFalse <@ 1N = 2N @>
+        Assertify.IsFalse <@ 1N = 1N @>
+    
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsFalse Beispiele 2`` (): unit =
+        let f (n: Nat): bool = n > 10N
+        Assertify.IsFalse (<@ f 9N @>, f 9N)
+        Assertify.IsFalse (<@ f 11N @>, f 11N)
+
+    [<TestMethod>] [<Timeout(10000)>]
+    member _.``IsFalse Zufall`` (): unit =
+        // TODO
+        ()

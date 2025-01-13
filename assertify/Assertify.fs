@@ -18,6 +18,8 @@ open Swensen.Unquote
 type Assertify =
     static let methodNameMessage: string    = "🔧 Method Name:"
     static let expressionMessage: string    = "🧪 Tested expression:"
+    static let conditionMessage: string     = "🌡️ Tested condition:"
+    static let objectMessage: string        = "📦 Tested object:"
     static let inputMessage: string         = "🔤 Input(s):"
     static let expectedMessage: string      = "🎯 Expected Result:"
     static let actualMessage: string        = "❌ Actual Result:"
@@ -94,22 +96,33 @@ type Assertify =
     /// TODO
     /// </summary>
     /// <param name="condition">TODO</param>
-    static let IsTrueStdOutMessage (condition: Boolean): string =
-        $"TODO IsTrueStdOutMessage: %b{condition}"
+    static let IsTrueStdOutMessage (expr: Expr<bool>, condition: Boolean): string =
+        StringBuilder()
+            .AppendLine()
+            .AppendLine("=================== COMPACT TEST RESULT ===================")
+            .AppendLine()
+            .AppendLine($"%-22s{conditionMessage} %s{expr.Decompile ()}")
+            .AppendLine($"%-21s{expectedMessage} true")
+            .AppendLine($"%-20s{actualMessage} %b{condition}")
+            .AppendLine()
+            .AppendLine("=========================== END ===========================")
+            .ToString()
 
     /// <summary>
     /// TODO
     /// </summary>
     /// <param name="condition">TODO</param>
-    static let IsFalseStdOutMessage (condition: Boolean): string =
-        $"TODO IsFalseStdOutMessage: %b{condition}"
-
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="value">TODO</param>
-    static let IsNullStdOutMessage (value: obj): string =
-        $"TODO IsNullStdOutMessage: %O{value}"
+    static let IsFalseStdOutMessage (expr: Expr<bool>, condition: Boolean): string =
+        StringBuilder()
+            .AppendLine()
+            .AppendLine("=================== COMPACT TEST RESULT ===================")
+            .AppendLine()
+            .AppendLine($"%-22s{conditionMessage} %s{expr.Decompile ()}")
+            .AppendLine($"%-21s{expectedMessage} false")
+            .AppendLine($"%-20s{actualMessage} %b{condition}")
+            .AppendLine()
+            .AppendLine("=========================== END ===========================")
+            .ToString()
 
     /// <summary>
     /// TODO
@@ -138,23 +151,28 @@ type Assertify =
             |> printf "%s"
         test expr
 
-    static member IsTrue (condition: Boolean): unit =
-        // TODO
-        IsTrueStdOutMessage condition
-        |> Decorator.ForegroundColor ConsoleColor.Cyan
-        |> printf "%s"
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="expr">TODO</param>
+    /// <param name="condition">TODO</param>
+    static member IsTrue (expr: Expr<bool>, ?condition: Boolean): unit =
+        let condition: bool = expr.Eval ()
+        if not condition then
+            IsTrueStdOutMessage (expr, condition)
+            |> Decorator.ForegroundColor ConsoleColor.Cyan
+            |> printf "%s"
         Assert.IsTrue condition
 
-    static member IsFalse (condition: Boolean): unit =
-        // TODO
-        IsFalseStdOutMessage condition
-        |> Decorator.ForegroundColor ConsoleColor.Cyan
-        |> printf "%s"
+    /// <summary>
+    /// TODO
+    /// </summary>
+    /// <param name="expr">TODO</param>
+    /// <param name="condition">TODO</param>
+    static member IsFalse (expr: Expr<bool>, ?condition: Boolean): unit =
+        let condition: bool = expr.Eval ()
+        if condition then
+            IsFalseStdOutMessage (expr, condition)
+            |> Decorator.ForegroundColor ConsoleColor.Cyan
+            |> printf "%s"
         Assert.IsFalse condition
-
-    static member IsNull (value: obj): unit =
-        // TODO
-        IsNullStdOutMessage value
-        |> Decorator.ForegroundColor ConsoleColor.Cyan
-        |> printf "%s"
-        Assert.IsNull value
