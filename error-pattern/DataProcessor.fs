@@ -176,6 +176,7 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
             |> ignore
 
             try
+                // TODO: Check if this workflow really works correctly
                 if not (createAndRunOperation |> Async.RunSynchronously) then log createAndRunFailureMessage
                 elif not (dotnetBuildOperation |> Async.RunSynchronously) then
                     if not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage

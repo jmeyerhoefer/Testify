@@ -8,8 +8,6 @@ open Types
 open Assertify
 open FsCheck
 open Microsoft.VisualStudio.TestTools.UnitTesting
-open Swensen.Unquote
-
 
 type SimpleRegExp<'a> =
     | SEps
@@ -109,7 +107,7 @@ type Tests () =
         Assertify.Test <@ Reduktionssemantik.isWord ex2 = Some ['a'] @>
         Assertify.Test <@ Reduktionssemantik.isWord ex5 = None @>
         Assertify.Test <@ Reduktionssemantik.isWord ex4 = None @>
-    
+
     [<TestMethod>] [<Timeout(10000)>]
     member _.``isWord Zufall`` (): unit =
         Check.One (
@@ -242,13 +240,13 @@ type Tests () =
     // member _.``IsTrue Beispiele 1`` (): unit =
     //     Assertify.IsTrue <@ 1N = 1N @>
     //     Assertify.IsTrue <@ 1N = 2N @>
-    //
+
     // [<TestMethod>] [<Timeout(10000)>]
     // member _.``IsTrue Beispiele 2`` (): unit =
     //     let f (n: Nat): bool = n > 10N
     //     Assertify.IsTrue <@ f 11N @>
     //     Assertify.IsTrue <@ f 9N @>
-    //
+
     // [<TestMethod>] [<Timeout(10000)>]
     // member _.``IsTrue Zufall`` (): unit =
     //     Check.One (
@@ -257,18 +255,18 @@ type Tests () =
     //             let r: RegExp<char> = toRegExp r
     //             Assertify.IsTrue <@ Reduktionssemantik.generates r word n @>
     //     )
-    //
+
     // [<TestMethod>] [<Timeout(10000)>]
     // member _.``IsFalse Beispiele 1`` (): unit =
     //     Assertify.IsFalse <@ 1N = 2N @>
     //     Assertify.IsFalse <@ 1N = 1N @>
-    //
+
     // [<TestMethod>] [<Timeout(10000)>]
     // member _.``IsFalse Beispiele 2`` (): unit =
     //     let f (n: Nat): bool = n > 10N
     //     Assertify.IsFalse <@ f 9N @>
     //     Assertify.IsFalse <@ f 11N @>
-    //
+
     // [<TestMethod>] [<Timeout(10000)>]
     // member _.``IsFalse Zufall`` (): unit =
     //     Check.One (

@@ -10,7 +10,7 @@ open System.IO
 open System.Xml
 
 
-let countSuccessfulAndFailedBuildsTotal (buildResults: string seq): int * int =
+let private countSuccessfulAndFailedBuildsTotal (buildResults: string seq): int * int =
     let buildSucceeded: string = "Build succeeded."
     buildResults
     |> Seq.fold (fun (counterSuccessful: int, counterFailed: int) (buildResult: string) ->
@@ -23,6 +23,35 @@ let countSuccessfulAndFailedBuildsTotal (buildResults: string seq): int * int =
         else
             counterSuccessful, counterFailed + 1
     ) (0, 0)
+
+
+let private getAveragePassedTestsInfos (submissions: string seq): float * int * int =
+    submissions
+    |> Seq.fold (fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) (stacktracePath: string) ->
+        let lines: string array = File.ReadAllLines stacktracePath
+        if lines.Length > 1 then
+            let firstLineTrimmed: string = lines[0].Remove (0, lines[0].IndexOf "<")
+            let middleLines: string array = lines[1 .. lines.Length - 2]
+            let lastLine: string = lines[lines.Length - 1]
+            let lastLineTrimmed: string = lastLine.Remove (lastLine.IndexOf ">" + 1)
+            let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
+            let xmlDocument: XmlDocument = XmlDocument ()
+            xmlDocument.LoadXml cleanedXmlContent
+            let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
+
+            if testResultsCollection.Count = 1 then
+                let testResultsCollectionNode: XmlNode = testResultsCollection[0]
+                let total: int = int testResultsCollectionNode.Attributes["total"].Value
+                let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
+                let passedPercentage: float = 100.0 * float passed / float total
+
+                totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
+            else
+                totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
+        else
+            totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
+    ) (0.0, 0, 0)
+    |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
 
 
 /// <summary>
@@ -98,34 +127,7 @@ let generateTestResultsStatisticsTotal (exerciseId: string): unit =
         |> Directory.GetFiles
         |> Array.toSeq
 
-    let averagePassedPercentage, totalFiles, totalInvalidFiles: float * int * int =
-        testResults
-        |> Seq.fold (fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) (testResult: string) ->
-            let lines: string array = File.ReadAllLines testResult
-            if lines.Length > 1 then
-                let firstLineTrimmed: string = lines[0].Remove (0, lines[0].IndexOf "<")
-                let middleLines: string array = lines[1 .. lines.Length - 2]
-                let lastLine: string = lines[lines.Length - 1]
-                let lastLineTrimmed: string = lastLine.Remove (lastLine.IndexOf ">" + 1)
-                let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
-                let xmlDocument: XmlDocument = XmlDocument ()
-                xmlDocument.LoadXml cleanedXmlContent
-                let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
-
-                if testResultsCollection.Count = 1 then
-                    let testResultsCollectionNode: XmlNode = testResultsCollection[0]
-                    let total: int = int testResultsCollectionNode.Attributes["total"].Value
-                    let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
-                    let passedPercentage: float = 100.0 * float passed / float total
-
-                    totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
-                else
-                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-            else
-                totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-        ) (0.0, 0, 0)
-        |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
-
+    let averagePassedPercentage, totalFiles, totalInvalidFiles: float * int * int = getAveragePassedTestsInfos testResults
 
     let testResultsAnnotation: Annotation =
         Annotation.init (
@@ -159,7 +161,6 @@ let generateTestResultsStatisticsPerTask (exerciseId: string) (relevantTasks: Ta
     let statisticsPath: string = getStatisticsPath exerciseId
 
     relevantTasks
-    |> List.filter (fun (taskInfo: TaskInfo) -> taskInfo.SheetId <> "08" || taskInfo.AssignmentId <> "2")
     |> List.iter (fun (taskInfo: TaskInfo) ->
         let averagePassedPercentage, totalFiles, totalInvalidFiles: float * int * int =
             taskInfo.GetStacktracePaths ()
@@ -168,31 +169,7 @@ let generateTestResultsStatisticsPerTask (exerciseId: string) (relevantTasks: Ta
                 |> Directory.GetFiles
                 |> Array.toSeq
             )
-            |> Seq.fold (fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) (stacktracePath: string) ->
-                let lines: string array = File.ReadAllLines stacktracePath
-                if lines.Length > 1 then
-                    let firstLineTrimmed: string = lines[0].Remove (0, lines[0].IndexOf "<")
-                    let middleLines: string array = lines[1 .. lines.Length - 2]
-                    let lastLine: string = lines[lines.Length - 1]
-                    let lastLineTrimmed: string = lastLine.Remove (lastLine.IndexOf ">" + 1)
-                    let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
-                    let xmlDocument: XmlDocument = XmlDocument ()
-                    xmlDocument.LoadXml cleanedXmlContent
-                    let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
-
-                    if testResultsCollection.Count = 1 then
-                        let testResultsCollectionNode: XmlNode = testResultsCollection[0]
-                        let total: int = int testResultsCollectionNode.Attributes["total"].Value
-                        let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
-                        let passedPercentage: float = 100.0 * float passed / float total
-
-                        totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
-                    else
-                        totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-                else
-                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-            ) (0.0, 0, 0)
-            |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
+            |> getAveragePassedTestsInfos
 
         let testResultsAnnotation: Annotation =
             Annotation.init (
@@ -235,31 +212,7 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
                 |> Directory.GetFiles
                 |> Array.toSeq
             )
-            |> Seq.fold (fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) (stacktracePath: string) ->
-                let lines: string array = File.ReadAllLines stacktracePath
-                if lines.Length > 1 then
-                    let firstLineTrimmed: string = lines[0].Remove (0, lines[0].IndexOf "<")
-                    let middleLines: string array = lines[1 .. lines.Length - 2]
-                    let lastLine: string = lines[lines.Length - 1]
-                    let lastLineTrimmed: string = lastLine.Remove (lastLine.IndexOf ">" + 1)
-                    let cleanedXmlContent: string = String.Join (Environment.NewLine, [| firstLineTrimmed; yield! middleLines; lastLineTrimmed |])
-                    let xmlDocument: XmlDocument = XmlDocument ()
-                    xmlDocument.LoadXml cleanedXmlContent
-                    let testResultsCollection: XmlNodeList = xmlDocument.SelectNodes "//collection"
-
-                    if testResultsCollection.Count = 1 then
-                        let testResultsCollectionNode: XmlNode = testResultsCollection[0]
-                        let total: int = int testResultsCollectionNode.Attributes["total"].Value
-                        let passed: int =  int testResultsCollectionNode.Attributes["passed"].Value
-                        let passedPercentage: float = 100.0 * float passed / float total
-
-                        totalPassedPercentage + passedPercentage, totalFiles + 1, totalInvalidFiles
-                    else
-                        totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-                else
-                    totalPassedPercentage, totalFiles + 1, totalInvalidFiles + 1
-            ) (0.0, 0, 0)
-            |> fun (totalPassedPercentage: float, totalFiles: int, totalInvalidFiles: int) -> totalPassedPercentage / float totalFiles, totalFiles, totalInvalidFiles
+            |> getAveragePassedTestsInfos
 
         Chart.Column (
             Name = $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}",
@@ -271,12 +224,41 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
         |> Chart.withYAxisStyle (MinMax = (0, 100))
     )
     |> Chart.combine
-    |> Chart.withTitle $"Average percentage of passed tests"
-    |> Chart.savePNG (Path.Combine (statisticsPath, $"testResultsColumnChart-Combined"))
+    |> Chart.withTitle "Average percentage of passed tests"
+    |> Chart.savePNG (Path.Combine (statisticsPath, "testResultsColumnChart-Combined"))
 
 
 let generateTestResultsFirstAndLastSubmission (exerciseId: string) (relevantTasks: TaskInfo list): unit =
-    relevant
+    let statisticsPath: string = getStatisticsPath exerciseId
+
+    relevantTasks
+    |> List.map (fun (taskInfo: TaskInfo) ->
+        taskInfo.GetStacktracePaths ()
+        |> Seq.map (fun (groupAndTeamPath: string) ->
+            groupAndTeamPath
+            |> Directory.GetDirectories
+            |> Seq.collect (fun (stacktracePath: string) ->
+                (stacktracePath, "*.xml", SearchOption.AllDirectories)
+                |> Directory.GetFiles
+                |> Array.toSeq
+            )
+        )
+        |> Seq.filter (fun (directories: string seq) -> directories |> Seq.length >= 2)
+        |> Seq.map (fun (directories: string seq) -> directories |> Seq.head, directories |> Seq.last)
+        |> List.ofSeq
+        |> List.unzip
+        |> fun (firstSubmissions: string list, lastSubmissions: string list) ->
+            let firstSubmissionsAverage, _, _: float * int * int = getAveragePassedTestsInfos firstSubmissions
+            let lastSubmissionAverage, _, _: float * int * int = getAveragePassedTestsInfos lastSubmissions
+            Chart.Column (
+                Name = $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}",
+                values = [ firstSubmissionsAverage; lastSubmissionAverage ],
+                Keys = [ $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}: First"; $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}: Last" ],
+                Width = 0.25
+            )
+    )
+    |> Chart.combine
+    |> Chart.savePNG (Path.Combine (statisticsPath, "testResultsColumnChartFirstAndLastSubmission-Combined"))
 
 
 /// <summary>

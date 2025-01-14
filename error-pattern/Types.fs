@@ -73,7 +73,7 @@ type TaskInfo (exerciseId: string, sheetId: string, assignmentId: string, assign
     /// <param name="groupAndTeamId">ID of a specific group and team.</param>
     /// <returns>The path to the stacktrace of a submission as string.</returns>
     member self.GetGroupAndTeamStacktracePath (groupAndTeamId: string): string =
-        Path.Combine (RootPath, "data", "Exercises", self.ExerciseId, "Stacktrace", self.SheetId, groupAndTeamId, self.AssignmentId)/// <summary>
+        Path.Combine (RootPath, "data", "Exercises", self.ExerciseId, "Stacktrace", self.SheetId, groupAndTeamId, self.AssignmentId)
 
     /// <summary>
     /// Builds the path to the stacktrace directory.
