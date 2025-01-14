@@ -51,7 +51,7 @@ let relevantTasksGdP23: TaskInfo list = [
     TaskInfo ("GdP23", "06", "3", "Heaps", "Heaps.fsproj", "Heaps.fs")
     TaskInfo ("GdP23", "07", "2", "Endliche Abbildungen 1", "Map.fsproj", "MapSortedList.fs")
     TaskInfo ("GdP23", "07", "3", "Endliche Abbildungen 2", "Map.fsproj", "MapPartialFunction.fs")
-    TaskInfo ("GdP23", "08", "2", "Datentypen", "Datatypes.fsproj", "Datatypes.fs")
+    // TaskInfo ("GdP23", "08", "2", "Datentypen", "Datatypes.fsproj", "Datatypes.fs")
     TaskInfo ("GdP23", "08", "3", "Reguläre Ausdrücke", "RegExp.fsproj", "RegExp.fs")
     TaskInfo ("GdP23", "09", "2", "Black Jack", "BlackJack.fsproj", "BlackJack.fs")
     TaskInfo ("GdP23", "10", "4", "Veränderbare Listen", "Lists.fsproj", "Lists.fs")

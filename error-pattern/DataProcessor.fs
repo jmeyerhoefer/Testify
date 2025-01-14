@@ -157,7 +157,7 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
             let extractBuildResultsFailureMessage: string = "Failed to extract build results from container."
 
             let dotnetTestOperation: bool Async = executeCommandInsideContainer dockerClient snapshotTimestamp workingDirectory command testArguments
-            let _dotnetTestFailureMessage: string = "Failed to run 'dotnet test'."
+            let dotnetTestFailureMessage: string = "Failed to run 'dotnet test'."
 
             let hostTestResultsPath: string = Path.Combine (stacktracePath, snapshotTimestamp, $"%s{snapshotTimestamp}-testResults.xml")
             let extractTestResultsOperation: bool Async = copyFilesFromContainer dockerClient snapshotTimestamp containerTestResultsPath hostTestResultsPath
@@ -181,18 +181,12 @@ let processGroupAndTeam (taskInfo: TaskInfo) (groupAndTeamId: string): unit =
                     if not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage
                     elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
                     else log "Finished after failed build."
-                elif not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage
-                elif taskInfo.ExerciseId <> "08" || taskInfo.AssignmentId <> "2" then
-                    if not (addXunitTestLoggerOperation |> Async.RunSynchronously) then log addXunitTestLoggerFailureMessage
-                    elif not (dotnetTestOperation |> Async.RunSynchronously) then
-                        if not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage
-                        elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
-                        log "Finished after failed test."
-                    elif not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage
-                    elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
-                    else log "Finished after successful test."
+                elif not (extractBuildResultsOperation |> Async.RunSynchronously) then log extractBuildResultsFailureMessage                
+                elif not (addXunitTestLoggerOperation |> Async.RunSynchronously) then log addXunitTestLoggerFailureMessage
+                elif not (dotnetTestOperation |> Async.RunSynchronously) then log dotnetTestFailureMessage
+                elif not (extractTestResultsOperation |> Async.RunSynchronously) then log extractTestResultsFailureMessage
                 elif not (stopAndRemoveOperation |> Async.RunSynchronously) then log stopAndRemoveFailureMessage
-                else log "Finished after successful build."
+                else log "Finished after successful build & successful/failed test."
             with
             | ex ->
                 if not (stopAndRemoveOperation |> Async.RunSynchronously) then log $"%s{ex.Message}\n%s{stopAndRemoveFailureMessage}"

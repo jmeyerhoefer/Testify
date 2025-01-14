@@ -227,7 +227,6 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
     let statisticsPath: string = getStatisticsPath exerciseId
 
     relevantTasks
-    |> List.filter (fun (taskInfo: TaskInfo) -> taskInfo.SheetId <> "08" || taskInfo.AssignmentId <> "2")
     |> List.map (fun (taskInfo: TaskInfo) ->
         let averagePassedPercentage, _totalFiles, _totalInvalidFiles: float * int * int =
             taskInfo.GetStacktracePaths ()
@@ -275,71 +274,9 @@ let generateTestResultsStatisticsPerTaskCombined (exerciseId: string) (relevantT
     |> Chart.withTitle $"Average percentage of passed tests"
     |> Chart.savePNG (Path.Combine (statisticsPath, $"testResultsColumnChart-Combined"))
 
-(*
 
-Index: 2
-Average passed percentage: 82.75%
-Total files: 341
-Total invalid files: 0
-
-Index: 3
-Average passed percentage: 79.57%
-Total files: 553
-Total invalid files: 6
-
-Index: 4
-Average passed percentage: 70.59%
-Total files: 729
-Total invalid files: 0
-
-Index: 5
-Average passed percentage: 73.74%
-Total files: 669
-Total invalid files: 18
-
-Index: 6
-Average passed percentage: 70.20%
-Total files: 654
-Total invalid files: 0
-
-Index: 7
-Average passed percentage: 61.43%
-Total files: 919
-Total invalid files: 18
-
-Index: 8
-Average passed percentage: 81.63%
-Total files: 230
-Total invalid files: 0
-
-Index: 9
-Average passed percentage: NaN%
-Total files: 0
-Total invalid files: 0
-
-Index: 10
-Average passed percentage: 67.02%
-Total files: 601
-Total invalid files: 0
-
-Index: 11
-Average passed percentage: 67.94%
-Total files: 614
-Total invalid files: 0
-
-Index: 12
-Average passed percentage: NaN%
-Total files: 0
-Total invalid files: 0
-
-/
-
-
-// Average passed percentage: 70.84%
-// Total files: 5310 (Uploads excluded for sheet: 08, assignment: 2, because there are no tests)
-// Total invalid files: 42
-
- *)
+let generateTestResultsFirstAndLastSubmission (exerciseId: string) (relevantTasks: TaskInfo list): unit =
+    relevant
 
 
 /// <summary>
@@ -351,7 +288,8 @@ let generateStatistics (exerciseId: string) (relevantTasks: TaskInfo list): unit
     // generateBuildResultsStatisticsTotal exerciseId
     // generateTestResultsStatisticsTotal exerciseId
     // generateTestResultsStatisticsPerTask exerciseId relevantTasks
-    generateTestResultsStatisticsPerTaskCombined exerciseId relevantTasks
+    // generateTestResultsStatisticsPerTaskCombined exerciseId relevantTasks
+    generateTestResultsFirstAndLastSubmission exerciseId relevantTasks
 
 
 // EOF
