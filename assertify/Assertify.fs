@@ -17,9 +17,11 @@ open Swensen.Unquote
 /// </summary>
 [<CompiledName("Assertify")>]
 type Assertify =
+    static let beginMessage: string         = "\n=================== COMPACT TEST RESULT ===================\n"
     static let expressionMessage: string    = "🧪 Tested expression:"
     static let expectedMessage: string      = "🎯 Expected Result:"
     static let actualMessage: string        = "❌ Actual Result:"
+    static let endMessage: string           = "\n=========================== END ==========================="
 
     /// <summary>
     /// TODO
@@ -29,7 +31,7 @@ type Assertify =
         let stringBuilder: StringBuilder = StringBuilder ()
         let reductions: Expr list = expr.ReduceFully ()
         let secondLastReduction: Expr = reductions |> List.item (reductions.Length - 2)
-        stringBuilder.AppendLine("\n=================== COMPACT TEST RESULT ===================\n") |> ignore
+        stringBuilder.AppendLine beginMessage |> ignore
         match expr with
         // expression format: <@ leftSide = rightSide @>
         | SpecificCall <@ (=) @> (_, _, [ left; _ ]) ->
@@ -63,7 +65,7 @@ type Assertify =
                 |> ignore
             | _ -> ()
         | _ -> stringBuilder.AppendLine "Unknown expression" |> ignore
-        stringBuilder.AppendLine("\n=========================== END ===========================").ToString()
+        stringBuilder.AppendLine(endMessage).ToString()
 
     /// <summary>
     /// TODO
@@ -73,12 +75,16 @@ type Assertify =
     /// <param name="actual">TODO</param>
     static let AreEqualStdOutMessage (expr: Expr<'T>, expected: 'T, actual: 'T): string =
         StringBuilder()
-            .AppendLine("\n=================== COMPACT TEST RESULT ===================\n")
+            .AppendLine(beginMessage)
             .AppendLine($"%-21s{expressionMessage} %s{expr.Reduce().Decompile()}")
             .AppendLine($"%-21s{expectedMessage} %A{expected}")
             .AppendLine($"%-20s{actualMessage} %A{actual}")
-            .AppendLine("\n=========================== END ===========================")
+            .AppendLine(endMessage)
             .ToString()
+
+// TODO:
+//  dawdpa
+//  awdawd
 
     /// <summary>
     /// TODO
@@ -87,11 +93,11 @@ type Assertify =
     /// <param name="result">TODO</param>
     static let IsTrueStdOutMessage (expr: Expr<bool>, result: Boolean): string =
         StringBuilder()
-            .AppendLine("\n=================== COMPACT TEST RESULT ===================\n")
+            .AppendLine(beginMessage)
             .AppendLine($"%-21s{expressionMessage} %s{expr.Reduce().Decompile()}")
             .AppendLine($"%-21s{expectedMessage} true")
             .AppendLine($"%-20s{actualMessage} %b{result}")
-            .AppendLine("\n=========================== END ===========================")
+            .AppendLine(endMessage)
             .ToString()
 
     /// <summary>
@@ -101,11 +107,11 @@ type Assertify =
     /// <param name="result">TODO</param>
     static let IsFalseStdOutMessage (expr: Expr<bool>, result: Boolean): string =
         StringBuilder()
-            .AppendLine("\n=================== COMPACT TEST RESULT ===================\n")
+            .AppendLine(beginMessage)
             .AppendLine($"%-21s{expressionMessage} %s{expr.Reduce().Decompile()}")
             .AppendLine($"%-21s{expectedMessage} false")
             .AppendLine($"%-20s{actualMessage} %b{result}")
-            .AppendLine("\n=========================== END ===========================")
+            .AppendLine(endMessage)
             .ToString()
 
     /// <summary>
@@ -113,8 +119,8 @@ type Assertify =
     /// </summary>
     /// <param name="expr">TODO</param>
     static member Test (expr: Expr<bool>): unit =
-        if not (expr.Eval ()) then 
-            TestStdOutMessage expr
+        if not (expr.Eval ()) then
+            TestStdOutMessage expr 
             |> Decorator.ForegroundColor ConsoleColor.Cyan
             |> printf "%s"
         test expr
@@ -162,8 +168,11 @@ type Assertify =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
-[<Obsolete("Do not use. Use Assertify.Test instead")>]
 let inline (=!) (x: 'T when 'T: equality) (y: 'T): unit =
+    // TODO: Pass arguments to Test or override it with more parameters to:
+    //  1. print original expressions when using (=!) operator
+    //  2. ensure expression is only evaluated once and not in the implementation of (=!) and Test
+    //  3. ensure the correct output to the console
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) = (%%Expr.Value<'T> y: 'T) @>
 
 
@@ -172,7 +181,6 @@ let inline (=!) (x: 'T when 'T: equality) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
-[<Obsolete("Do not use. Use Assertify.Test instead")>]
 let inline (<!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) < (%%Expr.Value<'T> y: 'T) @>
 
@@ -182,7 +190,6 @@ let inline (<!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
-[<Obsolete("Do not use. Use Assertify.Test instead")>]
 let inline (>!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) > (%%Expr.Value<'T> y: 'T) @>
 
@@ -202,7 +209,6 @@ let inline (<=!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
-[<Obsolete("Do not use. Use Assertify.Test instead")>]
 let inline (>=!) (x: 'T when 'T: comparison) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) >= (%%Expr.Value<'T> y: 'T) @>
 
@@ -212,6 +218,5 @@ let inline (>=!) (x: 'T when 'T: comparison) (y: 'T): unit =
 /// </summary>
 /// <param name="x">The first parameter.</param>
 /// <param name="y">The second parameter.</param>
-[<Obsolete("Do not use. Use Assertify.Test instead")>]
 let inline (<>!) (x: 'T when 'T: equality) (y: 'T): unit =
     Assertify.Test <@ (%%Expr.Value<'T> x: 'T) <> (%%Expr.Value<'T> y: 'T) @>
