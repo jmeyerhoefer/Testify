@@ -196,7 +196,7 @@ let readNat (s : String) : Nat =
         | :? System.FormatException -> raise Read
 
 // See https://github.com/fsharp/fslang-design/blob/main/FSharp-6.0/FS-1111-refcell-op-information-messages.md
-let (!) (r: 'T ref)  = r.Value
-let (:=) (r: 'T ref) (v: 'T)  = r.Value <- v
+let (!) (r: 'T ref): 'T = r.Value
+let (:=) (r: 'T ref) (v: 'T): unit  = r.Value <- v
 
 let cs = CS

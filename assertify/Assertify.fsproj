@@ -12,11 +12,13 @@
         <Compile Include="Mini.fs"/>
         <Compile Include="Types.fs"/>
         <Compile Include="Reduktionssemantik.fs"/>
+        <Compile Include="RingBuffer.fs" />
     </ItemGroup>
 
     <ItemGroup Label="Advanced Assert And Parser">
         <Compile Include="Decorator.fs" />
         <Compile Include="Assertify.fs" />
+        <Compile Include="Assertify2.fs" />
         <Compile Include="Parser.fs"/>
     </ItemGroup>
 

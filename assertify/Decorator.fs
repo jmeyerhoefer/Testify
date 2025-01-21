@@ -52,3 +52,22 @@ type Decorator () =
 
     static member Underline (message: string): string =
         $"\u001b[4m%s{message}\u001b[0m"
+
+    static member GetNumberEmoji (number: int): string =
+        let lookup: string array = [| "0️⃣"; "1️⃣"; "2️⃣"; "3️⃣"; "4️⃣"; "5️⃣"; "6️⃣"; "7️⃣"; "8️⃣"; "9️⃣"; "🔟" |]
+        if 0 <= number && number <= 10 then
+            lookup[number]
+        else
+            "#️⃣"
+
+    static member GetOrdinalIndicator (number: int): string =
+        let suffix: string =
+            match number % 100 with
+            | 11 | 12 | 13 -> "th"
+            | _ ->
+                match number % 10 with
+                | 1 -> "st"
+                | 2 -> "nd"
+                | 3 -> "rd"
+                | _ -> "th"
+        $"%d{number}%s{suffix}"

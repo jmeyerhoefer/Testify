@@ -1,20 +1,21 @@
 ﻿module Program
 
 
-open System
 open Microsoft.FSharp.Quotations
-open Swensen.Unquote
-open Types
 
 
 [<EntryPoint>]
 let main (_: string array): int =
-    let addCorrect (a: int) (b: int): int = a + b
-    let addWrong (a: int) (b: int): int = a + b + 1
+    let content = """
+        [FieldGet (Some (ValueWithName (Tests+Tests, _)), ex1RegExp)])
+        Call (None, reduceStep, [FieldGet (Some (Value (Tests+Tests))
+        Call (None, OfList, [Call (None, reduceStep, [ValueWithName (Star Eps, r)])])
+        Call (None, OfList, [Call (None, reduce, [FieldGet (Some (ValueWithName (Tests+Tests, _)), ex4RegExp), Call (None, FromOne, [])])])
+        Call (None, OfList, [Call (None, reduce, [ValueWithName (Star Eps, r), ValueWithName (1N, n)])])
+    """
 
-    let expr1 = <@ addCorrect 1 2 @>
-    let expr2 = <@ addWrong 1 2 @>
-
-    let expr3 = <@ (%%expr1: int) = (%%expr2: int) @>
-    printfn $"{expr3.Decompile ()}"
+    let print a b c = printfn $"a: %d{a}, b: %s{b}, c: %b{c}"
+    let f = fun (a: int) (b: string) (c: bool) -> <@ print a b c @>
+    let x = f 1 "Hallo" true
+    printfn $"{x.ToString ()}"
     0

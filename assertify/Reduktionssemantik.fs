@@ -5,6 +5,13 @@ open Mini
 open Types
 
 
+let ex1RegExp: RegExp<char> = Cat (Lit 'a', Lit 'b')
+let ex2RegExp: RegExp<char> = Cat (Lit 'a', Eps)
+let ex3RegExp: RegExp<char> = Cat (Eps, Lit 'b')
+let ex4RegExp: RegExp<char> = Or (Lit 'a', Lit 'b')
+let ex5RegExp: RegExp<char> = Star (Lit 'a')
+
+
 let rec isWord<'a> (r: RegExp<'a>): 'a list option =
     match r with
     | Eps -> Some []
