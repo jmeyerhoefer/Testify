@@ -373,9 +373,9 @@ type Tests () =
     [<TestMethod>] [<Timeout(1000)>]
     member _.``a) Beispiel`` (): unit =
         let rb: RingBuffer<int> = RingBuffer.create<int> 10
-        (?->) <@ Array.length rb.buffer = 10 @> "Die Kapazität des Puffers stimmt nicht."
-        <@ !rb.size = 0 @> ?-> "Das size stimmt nicht"
-        <@ !rb.readPos = 0 @> ?->
+        (-?>) <@ Array.length rb.buffer = 10 @> "Die Kapazität des Puffers stimmt nicht."
+        <@ !rb.size = 0 @> -?> "Das size stimmt nicht"
+        <@ !rb.readPos = 0 @> -?>
             "readPos stimmt nicht"
 
     [<TestMethod>] [<Timeout(1000)>]
@@ -446,7 +446,6 @@ type Tests () =
                         try
                             RingBuffer.get rb |> ignore
                             Assertify.Fail (<@ RingBuffer.get rb @>, "Ringpuffer gibt Elemente zurück, obwohl None erwartet wird.")
-                            // !!> <@ RingBuffer.get rb @> "Ringpuffer gibt Elemente zurück, obwohl None erwartet wird."
                         with
                         | RingEmpty -> ()
                 help 0
@@ -562,7 +561,7 @@ type Tests () =
                     | BufferFull -> Assertify.Fail "Ausnahme geworfen, obwohl Buffer noch nicht voll ist."
                 if List.length truncatedElems < List.length elems then
                     try
-                        RingBuffer.put rb 0 |> ignore
+                        RingBuffer.put rb 0
                         Assertify.Fail "Element eingefügt, obwohl Buffer voll ist." with
                     | BufferFull -> ()
                 let sizeEnd: int = min (sizeBegin + List.length truncatedElems) rb.buffer.Length

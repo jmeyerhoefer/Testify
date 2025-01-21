@@ -55,6 +55,7 @@ type Decorator () =
 
     static member GetNumberEmoji (number: int): string =
         let lookup: string array = [| "0️⃣"; "1️⃣"; "2️⃣"; "3️⃣"; "4️⃣"; "5️⃣"; "6️⃣"; "7️⃣"; "8️⃣"; "9️⃣"; "🔟" |]
+
         if 0 <= number && number <= 10 then
             lookup[number]
         else
@@ -70,4 +71,5 @@ type Decorator () =
                 | 2 -> "nd"
                 | 3 -> "rd"
                 | _ -> "th"
+
         $"%d{number}%s{suffix}"
