@@ -2,52 +2,12 @@ module Assertify
 
 
 open Decorator
-open FsCheck
 open Microsoft.FSharp.Quotations
 open Microsoft.VisualStudio.TestTools
 open Swensen.Unquote
 open System
 open System.Text
 open System.Text.RegularExpressions
-
-
-/// <summary>Maintains a history of evaluated F# expressions.</summary>
-type History () =
-    /// <summary>
-    /// Initializes History with multiple expressions and evaluates them immediately.
-    /// Throws an exception if any evaluation fails.
-    /// </summary>
-    /// <param name="initialExpressions">The list of initial expressions to evaluate and store.</param>
-    new (initialExpressions: Expr<unit> list) as self =
-        History () then
-            initialExpressions |> List.iter _.Eval()
-            self.EvaluatedExpressions <- initialExpressions
-
-
-    /// <summary>
-    /// Initializes History with a single expression and evaluates it immediately.
-    /// Throws an exception if evaluation fails.
-    /// </summary>
-    /// <param name="initialExpression">The initial expression to evaluate and store.</param>
-    new (initialExpression: Expr<unit>) =
-        initialExpression.Eval ()
-        History [ initialExpression ]
-
-
-    /// <summary>Stores the history of successfully evaluated expressions.</summary>
-    member val EvaluatedExpressions: Expr<unit> list = [] with get, set
-
-
-    /// <summary>Checks whether the history is empty, meaning no expressions have been evaluated.</summary>
-    member self.IsEmpty (): bool =
-        self.EvaluatedExpressions.IsEmpty
-
-
-    /// <summary>Evaluates the given expression and adds it to history if successful.</summary>
-    /// <param name="expr">The expression to evaluate.</param>
-    member self.EvalAndAdd (expr: Expr<unit>): unit =
-        expr.Eval ()
-        self.EvaluatedExpressions <- self.EvaluatedExpressions @ [expr]
 
 
 /// <summary>Initializes a new instance of the <c>Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute</c> class.</summary>
@@ -63,6 +23,7 @@ type TestMethodAttribute () = inherit UnitTesting.TestMethodAttribute ()
 type TimeoutAttribute (timeout: int) =
     inherit Attribute ()
 
+
     /// <summary>The timeout of a unit test.</summary>
     member _.Timeout: int = timeout
 
@@ -76,12 +37,13 @@ let reductionsMarker: string        = "\n------------------ EXPRESSION REDUCTION
 let expressionMessage: string       = "🧪 Tested/Failed expression:"
 let toStringMessage: string         = "📝 Expression ToString:"
 let simplifiedMessage: string       = "✅ Simplified expression:"
-let seperatorMessage: string        = "\n------------------------------\n"
+let separatorMessage: string        = "\n------------------------------\n"
 let expectedActualMarker: string    = "\n------------------- EXPECTED AND ACTUAL -------------------\n"
 let expectedMessage: string         = "🎯 Expected result:"
 let actualMessage: string           = "❌ Actual result:"
 let endMarker: string               = "\n=========================== END ==========================="
 let beginStacktraceToken: string    = "========================== TRACE ==========================\n"
+
 
 
 /// <summary>Represents a custom exception used by Assertify for failed assertions.</summary>
@@ -96,16 +58,59 @@ type AssertifyException (message: string) =
 
     /// <summary>Gets the stack trace of the exception, formatted with markers for clarity.</summary>
     override _.StackTrace: string =
-        // null
-        StringBuilder()
-            .AppendLine(beginStacktraceToken)
+        StringBuilder().AppendLine(beginStacktraceToken)
             .AppendLine(base.StackTrace)
             .Append(endMarker)
             .ToString()
 
 
+/// <summary>Maintains a history of evaluated F# expressions.</summary>
+type History () =
+    /// <summary>
+    /// Initializes History with multiple expressions and evaluates them immediately.
+    /// Throws an exception if any evaluation fails.
+    /// </summary>
+    /// <param name="exprs">The list of initial expressions to evaluate and store.</param>
+    new (exprs: Expr<unit> list) as self =
+        History () then
+            exprs
+            |> List.iter (fun (expr: Expr<unit>) ->
+                try expr.Eval () with
+                | _ -> Assertify.Fail $"Failed to execute the following expression: %s{expr.Decompile ()}"
+            )
+            self.EvaluatedExpressions <- exprs
+
+
+    /// <summary>
+    /// Initializes History with a single expression and evaluates it immediately.
+    /// Throws an exception if evaluation fails.
+    /// </summary>
+    /// <param name="expr">The initial expression to evaluate and store.</param>
+    new (expr: Expr<unit>) =
+        try expr.Eval () with
+        | _ -> Assertify.Fail $"Failed to execute the following expression: %s{expr.Decompile ()}"
+        History [ expr ]
+
+
+    /// <summary>Stores the history of successfully evaluated expressions.</summary>
+    member val EvaluatedExpressions: Expr<unit> list = [] with get, set
+
+
+    /// <summary>Checks whether the history is empty, meaning no expressions have been evaluated.</summary>
+    member self.IsEmpty (): bool =
+        self.EvaluatedExpressions.IsEmpty
+
+
+    /// <summary>Evaluates the given expression and adds it to history if successful.</summary>
+    /// <param name="expr">The expression to evaluate.</param>
+    member self.EvalAndAdd (expr: Expr<unit>): unit =
+        try expr.Eval () with
+        | _ -> Assertify.Fail $"Failed to execute the following expression: %s{expr.Decompile ()}"
+        self.EvaluatedExpressions <- self.EvaluatedExpressions @ [expr]
+
+
 /// <summary>Library to assert and (ver)ify.</summary>
-type Assertify =
+and Assertify =
     /// <summary>Determines whether to display the history in the output.</summary>
     static let mutable showHistory: bool = true
 
@@ -183,7 +188,7 @@ type Assertify =
                         stringBuilder.AppendLine($"%-30s{toStringMessage} %s{toStringExpr}")
                             .AppendLine($"%-30s{expressionMessage} {decompiledExpr}")
                             .AppendLine($"%-29s{simplifiedMessage} %s{reduction |> simplifyExpr |> toReadable}")
-                            .AppendLine(seperatorMessage) |> ignore
+                            .AppendLine(separatorMessage) |> ignore
                     else
                         let ordinalIndicator: string = $"%s{Decorator.GetOrdinalIndicator index} reduction:"
                         stringBuilder.AppendLine($"%-30s{ordinalIndicator} %s{decompiledExpr}") |> ignore
@@ -197,6 +202,21 @@ type Assertify =
         | _ -> ()
 
         stringBuilder.Append(endMarker).ToString()
+
+
+    static let HistoryStdOutMessage (history: History): string =
+        let stringBuilder: StringBuilder = StringBuilder ()
+        if showHistory && not (history.IsEmpty ()) then
+            stringBuilder.AppendLine($"%s{historyMarker}")
+                .AppendLine($"%s{historyMessage}") |> ignore
+
+            history.EvaluatedExpressions
+            |> List.iteri (fun (index: int) (evaluatedExpression: Expr<unit>) ->
+                let numString: string = $"%02d{index + 1}:"
+                stringBuilder.AppendLine $"%-30s{numString} %s{evaluatedExpression.Decompile ()}" |> ignore // TODO: change to |> simplifyExpr |> toReadable
+            )
+
+        stringBuilder.ToString ()
 
 
     /// <summary>Configures whether the history should be displayed in the output.</summary>
@@ -239,15 +259,9 @@ type Assertify =
             else
                 stringBuilder.AppendLine noInfoMessage |> ignore
 
-            if showHistory && not (history.IsEmpty ()) then
-                stringBuilder.AppendLine($"%s{historyMarker}")
-                    .AppendLine($"%s{historyMessage}") |> ignore
-
-                history.EvaluatedExpressions
-                |> List.iteri (fun (index: int) (evaluatedExpression: Expr<unit>) ->
-                    let numString: string = $"%02d{index + 1}:"
-                    stringBuilder.AppendLine $"%-30s{numString} %s{evaluatedExpression.Decompile ()}" |> ignore // TODO: change to |> simplifyExpr |> toReadable
-                )
+            HistoryStdOutMessage history
+            |> stringBuilder.Append
+            |> ignore
 
             TestStdOutMessage (expr, stringBuilder)
             |> Decorator.ForegroundColor ConsoleColor.Cyan
@@ -264,11 +278,26 @@ type Assertify =
         |> failwith
 
 
-    /// <summary>Fails the current assertion with an expression and custom message.</summary>
+    /// <summary>Fails the current assertion with an expression and a custom message.</summary>
     /// <param name="expr">The expression to include in the failure output.</param>
     /// <param name="message">The failure message to display.</param>
     static member Fail (expr: Expr, message: string): unit =
         StringBuilder(beginMarker).AppendLine($"%-30s{infoMessage} %s{message}")
+            .AppendLine($"%-30s{expressionMessage} %s{expr.Decompile ()}") // TODO: change to |> simplifyExpr |> toReadable
+            .Append(endMarker)
+            .ToString()
+        |> Decorator.ForegroundColor ConsoleColor.Yellow
+        |> failwith
+
+
+    /// <summary>Fails the current assertion with an expression, a history and a custom message.</summary>
+    /// <param name="expr">The expression to include in the failure output.</param>
+    /// <param name="history">The history of evaluated expressions.</param>
+    /// <param name="message">The failure message to display.</param>
+    static member Fail (expr: Expr, history: History, message: string): unit =
+        let stringBuilder: StringBuilder = StringBuilder(beginMarker).AppendLine($"%-30s{infoMessage} %s{message}")
+
+        stringBuilder.Append(HistoryStdOutMessage history)
             .AppendLine($"%-30s{expressionMessage} %s{expr.Decompile ()}") // TODO: change to |> simplifyExpr |> toReadable
             .Append(endMarker)
             .ToString()
@@ -289,6 +318,14 @@ let inline (-?>) (expr: Expr<bool>) (message: string): unit =
     Assertify.Test (expr, message)
 
 
+/// <summary>Tests a boolean expression using Assertify.Test with a history and a custom message.</summary>
+/// <param name="expr">The boolean expression to test.</param>
+/// <param name="history">The history of evaluated expressions.</param>
+/// <param name="message">The custom message to include in the test output.</param>
+let inline (-??>) (expr: Expr<bool>, history: History) (message: string): unit =
+    Assertify.Test (expr, history, message)
+
+
 /// <summary>Fails the current test with a custom message.</summary>
 /// <param name="message">The failure message to display.</param>
 let inline (!!) (message: string): unit =
@@ -300,3 +337,11 @@ let inline (!!) (message: string): unit =
 /// <param name="message">The failure message to display.</param>
 let inline (-!>) (expr: Expr<'T>) (message: string): unit =
     Assertify.Fail (expr, message)
+
+
+/// <summary>Fails the current test with an expression and a custom message.</summary>
+/// <param name="expr">The expression to include in the failure output.</param>
+/// <param name="history">The history of evaluated expressions.</param>
+/// <param name="message">The failure message to display.</param>
+let inline (-!!>) (expr: Expr<'T>, history: History) (message: string): unit =
+    Assertify.Fail (expr, history, message)
