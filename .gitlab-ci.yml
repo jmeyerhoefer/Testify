@@ -1,15 +1,15 @@
-image: ctornau/latex
+stages:
+  - build
 
-compile-pdfs:
-    stage: build
-    script:
-        - ./compile-pdfs.sh
-    after_script:
-        - mv compiled/*.pdf . || true
-        - mv compiled/*.log . || true
-    artifacts:
-        paths:
-            - ./*.pdf
-            - ./*.log
-        when: always
-        expire_in: 2 weeks
+build-pdfs:
+  stage: build
+  image: texlive/texlive:latest # Or any LaTeX Docker image
+  script:
+    - mkdir -p output # Create an output directory for PDFs
+    - for file in *.tex; do
+        pdflatex -output-directory output "$file";
+      done
+  artifacts:
+    paths:
+      - output/*.pdf # Store the compiled PDFs as artifacts
+    expire_in: 1 week # Optional: Set expiration for the artifacts
