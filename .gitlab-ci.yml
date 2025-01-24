@@ -3,7 +3,7 @@ stages:
 
 build_pdf:
   stage: build
-  image: texlive/texlive:full
+  image: texlive/texlive:latest
   script:
     - mkdir -p output
     - pdflatex -output-directory=output ./template/thesis.tex
