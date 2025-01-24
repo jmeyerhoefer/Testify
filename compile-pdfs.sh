@@ -26,7 +26,7 @@ function compilePdf() {
 }
 
 
-
+mkdir -p compiled
 cd "template"    
 compilePdf "thesis.tex" "thesis"
 cd ..
