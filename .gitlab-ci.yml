@@ -1,13 +1,16 @@
 stages:
   - build
 
-build-pdfs:
+build_pdf:
   stage: build
-  image: texlive/texlive:latest # Or any LaTeX Docker image
+  image: texlive/texlive:full
   script:
-    - mkdir -p output # Create an output directory for PDFs
-    - pdflatex -output-directory output "./template/thesis.tex"
+    - mkdir -p output
+    - pdflatex -output-directory=output ./template/thesis.tex
+    - bibtex output/thesis.aux || true  # Handle bibliography
+    - pdflatex -output-directory=output ./template/thesis.tex
+    - pdflatex -output-directory=output ./template/thesis.tex
   artifacts:
     paths:
-      - output/*.pdf # Store the compiled PDFs as artifacts
-    expire_in: 1 week # Optional: Set expiration for the artifacts
+      - output/thesis.pdf
+    expire_in: 1 week
