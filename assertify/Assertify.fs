@@ -185,20 +185,20 @@ and Assertify =
                     let toStringExpr: string = reduction.ToString().Replace("\n", "").Replace("\r", "")
 
                     if index = 0 then
-                        stringBuilder.AppendLine($"%-30s{toStringMessage} %s{toStringExpr}")
+                        ignore <| stringBuilder.AppendLine($"%-30s{toStringMessage} %s{toStringExpr}")
                             .AppendLine($"%-30s{expressionMessage} {decompiledExpr}")
                             .AppendLine($"%-29s{simplifiedMessage} %s{reduction |> simplifyExpr |> toReadable}")
-                            .AppendLine(separatorMessage) |> ignore
+                            .AppendLine(separatorMessage)
                     else
                         let ordinalIndicator: string = $"%s{Decorator.GetOrdinalIndicator index} reduction:"
-                        stringBuilder.AppendLine($"%-30s{ordinalIndicator} %s{decompiledExpr}") |> ignore
+                        ignore <| stringBuilder.AppendLine($"%-30s{ordinalIndicator} %s{decompiledExpr}")
                 )
             else
-                stringBuilder.AppendLine $"%-30s{expressionMessage} %s{left |> simplifyExpr |> toReadable}" |> ignore
+                ignore <| stringBuilder.AppendLine $"%-30s{expressionMessage} %s{left |> simplifyExpr |> toReadable}"
 
-            stringBuilder.AppendLine($"%s{expectedActualMarker}")
+            ignore <| stringBuilder.AppendLine($"%s{expectedActualMarker}")
                 .AppendLine($"%-30s{expectedMessage} %A{right.Eval ()}")
-                .AppendLine($"%-29s{actualMessage} %A{left.Eval ()}") |> ignore
+                .AppendLine($"%-29s{actualMessage} %A{left.Eval ()}")
         | _ -> ()
 
         stringBuilder.Append(endMarker).ToString()
@@ -207,13 +207,12 @@ and Assertify =
     static let HistoryStdOutMessage (history: History): string =
         let stringBuilder: StringBuilder = StringBuilder ()
         if showHistory && not (history.IsEmpty ()) then
-            stringBuilder.AppendLine($"%s{historyMarker}")
-                .AppendLine($"%s{historyMessage}") |> ignore
+            ignore <| stringBuilder.AppendLine($"%s{historyMarker}").AppendLine($"%s{historyMessage}")
 
             history.EvaluatedExpressions
             |> List.iteri (fun (index: int) (evaluatedExpression: Expr<unit>) ->
                 let numString: string = $"%02d{index + 1}:"
-                stringBuilder.AppendLine $"%-30s{numString} %s{evaluatedExpression.Decompile ()}" |> ignore // TODO: change to |> simplifyExpr |> toReadable
+                ignore <| stringBuilder.AppendLine $"%-30s{numString} %s{evaluatedExpression.Decompile ()}" // TODO: change to |> simplifyExpr |> toReadable
             )
 
         stringBuilder.ToString ()
@@ -237,9 +236,9 @@ and Assertify =
             let stringBuilder: StringBuilder = StringBuilder beginMarker
 
             if message.IsSome then
-                stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}" |> ignore
+                ignore <| stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}"
             else
-                stringBuilder.AppendLine noInfoMessage |> ignore
+                ignore <| stringBuilder.AppendLine noInfoMessage
 
             TestStdOutMessage (expr, stringBuilder)
             |> Decorator.ForegroundColor ConsoleColor.Green
@@ -255,13 +254,11 @@ and Assertify =
             let stringBuilder: StringBuilder = StringBuilder beginMarker
 
             if message.IsSome then
-                stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}" |> ignore
+                ignore <| stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}"
             else
-                stringBuilder.AppendLine noInfoMessage |> ignore
+                ignore <| stringBuilder.AppendLine noInfoMessage
 
-            HistoryStdOutMessage history
-            |> stringBuilder.Append
-            |> ignore
+            ignore <| stringBuilder.Append (HistoryStdOutMessage history)
 
             TestStdOutMessage (expr, stringBuilder)
             |> Decorator.ForegroundColor ConsoleColor.Cyan
