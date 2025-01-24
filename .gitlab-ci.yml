@@ -6,7 +6,7 @@ build_pdf:
   image: texlive/texlive:latest
   script:
     - mkdir -p output
-    - pdflatex -output-directory=output ./template/thesis.tex
+    - latexmk -pdf -output-directory=output ./template/thesis.tex
   artifacts:
     paths:
       - output/thesis.pdf
