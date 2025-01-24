@@ -6,9 +6,8 @@ build-pdfs:
   image: texlive/texlive:latest # Or any LaTeX Docker image
   script:
     - mkdir -p output # Create an output directory for PDFs
-    - for file in ./template/*.tex; do
-        pdflatex -output-directory output "$file";
-      done
+    - pdflatex -output-directory output "./template/hardcover_titlepage.pdf"
+    - pdflatex -output-directory output "./template/main.pdf"
   artifacts:
     paths:
       - output/*.pdf # Store the compiled PDFs as artifacts
