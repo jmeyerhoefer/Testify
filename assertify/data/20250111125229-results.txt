@@ -1,0 +1,224 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  AdvancedAssert -> D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\bin\Debug\net8.0\AdvancedAssert.dll
+Test run for D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\bin\Debug\net8.0\AdvancedAssert.dll (.NETCoreApp,Version=v8.0)
+Microsoft (R) Test Execution Command Line Tool Version 17.8.0 (x64)
+Copyright (c) Microsoft Corporation.  All rights reserved.
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+  Failed reduceStep Beispiele [112 ms]
+  Error Message:
+   Test method Tests+Tests.reduceStep Beispiele threw exception: 
+Swensen.Unquote.AssertionFailedException: Test failed:
+
+Reduktionssemantik.reduceStep self.ex1 = []
+Reduktionssemantik.reduceStep Tests+Tests.ex1 = []
+Reduktionssemantik.reduceStep Cat (Lit 'a', Lit 'b') = []
+[Or (Lit 'a', Lit 'b')] = []
+false
+
+  Stack Trace:
+      at Tests.Tests.reduceStep Beispiele() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 133
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Failed reduceStep Zufall [71 ms]
+  Error Message:
+   Test method Tests+Tests.reduceStep Zufall threw exception: 
+System.Exception: Falsifiable, after 4 tests (0 shrinks) (StdGen (1168304161, 297428106)):
+Original:
+SStar SEps
+with exception:
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<set [Eps; Cat (Eps, Star Eps)]>. Actual:<set [Cat (Eps, Star Eps); Empty]>. 
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+   at AdvancedAssert.AdvancedAssert.AreEqual[T](String methodName, Object[] input, T expected, T actual) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\AdvancedAssert.fs:line 34
+   at Tests.reduceStep Zufall@143.Invoke(SimpleRegExp`1 r) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 145
+   at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+  Stack Trace:
+      at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+   at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+   at FsCheck.Runner.runner[a](Config config, a prop)
+   at FsCheck.Runner.check[a](Config config, a p)
+   at FsCheck.Check.One[Testable](Config config, Testable property)
+   at Tests.Tests.reduceStep Zufall() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 141
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Standard Output Messages:
+ 
+ =================== COMPACT TEST RESULT ===================
+ 
+ 🔧 Method Name:      reduceStep
+ 🔤 Input(s):         Star Eps
+ 🎯 Expected Result:  set [Eps; Cat (Eps, Star Eps)]
+ ❌ Actual Result:    set [Cat (Eps, Star Eps); Empty]
+ 
+ =========================== END ===========================
+
+
+  Failed reduce Beispiele [30 ms]
+  Error Message:
+   Test method Tests+Tests.reduce Beispiele threw exception: 
+Swensen.Unquote.AssertionFailedException: Test failed:
+
+Set.ofList (Reduktionssemantik.reduce self.ex4 1N) = Set.ofList [self.ex4; Lit('a'); Lit('b')]
+Set.ofList (Reduktionssemantik.reduce Tests+Tests.ex4 1N) = Set.ofList [Tests+Tests.ex4; Lit('a'); Lit('b')]
+Set.ofList (Reduktionssemantik.reduce Or (Lit 'a', Lit 'b') 1N) = Set.ofList [Or (Lit 'a', Lit 'b'); Lit('a'); Lit('b')]
+Set.ofList [Or (Lit 'a', Lit 'b')] = set [Lit 'a'; Lit 'b'; Or (Lit 'a', Lit 'b')]
+set [Or (Lit 'a', Lit 'b')] = set [Lit 'a'; Lit 'b'; Or (Lit 'a', Lit 'b')]
+false
+
+  Stack Trace:
+      at Tests.Tests.reduce Beispiele() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 161
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Failed reduce Zufall [46 ms]
+  Error Message:
+   Test method Tests+Tests.reduce Zufall threw exception: 
+System.Exception: Falsifiable, after 27 tests (0 shrinks) (StdGen (1169373759, 297428106)):
+Original:
+(SStar SEps, SmallNat 1N)
+with exception:
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<set [Eps; Cat (Eps, Star Eps); Star Eps]>. Actual:<set [Star Eps]>. 
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+   at AdvancedAssert.AdvancedAssert.AreEqual[T](String methodName, Object[] input, T expected, T actual) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\AdvancedAssert.fs:line 34
+   at Tests.reduce Zufall@174.Invoke(Tuple`2 tupledArg) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 176
+   at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+  Stack Trace:
+      at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+   at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+   at FsCheck.Runner.runner[a](Config config, a prop)
+   at FsCheck.Runner.check[a](Config config, a p)
+   at FsCheck.Check.One[Testable](Config config, Testable property)
+   at Tests.Tests.reduce Zufall() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 172
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Standard Output Messages:
+ 
+ =================== COMPACT TEST RESULT ===================
+ 
+ 🔧 Method Name:      reduce
+ 🔤 Input(s):         Star Eps; 1N
+ 🎯 Expected Result:  set [Eps; Cat (Eps, Star Eps); Star Eps]
+ ❌ Actual Result:    set [Star Eps]
+ 
+ =========================== END ===========================
+
+
+  Failed words Beispiele [17 ms]
+  Error Message:
+   Test method Tests+Tests.words Beispiele threw exception: 
+Swensen.Unquote.AssertionFailedException: Test failed:
+
+Set.ofList (Reduktionssemantik.words self.ex4 1N) = Set.ofList [['a']; ['b']]
+Set.ofList (Reduktionssemantik.words Tests+Tests.ex4 1N) = set [['a']; ['b']]
+Set.ofList (Reduktionssemantik.words Or (Lit 'a', Lit 'b') 1N) = set [['a']; ['b']]
+Set.ofList [] = set [['a']; ['b']]
+set [] = set [['a']; ['b']]
+false
+
+  Stack Trace:
+      at Tests.Tests.words Beispiele() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 191
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Failed words Zufall [24 ms]
+  Error Message:
+   Test method Tests+Tests.words Zufall threw exception: 
+System.Exception: Falsifiable, after 30 tests (0 shrinks) (StdGen (1170000228, 297428106)):
+Original:
+(SOr (SEmpty, SEps), SmallNat 1N)
+with exception:
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<set [[]]>. Actual:<set []>. 
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+   at AdvancedAssert.AdvancedAssert.AreEqual[T](String methodName, Object[] input, T expected, T actual) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\AdvancedAssert.fs:line 34
+   at Tests.words Zufall@204.Invoke(Tuple`2 tupledArg) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 206
+   at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+  Stack Trace:
+      at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+   at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+   at FsCheck.Runner.runner[a](Config config, a prop)
+   at FsCheck.Runner.check[a](Config config, a p)
+   at FsCheck.Check.One[Testable](Config config, Testable property)
+   at Tests.Tests.words Zufall() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 202
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Standard Output Messages:
+ 
+ =================== COMPACT TEST RESULT ===================
+ 
+ 🔧 Method Name:      words
+ 🔤 Input(s):         Or (Empty, Eps); 1N
+ 🎯 Expected Result:  set [[]]
+ ❌ Actual Result:    set []
+ 
+ =========================== END ===========================
+
+
+  Failed generates Beispiele [17 ms]
+  Error Message:
+   Test method Tests+Tests.generates Beispiele threw exception: 
+Swensen.Unquote.AssertionFailedException: Test failed:
+
+Reduktionssemantik.generates self.ex4 ['a'] 1N
+Reduktionssemantik.generates Tests+Tests.ex4 ['a'] 1N
+Reduktionssemantik.generates Or (Lit 'a', Lit 'b') ['a'] 1N
+false
+
+  Stack Trace:
+      at Tests.Tests.generates Beispiele() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 224
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Failed generates Zufall [32 ms]
+  Error Message:
+   Test method Tests+Tests.generates Zufall threw exception: 
+System.Exception: Falsifiable, after 52 tests (0 shrinks) (StdGen (1170394930, 297428106)):
+Original:
+(SStar SEmpty, [], SmallNat 1N)
+with exception:
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<True>. Actual:<False>. 
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+   at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+   at AdvancedAssert.AdvancedAssert.AreEqual[T](String methodName, Object[] input, T expected, T actual) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\AdvancedAssert.fs:line 34
+   at Tests.generates Zufall@241.Invoke(Tuple`3 tupledArg) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 243
+   at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+  Stack Trace:
+      at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+   at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+   at FsCheck.Runner.runner[a](Config config, a prop)
+   at FsCheck.Runner.check[a](Config config, a p)
+   at FsCheck.Check.One[Testable](Config config, Testable property)
+   at Tests.Tests.generates Zufall() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\advanced-assert\Tests.fs:line 239
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+   at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+  Standard Output Messages:
+ 
+ =================== COMPACT TEST RESULT ===================
+ 
+ 🔧 Method Name:      generates
+ 🔤 Input(s):         Star Empty; []; 1N
+ 🎯 Expected Result:  true
+ ❌ Actual Result:    false
+ 
+ =========================== END ===========================
+
+
+
+Failed!  - Failed:     8, Passed:     2, Skipped:     0, Total:    10, Duration: 1 s - AdvancedAssert.dll (net8.0)
