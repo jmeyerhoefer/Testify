@@ -1,0 +1,180 @@
+{
+  "name": "fsharp-beautify",
+  "displayName": "F# Beautify",
+  "version": "0.0.1",
+  "publisher": "jmeyerhoefer",
+  "author": {
+    "name": "Jakob Meyerhöfer"
+  },
+  "description": "",
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Formatters",
+    "Extension Packs",
+    "Language Packs",
+    "Education",
+    "Testing"
+  ],
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#C80000",
+    "theme": "dark"
+  },
+  "pricing": "Free",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "compiler",
+    "debug",
+    "error",
+    "fsharp",
+    "testing"
+  ],
+  "preview": true,
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "fsharp"
+      }
+    ],
+    "configuration":[
+      {
+        "title": "F# Beautify",
+        "properties": {
+          "testCategory.testConfiguration.one": {
+            "type": "boolean",
+            "default": false,
+            "order": 2,
+            "markdownDescription": "Blah blah (refer to `#testCategory.testConfiguration.two#`)"
+          },
+          "testCategory.testConfiguration.two": {
+            "type": "string",
+            "default": "Rrp-Rrp!",
+            "order": 1,
+            "markdownDescription": "Blah blah 2 [Google](http://www.google.de/)"
+          }
+        }
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "fsharp-beautify",
+          "title": "F# Beautify",
+          "icon": "images/activityBar.svg"
+        }
+      ]
+    },
+    "views": {
+      "fsharp-beautify": [
+        {
+          "id": "errors",
+          "name": "Error Explorer"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "errors",
+        "contents": "Test 123"
+      }
+    ],
+    "commands": [
+      {
+        "command": "fsharp-beautify.test1",
+        "icon": "$(run)",
+        "title": "Test 1"
+      },
+      {
+        "command": "fsharp-beautify.test2",
+        "icon": "$(run-all)",
+        "title": "Test 2"
+      },
+      {
+        "command": "fsharp-beautify.test3",
+        "icon": "$(heart)",
+        "title": "Test 3"
+      },
+      {
+        "command": "fsharp-beautify.test4",
+        "icon": "$(lightbulb)",
+        "title": "Test 4"
+      },
+      {
+        "command": "fsharp-beautify.test5",
+        "icon": "$(lightbulb)",
+        "title": "Test 5"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "fsharp-beautify.test1",
+          "group": "navigation@1",
+          "when": "view == errors"
+        },
+        {
+          "command": "fsharp-beautify.test2",
+          "group": "navigation@2",
+          "when": "view == errors"
+        },
+        {
+          "command": "fsharp-beautify.test3",
+          "group": "modification@3",
+          "when": "view == errors"
+        },
+        {
+          "command": "fsharp-beautify.test4",
+          "group": "modification@1",
+          "when": "view == errors"
+        },
+        {
+          "command": "fsharp-beautify.test5",
+          "group": "modification@2",
+          "when": "view == errors"
+        }
+      ]
+    }
+  },
+  "extensionDependencies": [
+    "ionide.ionide-fsharp"
+  ],
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.94.0",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "eslint": "^9.13.0",
+    "esbuild": "^0.24.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.6.3",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1"
+  },
+  "bugs": {
+    "url": "https://github.com/jmeyerhoefer/fsharp-beautify/issues",
+    "email": "jakobmeyerhoefer@gmail.com"
+  }
+}
