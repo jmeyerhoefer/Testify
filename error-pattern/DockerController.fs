@@ -36,19 +36,19 @@ let createAndRunContainer (dockerClient: DockerClient) (imageId: string) (contai
         config.HostConfig <- HostConfig ()
         config.HostConfig.PortBindings <- dict [ "8080/tcp", [| PortBinding (HostPort = "8080") |] ]
 
-        let! createContainerResponse = dockerClient.Containers.CreateContainerAsync config |> Async.AwaitTask
-        let! startContainerResponse = dockerClient.Containers.StartContainerAsync (createContainerResponse.ID, null) |> Async.AwaitTask
+        let! createContainerResponse = Async.AwaitTask <| dockerClient.Containers.CreateContainerAsync config
+        let! startContainerResponse = Async.AwaitTask <| dockerClient.Containers.StartContainerAsync (createContainerResponse.ID, null)
 
         let mutable isRunning: bool = false
         while not isRunning do
-            let! inspectContainerResponse = dockerClient.Containers.InspectContainerAsync containerId |> Async.AwaitTask
+            let! inspectContainerResponse = Async.AwaitTask <| dockerClient.Containers.InspectContainerAsync containerId
             isRunning <- inspectContainerResponse.State.Running
             if isRunning then
                 do! Async.Sleep 500
 
         let containerExecCreateParameters: ContainerExecCreateParameters = ContainerExecCreateParameters ()
         containerExecCreateParameters.Cmd <- [| "mkdir"; "-p"; workingDirectory |]
-        let! execCreateDirectoryResponse = dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters) |> Async.AwaitTask
+        let! execCreateDirectoryResponse = Async.AwaitTask <| dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters)
         do! dockerClient.Exec.StartContainerExecAsync execCreateDirectoryResponse.ID |> Async.AwaitTask
 
         let templateFiles: string list =
@@ -97,17 +97,17 @@ let executeCommandInsideContainer (dockerClient: DockerClient) (containerId: str
         containerExecCreateParameters.Cmd <- Array.append [| command |] args
         containerExecCreateParameters.WorkingDir <- workingDirectory
 
-        let! execCreateContainerResponse = dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters) |> Async.AwaitTask
-        let! _startAndAttachContainerExecResponse = dockerClient.Exec.StartAndAttachContainerExecAsync (execCreateContainerResponse.ID, false) |> Async.AwaitTask
+        let! execCreateContainerResponse = Async.AwaitTask <| dockerClient.Exec.ExecCreateContainerAsync (containerId, containerExecCreateParameters)
+        let! _startAndAttachContainerExecResponse = Async.AwaitTask <| dockerClient.Exec.StartAndAttachContainerExecAsync (execCreateContainerResponse.ID, false)
 
         let mutable isRunning: bool = true
         while isRunning do
-            let! inspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
+            let! inspectContainerExecResponse = Async.AwaitTask <| dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID
             isRunning <- inspectContainerExecResponse.Running
             if isRunning then
                 do! Async.Sleep 500
 
-        let! finalInspectContainerExecResponse = dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID |> Async.AwaitTask
+        let! finalInspectContainerExecResponse = Async.AwaitTask <| dockerClient.Exec.InspectContainerExecAsync execCreateContainerResponse.ID
         return finalInspectContainerExecResponse.ExitCode = 0
     }
 
@@ -123,7 +123,7 @@ let copyFilesFromContainer (dockerClient: DockerClient) (containerId: string) (c
     async {
         let getArchiveFromContainerParameters: GetArchiveFromContainerParameters = GetArchiveFromContainerParameters ()
         getArchiveFromContainerParameters.Path <- containerPath
-        let! getArchiveFromContainerResponse = dockerClient.Containers.GetArchiveFromContainerAsync (containerId, getArchiveFromContainerParameters, false) |> Async.AwaitTask
+        let! getArchiveFromContainerResponse = Async.AwaitTask <| dockerClient.Containers.GetArchiveFromContainerAsync (containerId, getArchiveFromContainerParameters, false)
 
         use fileStream: FileStream = File.Create hostPath
         do! getArchiveFromContainerResponse.Stream.CopyToAsync fileStream |> Async.AwaitTask
@@ -139,11 +139,11 @@ let copyFilesFromContainer (dockerClient: DockerClient) (containerId: string) (c
 /// <param name="containerId">TODO</param>
 let stopAndRemoveContainer (dockerClient: DockerClient) (containerId: string): bool Async =
     async {
-        let! _stopContainerResponse = dockerClient.Containers.StopContainerAsync (containerId, ContainerStopParameters ()) |> Async.AwaitTask
+        let! _stopContainerResponse = Async.AwaitTask <| dockerClient.Containers.StopContainerAsync (containerId, ContainerStopParameters ())
 
         let mutable isRunning: bool = true
         while isRunning do
-            let! inspectContainerResponse = dockerClient.Containers.InspectContainerAsync containerId |> Async.AwaitTask
+            let! inspectContainerResponse = Async.AwaitTask <| dockerClient.Containers.InspectContainerAsync containerId
             isRunning <- inspectContainerResponse.State.Running
             if isRunning then
                 do! Async.Sleep 500

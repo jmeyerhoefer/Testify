@@ -11,8 +11,10 @@
         <Compile Include="DockerController.fs" />
         <Compile Include="RelevantInfo.fs" />
         <Compile Include="DataProcessor.fs" />
+        <Compile Include="ErrorDescriptions.fs" />
         <Compile Include="Statistics.fs" />
         <Compile Include="Program.fs" />
+        <Content Include="FSComp.txt" />
     </ItemGroup>
     <ItemGroup Label="Other">
         <Content Include="fsharpdev\Dockerfile" />
@@ -25,6 +27,7 @@
         <PackageReference Include="Docker.DotNet" Version="3.125.15" />
         <PackageReference Include="FsCheck" Version="2.16.6" />
         <PackageReference Include="FSharp.Data" Version="6.4.0" />
+        <PackageReference Include="FSharp.Data.Adaptive" Version="1.2.19" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
         <PackageReference Include="Microsoft.TestPlatform" Version="17.6.3" />
         <PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />

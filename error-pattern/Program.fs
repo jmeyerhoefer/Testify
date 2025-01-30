@@ -2,9 +2,13 @@ module Program
 
 
 open DataProcessor
+open FSharp.Data.Adaptive
 open RelevantInfo
 open Statistics
 open System
+
+
+open ErrorDescriptions
 
 
 let startProcessing (exerciseId: string): unit =
@@ -43,15 +47,9 @@ let startProcessingSingleTask (exerciseId: string) (sheetId: string) (assignment
 [<EntryPoint>]
 let main (args: string array): int =
     match args with
-    | [| "processData"; exerciseId |] ->
-        startProcessing exerciseId
-        0
-    | [| "generateStatistics"; exerciseId |] ->
-        getRelevantTasks exerciseId |> generateStatistics exerciseId
-        0
-    | _ ->
-        Console.Write $"Invalid arguments: %A{args}"
-        1
+    | [| "processData"; exerciseId |] -> startProcessing exerciseId; 0
+    | [| "generateStatistics"; exerciseId |] -> generateStatistics exerciseId (getRelevantTasks exerciseId); 0
+    | _ -> Console.Write $"Invalid arguments: %A{args}"; 1
 
 
 // EOF

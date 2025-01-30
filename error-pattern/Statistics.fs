@@ -1,6 +1,8 @@
 ﻿module Statistics
 
 
+open System.Text.RegularExpressions
+open ErrorDescriptions
 open Plotly.NET
 open Plotly.NET.ImageExport
 open Plotly.NET.LayoutObjects
@@ -261,6 +263,62 @@ let generateTestResultsFirstAndLastSubmission (exerciseId: string) (relevantTask
     |> Chart.savePNG (Path.Combine (statisticsPath, "testResultsColumnChartFirstAndLastSubmission-Combined"))
 
 
+let generateBuildResultsTop10Errors (exerciseId: string): unit =
+    let stacktracePath: string = getStacktracePath exerciseId
+    let statisticsPath: string = getStatisticsPath exerciseId
+
+    let fsharpErrorPattern: string = @"1>(\/.*?): error (FS\d{4}): (.*?)(?=\n)"
+    let regex: Regex = Regex (fsharpErrorPattern, RegexOptions.Singleline)
+    let errorCodes: (string * int) seq =
+        (stacktracePath, "*.log", SearchOption.AllDirectories)
+        |> Directory.GetFiles
+        |> Array.toSeq
+        |> Seq.collect (fun (buildResult: string) ->
+            let fileContent: string = File.ReadAllText buildResult
+            [ for m: Match in regex.Matches fileContent -> m.Groups[2].Value ]
+        )
+        |> Seq.groupBy id
+        |> Seq.map (fun (code: string, group: string seq) -> code, (group |> Seq.length))
+        |> Seq.sortByDescending snd
+
+    Chart.Column (
+        Name = "Top error codes",
+        values = (errorCodes |> Seq.map snd),
+        Keys = (errorCodes |> Seq.map fst),
+        Width = 1
+    )
+    |> Chart.savePNG (Path.Combine (statisticsPath, "buildResultsColumnChartTop10Errors"))
+
+    let errorCodesTableRows: string list seq =
+        errorCodes
+        |> Seq.mapi (fun (index: int) (code: string, count: int) ->
+            let errorCode: int = int Regex.Match(code, @"FS(\d{4})").Groups[1].Value
+            let errorCodeDescription: ErrorCodeDescription = getErrorCodeDescription errorCode
+            [ string (index + 1); code; errorCodeDescription.ShortDescription; string count ]
+        )
+    Chart.Table (
+        Name = "Top error codes",
+        headerValues = [ "<b>#</b>"; "<b>Error code</b>"; "<b>Short Description</b>"; "<b>Count</b>" ],
+        cellsValues = errorCodesTableRows,
+        CellsMultiAlign = [
+            StyleParam.HorizontalAlign.Center
+            StyleParam.HorizontalAlign.Center
+            StyleParam.HorizontalAlign.Left
+            StyleParam.HorizontalAlign.Right
+        ],
+        MultiColumnWidth = [ 40.; 70.; 300.; 60. ]
+    )
+    |> fun (genericChart: GenericChart) ->
+        genericChart
+        |> Chart.savePNG (
+            path = Path.Combine (statisticsPath, "buildResultsTableChartTop10Errors"),
+            Width = 1000,
+            Height = 2500
+        )
+        genericChart
+        |> Chart.saveHtml (Path.Combine (statisticsPath, "buildResultsTableChartTop10Errors"))
+
+
 /// <summary>
 /// TODO
 /// </summary>
@@ -271,7 +329,8 @@ let generateStatistics (exerciseId: string) (relevantTasks: TaskInfo list): unit
     // generateTestResultsStatisticsTotal exerciseId
     // generateTestResultsStatisticsPerTask exerciseId relevantTasks
     // generateTestResultsStatisticsPerTaskCombined exerciseId relevantTasks
-    generateTestResultsFirstAndLastSubmission exerciseId relevantTasks
+    // generateTestResultsFirstAndLastSubmission exerciseId relevantTasks
+    generateBuildResultsTop10Errors exerciseId
 
 
 // EOF

@@ -13,9 +13,7 @@ open Types
 /// </summary>
 /// <param name="fileNameWithTimestamp">TODO</param>
 let getTimestamp (fileNameWithTimestamp: string): string =
-    let timestampOption: string option =
-        fileNameWithTimestamp.Split "-"
-        |> Array.tryHead
+    let timestampOption: string option = Array.tryHead <| fileNameWithTimestamp.Split "-"
     match timestampOption with
     | Some timestamp -> timestamp
     | None -> failwith $"Failed to retrieve timestamp from: %s{fileNameWithTimestamp}"
@@ -47,10 +45,10 @@ let getSnapshotTimestamps (taskInfo: TaskInfo) (groupAndTeamId: string) : string
         | _ -> failwith $"Invalid format for 'groupAndTeamId': %s{groupAndTeamId}"
 
     csvFile.Filter (fun (row: CsvRow) ->
-        row.GetColumn "SHEET" = taskInfo.SheetId
-        && row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId
-        && row.GetColumn "GROUPID" = groupId
-        && row.GetColumn "TEAMID" = teamId
+        row.GetColumn "SHEET" = taskInfo.SheetId &&
+        row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId &&
+        row.GetColumn "GROUPID" = groupId &&
+        row.GetColumn "TEAMID" = teamId
     )
     |> fun (filtered: Runtime.CsvFile<CsvRow>) -> filtered.Rows
     |> Seq.map (fun (row: CsvRow) -> row.GetColumn "SNAPSHOT_TIMESTAMP")
@@ -72,11 +70,11 @@ let getDeletedFiles (taskInfo: TaskInfo) (groupAndTeamId: string) (snapshotTimes
         | _ -> failwith $"Invalid format for 'groupAndTeamId': %s{groupAndTeamId}"
 
     csvFile.Filter (fun (row: CsvRow) ->
-           row.GetColumn "SHEET" = taskInfo.SheetId
-        && row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId
-        && row.GetColumn "GROUPID" = groupId
-        && row.GetColumn "TEAMID" = teamId
-        && row.GetColumn "DELETE_TIMESTAMP" <= snapshotTimestamp
+        row.GetColumn "SHEET" = taskInfo.SheetId &&
+        row.GetColumn "ASSIGNMENT" = taskInfo.AssignmentId &&
+        row.GetColumn "GROUPID" = groupId &&
+        row.GetColumn "TEAMID" = teamId &&
+        row.GetColumn "DELETE_TIMESTAMP" <= snapshotTimestamp
     )
     |> fun (filtered: Runtime.CsvFile<CsvRow>) -> filtered.Rows
     |> Seq.map (fun (row: CsvRow) -> row.GetColumn "PHYSICAL_FILENAME")
