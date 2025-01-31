@@ -3,6 +3,22 @@
 
 <!-- #################################################################################################### -->
 
+<div align="center">
+    <a href="https://rptu.de"><img src="images/rptu/minimal/rptu-logo-minimal11.png" height=20 style="background-color: #ffffff; padding: 5px"></a>
+    &nbsp&nbsp&nbsp&nbsp
+    <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/blob/master/latex/thesis.pdf?ref_type=heads">
+        <img src="https://img.shields.io/badge/read_thesis-ae0001?logo=latex&labelColor=740001&style=for-the-badge" height=30>
+    </a>
+    &nbsp&nbsp&nbsp&nbsp
+    <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=20 style="background-color: #ffffff; padding: 5px"></a>
+</div>
+
+<!-- #################################################################################################### -->
+
+---
+
+<!-- #################################################################################################### -->
+
 
 <br/>
 <div align="center">
@@ -16,23 +32,12 @@
         <a href=""><strong>Explore the docs »</strong></a>
         <br/>
         <br/>
-        <a href="https://rptu.de"><img src="images/rptu/minimal/rptu-logo-minimal11.png" height=50></a>
-        <br/>
-        <br/>
-        <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=50></a>
-        <br/>
-        <br/>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/assertify">Assertify</a>
-        ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/error-pattern">Error-Pattern</a>
-        ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/fsharp-beautify">VS Code Extension</a>
-        ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/latex">LaTeX</a>
-        ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-        ·
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+        <a href="assertify"><img src="https://img.shields.io/badge/assertify-740001?style=for-the-badge"/></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/error-pattern"><img src="https://img.shields.io/badge/error_pattern-ae0001?style=for-the-badge"/></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-eeba30?style=for-the-badge"/></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/-/tree/master/latex"><img src="https://img.shields.io/badge/latex-d3a625?logo=latex&style=for-the-badge"/></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md"><img src="https://img.shields.io/badge/report_bug-black?style=for-the-badge"/></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md"><img src="https://img.shields.io/badge/request_feature-black?style=for-the-badge"/></a>
     </p>
 </div>
 
