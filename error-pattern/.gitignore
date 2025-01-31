@@ -1,12 +1,26 @@
-# TODO
-/.fake/
+# intellij idea project files
 /.idea/
+
+# fake build artifacts
+/.fake/
+
+# binary output directories
 /bin/
+
+# object files
 /obj/
+
+# test result directories
 /TestResults/
 
-# TODO
+# csv files of all deleted submissions
 /data/Removed/
+
+# csv files of all executed tests
 /data/Tests/
+
+# exclude all nested directories under exercises
 /data/Exercises/*/*
+
+# include only statistics
 !/data/Exercises/**/Statistics/
