@@ -5,8 +5,9 @@ build-job:
   stage: build
   script:
     - echo "Compiling the code..."
+    - cp latex/thesis.pdf thesis.pdf
     - echo "Compile complete."
   artifacts:
     paths:
-      - latex/thesis.pdf
+      - thesis.pdf
     expire_in: 2 weeks
