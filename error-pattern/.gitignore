@@ -4,6 +4,9 @@
 /obj/
 /TestResults/
 
-!/data
-/data/*
-!/data/**/Statistics/
+/data/Removed/
+/data/Tests/
+
+!/data/Exercises/**/
+/data/Exercises/*
+!/data/Exercises/**/Statistics
