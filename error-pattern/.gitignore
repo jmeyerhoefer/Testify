@@ -1,7 +1,7 @@
 .idea/
 bin/
 obj/
-data/
-!*/Statistics/
+data/*
+!data/**/Statistics/
 TestResults/
 .fake
