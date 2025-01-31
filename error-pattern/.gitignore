@@ -2,5 +2,6 @@
 bin/
 obj/
 data/
+!data/Exercises/*/Statistics/*
 TestResults/
 .fake
