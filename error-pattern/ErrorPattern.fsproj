@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <GenerateProgramFile>false</GenerateProgramFile>
@@ -6,6 +7,7 @@
         <Authors>Jakob Meyerhöfer</Authors>
         <RootNamespace>ErrorPattern</RootNamespace>
     </PropertyGroup>
+
     <ItemGroup Label="Code">
         <Compile Include="Types.fs" />
         <Compile Include="DockerController.fs" />
@@ -16,6 +18,7 @@
         <Compile Include="Program.fs" />
         <Content Include="FSComp.txt" />
     </ItemGroup>
+
     <ItemGroup Label="Other">
         <Content Include="fsharpdev\Dockerfile" />
         <Content Include="fsharpdev\Makefile" />
@@ -23,6 +26,7 @@
         <Content Include="README.md" />
         <Content Include="LICENSE" />
     </ItemGroup>
+
     <ItemGroup>
         <PackageReference Include="Docker.DotNet" Version="3.125.15" />
         <PackageReference Include="FsCheck" Version="2.16.6" />
@@ -37,4 +41,5 @@
         <PackageReference Include="Plotly.NET.Interactive" Version="5.0.0" />
         <PackageReference Include="Unquote" Version="6.1.0" />
     </ItemGroup>
+
 </Project>

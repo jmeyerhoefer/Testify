@@ -1,7 +1,7 @@
 stages:
   - build
 
-build-job:
+build:
   stage: build
   script:
     - echo "Compiling the code..."
