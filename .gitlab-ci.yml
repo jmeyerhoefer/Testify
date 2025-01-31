@@ -6,3 +6,7 @@ build-job:
   script:
     - echo "Compiling the code..."
     - echo "Compile complete."
+  artifacts:
+    paths:
+      - latex/thesis.pdf
+    expire_in: 2 weeks
