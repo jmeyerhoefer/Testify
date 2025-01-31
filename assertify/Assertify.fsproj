@@ -24,7 +24,7 @@
 
     <ItemGroup Label="Other">
         <Content Include=".gitignore" />
-        <Content Include=".README" />
+        <Content Include="README.md" />
     </ItemGroup>
 
     <ItemGroup>
