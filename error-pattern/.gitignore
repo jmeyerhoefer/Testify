@@ -2,6 +2,6 @@
 bin/
 obj/
 data/
-!data/Exercises/*/Statistics/*
+!data/Exercises/**/Statistics/*
 TestResults/
 .fake
