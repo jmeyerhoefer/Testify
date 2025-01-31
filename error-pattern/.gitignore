@@ -1,7 +1,9 @@
-.idea/
-bin/
-obj/
-data/*
-!data/**/Statistics/
-TestResults/
-.fake
+/.fake/
+/.idea/
+/bin/
+/obj/
+/TestResults/
+
+!/data
+/data/*
+!/data/**/Statistics/
