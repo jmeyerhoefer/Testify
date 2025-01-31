@@ -1,12 +1,12 @@
+# TODO
 /.fake/
 /.idea/
 /bin/
 /obj/
 /TestResults/
 
+# TODO
 /data/Removed/
 /data/Tests/
-
-!/data/Exercises/**/
-/data/Exercises/*
-!/data/Exercises/**/Statistics
+/data/Exercises/*/*
+!/data/Exercises/**/Statistics/
