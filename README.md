@@ -26,9 +26,6 @@
     <h3 align="center">Bachelor Thesis · Jakob Meyerhöfer</h3>
     <p align="center">
         GitLab repository for my bachelor thesis!
-        <br/>
-        <a href=""><strong>Explore the docs »</strong></a>
-        <br/>
     </p>
 </div>
 
