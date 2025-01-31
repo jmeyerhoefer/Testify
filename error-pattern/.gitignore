@@ -13,6 +13,9 @@
 # test result directories
 /TestResults/
 
+# user-specific settings
+Folder.DotSettings.user
+
 # csv files of all deleted submissions
 /data/Removed/
 
