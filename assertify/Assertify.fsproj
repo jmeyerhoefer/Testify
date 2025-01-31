@@ -18,18 +18,13 @@
     <ItemGroup Label="Advanced Assert And Parser">
         <Compile Include="Decorator.fs" />
         <Compile Include="Assertify.fs" />
-    </ItemGroup>
-
-    <ItemGroup Label="Tests">
         <Compile Include="Tests.fs"/>
-    </ItemGroup>
-
-    <ItemGroup Label="Program">
         <Compile Include="Program.fs"/>
     </ItemGroup>
 
     <ItemGroup Label="Other">
         <Content Include=".gitignore" />
+        <Content Include=".README" />
     </ItemGroup>
 
     <ItemGroup>
