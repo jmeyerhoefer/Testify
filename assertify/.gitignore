@@ -1,6 +1,20 @@
-.idea/
-bin/
-obj/
-TestResults/
-.fake
+# intellij idea project files
+/.idea/
+
+# fake build artifacts
+/.fake/
+
+# binary output directories
+/bin/
+
+# object files
+/obj/
+
+# test result directories
+/TestResults/
+
+# user-specific settings
 Folder.DotSettings.user
+
+# data
+/data/
