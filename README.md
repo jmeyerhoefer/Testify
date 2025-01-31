@@ -6,8 +6,8 @@
 
 <div align="center">
     <p align="center">
-        <a href="assertify"><img src="https://img.shields.io/badge/assertify-a8e8f9?style=for-the-badge"/></a>
-        <a href="error-pattern"><img src="https://img.shields.io/badge/error_pattern-00537a?style=for-the-badge"/></a>
+        <a href="assertify"><img src="https://img.shields.io/badge/assertify_for_F%23-a8e8f9?style=for-the-badge"/></a>
+        <a href="error-pattern"><img src="https://img.shields.io/badge/build%2Ftest_analysis-00537a?style=for-the-badge"/></a>
         <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-013c58?style=for-the-badge"/></a>
         <a href="latex/thesis.pdf"><img src="https://img.shields.io/badge/read_thesis-f5a201?logo=latex&labelColor=white&style=for-the-badge&logoColor=black"></a>
         <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">
@@ -20,7 +20,7 @@
     </p>
     <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
         <!-- <a href="https://rptu.de"><img src="images/rptu/minimal/rptu-logo-minimal11.png" height=30></a> -->
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer"><img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/></a>
+        <a href=""><img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/></a>
         <!-- <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=30></a> -->
     </div>
     <h3 align="center">Bachelor Thesis · Jakob Meyerhöfer</h3>
@@ -63,7 +63,16 @@
 
 ## About the project
 
-TODO
+This bachelor thesis focuses on the analysis of student submissions to identify the most common errors in their code, with the ultimate goal of improving the readability of error messages. The project uses various techniques and tools to detect recurring issues in the submitted code, categorize them, and then provides improved error messages that are easier for novices to understand. By improving the clarity of the error messages, this project aims to enhance the overall learning experience for students, especially those just starting with programming.
+
+### Problem Statement
+
+Many novice programmers struggle with cryptic error messages when writing code, which can lead to frustration and slower learning. By analyzing common student mistakes and improving how errors are communicated, we can make programming more accessible and encourage faster progress.
+
+### Key Features
+
+- Library for unit testing (assertion and verification) with better formatting of the crucial aspects of failed tests.
+- Error pattern analysis to identify common issues in student code submissions.
 
 ### Built With
 
