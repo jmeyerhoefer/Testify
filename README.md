@@ -98,6 +98,7 @@ To get started with the project, follow these instructions. You’ll need to hav
 
 - [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - [Docker](https://www.docker.com)
+- TODO
 
 
 ### Installation
@@ -116,6 +117,12 @@ cd your-project-directory
 
 
 ## Usage
+
+### Assertify for F#
+
+See [documentation](assertify/Assertify.xml)
+
+### Build/Test Analysis
 
 TODO
 
