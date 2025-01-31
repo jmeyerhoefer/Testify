@@ -54,7 +54,6 @@
         <li><a href="#contributing">Contributing</a></li>
         <li><a href="#license">License</a></li>
         <li><a href="#contact">Contact</a></li>
-        <li><a href="#acknowledgments">Acknowledgments</a></li>
     </ol>
 </details>
 
@@ -85,7 +84,7 @@ Many novice programmers struggle with cryptic error messages when writing code, 
 * [![TypeScript][typescript-shield]][typescript-url]
 * [![Node.js][nodejs-shield]][nodejs-url]
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
@@ -93,19 +92,24 @@ Many novice programmers struggle with cryptic error messages when writing code, 
 
 ## Getting Started
 
-TODO
-
+To get started with the project, follow these instructions. You’ll need to have the prerequisites installed and configured on your machine.
 
 ### Prerequisites
 
-TODO
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+- [Docker](https://www.docker.com)
 
 
 ### Installation
 
-TODO
+Clone the repository and install the dependencies using the following steps:
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+```bash
+git clone https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer.git
+cd your-project-directory
+```
+
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
@@ -115,7 +119,7 @@ TODO
 
 TODO
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
@@ -123,9 +127,16 @@ TODO
 
 ## Contributing
 
-TODO
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+1. Fork the project
+2. Clone it open the repository in command line
+3. Create your feature branch (`git checkout -b feature/amazing-feature`)
+4. Commit your changes (`git commit -m "Add some amazing feature"`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a pull request from your feature branch from your repository into this repository main branch, and provide a description of your changes.
+
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
@@ -133,9 +144,9 @@ TODO
 
 ## License
 
-TODO
+GNU General Public License v3.0
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
@@ -145,17 +156,8 @@ TODO
 
 Jakob Meyerhöfer - meyerhoe@rhrk.uni-kl.de
 
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
 
-
-<!-- #################################################################################################### -->
-
-
-## Acknowledgments
-
-TODO
-
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
