@@ -3,54 +3,35 @@
 
 <!-- #################################################################################################### -->
 
+
 <div align="center">
-    <a href="https://rptu.de" style="margin-right: 10px;">
-        <img src="images/rptu/minimal/rptu-logo-minimal11.png" height=30>
-    </a>
-    <a href="latex/thesis.pdf" style="margin-left: 10px; margin-right: 10px;">
-        <img src="https://img.shields.io/badge/read_thesis-ae0001?logo=latex&labelColor=740001&style=for-the-badge" height=30>
-    </a>
-    <a href="https://exclaim.cs.rptu.de" style="margin-left: 10px;">
-        <img src="images/exclaim/exclaim_logo.svg" height=30>
-    </a>
-</div>
-
-<!-- #################################################################################################### -->
-
----
-
-<!-- #################################################################################################### -->
-
-
-<br/>
-<div align="center">
-    <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer">
-        <img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/>
-    </a>
+    <p align="center">
+        <a href="assertify"><img src="https://img.shields.io/badge/assertify-a8e8f9?style=for-the-badge"/></a>
+        <a href="error-pattern"><img src="https://img.shields.io/badge/error_pattern-00537a?style=for-the-badge"/></a>
+        <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-013c58?style=for-the-badge"/></a>
+        <a href="latex/thesis.pdf"><img src="https://img.shields.io/badge/read_thesis-f5a201?logo=latex&labelColor=white&style=for-the-badge&logoColor=black"></a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">
+            <img src="https://img.shields.io/badge/report_bug-ffba42?style=for-the-badge"/>
+        </a>
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md">
+            <img src="https://img.shields.io/badge/request_feature-ffd35b?style=for-the-badge"/>
+        </a>
+        <br>
+    </p>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+        <!-- <a href="https://rptu.de"><img src="images/rptu/minimal/rptu-logo-minimal11.png" height=30></a> -->
+        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer"><img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/></a>
+        <!-- <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=30></a> -->
+    </div>
     <h3 align="center">Bachelor Thesis · Jakob Meyerhöfer</h3>
     <p align="center">
         GitLab repository for my bachelor thesis!
         <br/>
         <a href=""><strong>Explore the docs »</strong></a>
         <br/>
-        <br/>
-        <a href="assertify"><img src="https://img.shields.io/badge/assertify-740001?style=for-the-badge"/></a>
-        <a href="error-pattern"><img src="https://img.shields.io/badge/error_pattern-ae0001?style=for-the-badge"/></a>
-        <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-eeba30?style=for-the-badge"/></a>
-        <a href="latex"><img src="https://img.shields.io/badge/latex-d3a625?logo=latex&style=for-the-badge"/></a>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">
-            <img src="https://img.shields.io/badge/report_bug-black?style=for-the-badge"/>
-        </a>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md">
-            <img src="https://img.shields.io/badge/request_feature-black?style=for-the-badge"/>
-        </a>
     </p>
 </div>
 
-
-<!-- #################################################################################################### -->
-
----
 
 <!-- #################################################################################################### -->
 
@@ -82,10 +63,6 @@
 
 <!-- #################################################################################################### -->
 
----
-
-<!-- #################################################################################################### -->
-
 
 ## About the project
 
@@ -100,6 +77,8 @@ TODO
 * [![JavaScript][javascript-shield]][javascript-url]
 * [![TypeScript][typescript-shield]][typescript-url]
 * [![Node.js][nodejs-shield]][nodejs-url]
+
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
 
 
 <!-- #################################################################################################### -->
@@ -119,6 +98,8 @@ TODO
 
 TODO
 
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
 
 <!-- #################################################################################################### -->
 
@@ -127,21 +108,51 @@ TODO
 
 TODO
 
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
+
+<!-- #################################################################################################### -->
+
+
 ## Contributing
 
 TODO
+
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
+
+<!-- #################################################################################################### -->
+
 
 ## License
 
 TODO
 
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
+
+<!-- #################################################################################################### -->
+
+
 ## Contact
 
 Jakob Meyerhöfer - meyerhoe@rhrk.uni-kl.de
 
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
+
+<!-- #################################################################################################### -->
+
+
 ## Acknowledgments
 
 TODO
+
+<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></p>
+
+
+<!-- #################################################################################################### -->
+
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [dotnet-shield]: https://img.shields.io/badge/.net-512bd4?style=for-the-badge&logo=dotnet&logoColor=white
