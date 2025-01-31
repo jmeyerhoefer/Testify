@@ -9,6 +9,7 @@
         <a href="assertify"><img src="https://img.shields.io/badge/assertify_for_F%23-a8e8f9?style=for-the-badge"/></a>
         <a href="error-pattern"><img src="https://img.shields.io/badge/build%2Ftest_analysis-00537a?style=for-the-badge"/></a>
         <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-013c58?style=for-the-badge"/></a>
+        <br>
         <a href="latex/thesis.pdf"><img src="https://img.shields.io/badge/read_thesis-f5a201?logo=latex&labelColor=white&style=for-the-badge&logoColor=black"></a>
         <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">
             <img src="https://img.shields.io/badge/report_bug-ffba42?style=for-the-badge"/>
