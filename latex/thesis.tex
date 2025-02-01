@@ -7,6 +7,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Font
+\usepackage{lmodern}
+\renewcommand{\familydefault}{\sfdefault}
+
 % Input encoding: UTF8
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -21,6 +25,17 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page Geometry Layout
 
+% \usepackage[
+%         a4paper,
+%         top=25mm,
+%         bottom=40mm,
+%         inner=25mm,
+%         outer=30mm,
+%         bindingoffset=5mm,
+%         marginparsep=5mm,
+%         marginparwidth=40mm,
+%         %showframe  % Can be enabled to debug the page geometry
+%     ]{geometry}
 \usepackage[
         a4paper,
         top=35mm,
@@ -78,7 +93,7 @@
     ]{biblatex}
 
 % Cititation References
-\addbibresource{references.bib}
+\addbibresource{assets/bibliography/references.bib}
 
 % Citation style
 %\DeclareFieldFormat{labelalpha}{\thefield{entrykey}}
@@ -129,7 +144,7 @@
     \makeatletter
         \centering
         \includegraphics[width=7cm]{assets/logo/RPTU-logo-rgb} \par \vspace*{\fill}
-        {\scshape\LARGE \@title \par} \vspace*{\fill}
+        {\rmfamily\scshape\LARGE \@title \par} \vspace*{\fill} % {\scshape\LARGE \@title \par} \vspace*{\fill}
         {\bfseries \thesisType's Thesis \par} \vspace{1cm}
         {by \par} \vspace{1cm}
         {\Large\itshape \@author \par} \vspace{1cm}
@@ -153,30 +168,14 @@
 
 \selectlanguage{ngerman}
 
-\clearpage
-\pdfbookmark{Eigenständigkeitserklärung}{Eigenständigkeitserklärung}
-\section*{Eigenständigkeitserklärung}
-
-Hiermit versichere ich, dass ich die von mir vorgelegte Arbeit mit dem Thema \glqq \makeatletter\@title\makeatother \grqq{} selbstständig verfasst habe,
-dass ich die verwendeten Quellen und Hilfsmittel vollständig angegeben habe und dass ich die Stellen der Arbeit --- einschließlich Tabellen und Abbildungen ---,
-die anderen Werken oder dem Internet im Wortlaut oder dem Sinn nach entnommen sind unter Angabe der Quelle als Entlehnung kenntlich gemacht habe.
-
-\vspace{0.5cm}
-
-Kaiserslautern, den \the\day.\the\month.\the\year
-
-\vspace{2cm}
-
-\begin{tabular}{@{}l@{}}\hline
-\makeatletter\@author\makeatother
-\end{tabular}
+\input{chapters/00-authorship.tex}
 
 \selectlanguage{english}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Abstract
 
-\include{abstract}
+\include{chapters/00-abstract.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Table of Contents %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -189,7 +188,10 @@ Kaiserslautern, den \the\day.\the\month.\the\year
 % Content %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \mainmatter
-\input{main.tex}
+\input{chapters/01-introduction.tex}
+\input{chapters/02-related-work.tex}
+\input{chapters/03-something.tex}
+\input{chapters/04-conclusion.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % List of Algorithms / Figures / ... %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,7 +201,7 @@ Kaiserslautern, den \the\day.\the\month.\the\year
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\input{appendix}
+\input{chapters/05-appendix.tex}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Biliography %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
