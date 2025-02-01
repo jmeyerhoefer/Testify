@@ -5,6 +5,9 @@
         <TargetFramework>net8.0</TargetFramework>
         <GenerateProgramFile>false</GenerateProgramFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <DocumentationFile>bin/Debug/net8.0/Assertify.xml</DocumentationFile>
+        <OutputPath>bin/Debug/net8.0/</OutputPath>
+        <NoWarn>1591</NoWarn>
         <Authors>Jakob Meyerhöfer</Authors>
         <RootNamespace>Assertify</RootNamespace>
         <RepositoryUrl>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify</RepositoryUrl>
@@ -25,9 +28,9 @@
     </ItemGroup>
 
     <ItemGroup Label="Other">
-        <Content Include="Assertify.xml" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
+        <Content Include="docs\index.md" />
     </ItemGroup>
 
     <ItemGroup>
