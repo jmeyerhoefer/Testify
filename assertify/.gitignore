@@ -16,5 +16,11 @@
 # user-specific settings
 Folder.DotSettings.user
 
+# FSharp.Formatting
+/.fsdocs/
+/output/
+/tmp/
+/docs/
+
 # data
 /data/

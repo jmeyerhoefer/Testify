@@ -1,34 +1,31 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
+        <OutputType>Library</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <GenerateProgramFile>false</GenerateProgramFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>Assertify.xml</DocumentationFile>
         <Authors>Jakob Meyerhöfer</Authors>
         <RootNamespace>Assertify</RootNamespace>
+        <RepositoryUrl>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify</RepositoryUrl>
+        <FsDocsLicenseLink>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify/LICENSE</FsDocsLicenseLink>
+        <FsDocsReleaseNotesLink>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify/RELEASE_NOTES.md</FsDocsReleaseNotesLink>
+        <PackageProjectUrl>https://fsprojects.github.io/FSharp.AWS.DynamoDB</PackageProjectUrl>
     </PropertyGroup>
 
-    <ItemGroup Label="Test Project">
+    <ItemGroup Label="Code">
         <Compile Include="Mini.fs"/>
         <Compile Include="Types.fs"/>
         <Compile Include="Reduktionssemantik.fs"/>
         <Compile Include="RingBuffer.fs" />
-    </ItemGroup>
-
-    <ItemGroup Label="Advanced Assert And Parser">
         <Compile Include="Decorator.fs" />
         <Compile Include="Assertify.fs" />
         <Compile Include="Tests.fs"/>
         <Compile Include="Program.fs"/>
     </ItemGroup>
 
-    <ItemGroup Label="Documentation">
-        <Content Include="Assertify.xml" />
-    </ItemGroup>
-
     <ItemGroup Label="Other">
+        <Content Include="Assertify.xml" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
     </ItemGroup>
