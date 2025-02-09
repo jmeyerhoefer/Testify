@@ -1,0 +1,171 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example 1 - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\paragraph{Task a)} Implement a method \lstinline[basicstyle=\ttfamily]|digitSum: Nat -> Nat|,
+that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and returns its digit sum. Examples:
+\begin{center}\begin{multicols}{2}
+	\lstinline[basicstyle=\ttfamily]|digitSum 0N = 0N|\\
+	\lstinline[basicstyle=\ttfamily]|digitSum 123N = 6N|\\
+	\lstinline[basicstyle=\ttfamily]|digitSum 1234N = 10N|\\
+	\lstinline[basicstyle=\ttfamily]|digitSum 4711N = 13N|
+\end{multicols}\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Student submission - digitSum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\lstinputlisting[
+	linerange			= digitSumStudentBegin-digitSumStudentEnd,
+	firstnumber			= 0,
+	caption				= {Student submission for \texttt{digitSum}},
+	label				= studentSubmissionDigitSum,
+	linebackgroundcolor	= {\ifnum\value{lstnumber}=3 \color{red!30} \else \color{colorBackground} \fi}
+]{assets/src/ExampleErrorMessages/StudentSubmission.fs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Sample solution - digitSum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\lstinputlisting[
+	linerange			= digitSumSolutionBegin-digitSumSolutionEnd,
+	firstnumber			= 0,
+	caption				= {Sample solution for \texttt{digitSum}},
+	label				= sampleSolutionDigitSum,
+	linebackgroundcolor	= {\ifnum\value{lstnumber}=3 \color{green!30} \else \color{colorBackground} \fi}
+]{assets/src/ExampleErrorMessages/Tests.fs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Example Tests - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\lstinputlisting[
+	linerange			= digitSumExamplesBegin-digitSumExamplesEnd,
+	firstnumber			= 0,
+	caption				= {Example tests for \texttt{digitSum}},
+	label				= exampleTestsDigitSum
+]{assets/src/ExampleErrorMessages/Tests.fs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Output Example Tests - digitSum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{lstlisting}[
+	style 				= Output,
+	caption				= {Output of examples tests for \texttt{digitSum}},
+	label				= outputExampleTestsDigitSum
+]
+a) digitSum Examples (388ms): Error Message: Test method Tests+Tests.a) digitSum Examples threw exception:
+      Swensen.Unquote.AssertionFailedException: Test failed:
+
+      StudentSubmission.(*@\hlcolor{colorKeyword!50}{digitSum 123N}@*) = 6N
+      StudentSubmission.digitSum 123N = 6N
+      (*@\hlcolor{red!50}{7N}@*) = (*@\hlcolor{green!50}{6N}@*)
+      false
+
+      Stack Trace:
+          at Tests.Tests.a) digitSum Examples() in path\to\Tests.fs:line 57
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Key Information Example Tests - \texttt{digitSum}} %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{center}
+	\begin{tabular}{|l|l|}\hline
+		Tested expression & \texttt{\hlcolor{colorKeyword!50}{digitSum 123N}}\\ \hline
+		Expected result & \texttt{\hlcolor{green!50}{6N}}\\ \hline
+		Actual result & \texttt{\hlcolor{red!50}{7N}}\\ \hline
+	\end{tabular}
+\end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Random Tests - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\lstinputlisting[
+	linerange			= digitSumRandomBegin-digitSumRandomEnd,
+	firstnumber			= 0,
+	caption				= {Random tests for \texttt{digitSum}},
+	label				= randomTestsDigitSum
+]{assets/src/ExampleErrorMessages/Tests.fs}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Output Random Tests - digitSum %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{lstlisting}[
+	style				= Output,
+	caption				= {Output of random tests for \texttt{digitSum}},
+	label				= outputRandomTestsDigitSum
+]
+(*@\hlcolor{colorKeyword!50}{a) digitSum Random}@*) (74ms): Error Message: Test method Tests+Tests.a) digitSum Random threw exception:
+      System.Exception: Falsifiable, after 1 test (1 shrink) (StdGen (1765833463, 297438798)):
+      (*@\hlcolor{colorKeyword!50}{Original:}@*)
+      (*@\hlcolor{colorKeyword!50}{11N}@*)
+      Shrunk:
+      0N
+      with exception:
+      Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed.
+      (*@\hlcolor{green!50}{Expected:<0>}@*). (*@\hlcolor{red!50}{Actual:<1>}@*).
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
+      ions/Assert.AreEqual.cs:line 201
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+         at Tests.a) digitSum Random@69.Invoke(Nat n) in path\to\Tests.fs:line 69
+         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+      Stack Trace:
+          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+         at <StartupCode$\dollar$FsCheck>.$\dollar$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at FsCheck.Runner.runner[a](Config config, a prop)
+         at FsCheck.Runner.check[a](Config config, a p)
+         at FsCheck.Check.One[Testable](Config config, Testable property)
+         at Tests.Tests.a) digitSum Random() in path\to\Tests.fs:line 68
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+\end{lstlisting}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Key Information Random Tests - \texttt{digitSum}} %%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{center}
+	\begin{tabular}{|l|l|}\hline
+		% Tested expression &
+		% 	$\underbrace{
+		% 	\texttt{\hlcolor{colorKeyword!50}{a) digitSum Random}}
+		% 	\quad\text{and}\quad
+		% 	\texttt{\hlcolor{colorKeyword!50}{Original: 11N}}
+		% 	}_{\displaystyle\Longrightarrow\quad\texttt{\normalsize{digitSum 11N}}}$\\ \hline
+		Tested expression &
+			$\left.\begin{array}{rr}
+			    \texttt{\hlcolor{colorKeyword!50}{a) digitSum Random}}\\
+    			\texttt{\hlcolor{colorKeyword!50}{Original: 11N}}
+            \end{array}\right\}
+            \texttt{digitSum 11N}$\\ \hline
+		Expected result & \texttt{\hlcolor{green!50}{Expected:<0>}} $\Longrightarrow$ \texttt{\hlcolor{green!50}{0}} (actually \texttt{\hlcolor{green!50}{0N}})\\ \hline
+		Actual result & \texttt{\hlcolor{red!50}{Actual:<1>}} $\Longrightarrow$ \texttt{\hlcolor{red!50}{1}} (actually \texttt{\hlcolor{red!50}{1N}})\\ \hline
+	\end{tabular}
+\end{center}

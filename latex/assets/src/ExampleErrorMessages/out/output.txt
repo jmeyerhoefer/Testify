@@ -1,0 +1,220 @@
+Restore complete (0.4s)
+  ExampleErrorMessages succeeded (4.6s) → bin\Debug\net8.0\ExampleErrorMessages.dll
+  ExampleErrorMessages test failed with 8 error(s) (1.4s)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\bin\Debug\net8.0\ExampleErrorMessages.dll : error TESTERROR:
+      a) digitSum Examples (210ms): Error Message: Test method Tests+Tests.a) digitSum Examples threw exception:
+      Swensen.Unquote.AssertionFailedException: Test failed:
+
+      StudentSubmission.digitSum 123N = 6N
+      StudentSubmission.digitSum 123N = 6N
+      7N = 6N
+      false
+
+      Stack Trace:
+          at Tests.Tests.a) digitSum Examples() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 57
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(68): error TESTERROR:
+      a) digitSum Random (75ms): Error Message: Test method Tests+Tests.a) digitSum Random threw exception:
+      System.Exception: Falsifiable, after 1 test (1 shrink) (StdGen (866870754, 297439050)):
+      Original:
+      9N
+      Shrunk:
+      0N
+      with exception:
+      Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<0>. Actual:<1>.
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
+      ions/Assert.AreEqual.cs:line 201
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+         at Tests.a) digitSum Random@69.Invoke(Nat n) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 69
+         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+      Stack Trace:
+          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at FsCheck.Runner.runner[a](Config config, a prop)
+         at FsCheck.Runner.check[a](Config config, a p)
+         at FsCheck.Check.One[Testable](Config config, Testable property)
+         at Tests.Tests.a) digitSum Random() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 68
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\bin\Debug\net8.0\ExampleErrorMessages.dll : error TESTERROR:
+      b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sortedDigits Examples threw exception:
+      Swensen.Unquote.AssertionFailedException: Test failed:
+
+      StudentSubmission.sortedDigits 1111N = true
+      StudentSubmission.sortedDigits 1111N = true
+      false = true
+      false
+
+      Stack Trace:
+          at Tests.Tests.b) sortedDigits Examples() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 80
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(89): error TESTERROR:
+      b) sortedDigits Random (3ms): Error Message: Test method Tests+Tests.b) sortedDigits Random threw exception:
+      System.Exception: Falsifiable, after 5 tests (0 shrinks) (StdGen (867569077, 297439050)):
+      Original:
+      33N
+      with exception:
+      Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. Expected:<True>. Actual:<False>.
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
+      ions/Assert.AreEqual.cs:line 201
+         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+         at Tests.b) sortedDigits Random@90.Invoke(Nat n) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 90
+         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+      Stack Trace:
+          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at FsCheck.Runner.runner[a](Config config, a prop)
+         at FsCheck.Runner.check[a](Config config, a p)
+         at FsCheck.Check.One[Testable](Config config, Testable property)
+         at Tests.Tests.b) sortedDigits Random() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 89
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(98): error TESTERROR:
+      a) digitSum Examples (with) (27ms): Error Message: Test method Tests+Tests.a) digitSum Examples (with) threw exception:
+      System.Exception:
+      =================== COMPACT TEST RESULT ===================
+
+      💤 No comment from Harry Hacker!
+
+      ------------------ EXPRESSION REDUCTIONS ------------------
+
+      📝 Expression ToString:        Call (None, digitSum, [Call (None, FromInt32, [Value (123)])])
+      🧪 Tested/Failed expression:   StudentSubmission.digitSum 123N
+      ✅ Simplified expression:      digitSum (FromInt32 123)
+
+      ------------------------------
+
+      1st reduction:                 StudentSubmission.digitSum 123N
+      2nd reduction:                 7N
+
+      ------------------- EXPECTED AND ACTUAL -------------------
+
+      🎯 Expected result:            6N
+      ❌ Actual result:              7N
+
+      =========================== END ===========================
+      Stack Trace:
+          at Assertify.Assertify.Test(FSharpExpr`1 expr, FSharpOption`1 message) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Assertify.fs:line 361
+         at Tests.Tests.a) digitSum Examples (with)() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 98
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(109): error TESTERROR:
+      a) digitSum Random (with) (3ms): Error Message: Test method Tests+Tests.a) digitSum Random (with) threw exception:
+      System.Exception: Falsifiable, after 1 test (0 shrinks) (StdGen (867874797, 297439050)):
+      Original:
+      0N
+      with exception:
+      System.Exception:
+      =================== COMPACT TEST RESULT ===================
+
+      💤 No comment from Harry Hacker!
+
+      ------------------ EXPRESSION REDUCTIONS ------------------
+
+      📝 Expression ToString:        Call (None, digitSum, [ValueWithName (0N, n)])
+      🧪 Tested/Failed expression:   StudentSubmission.digitSum n
+      ✅ Simplified expression:      digitSum 0N
+
+      ------------------------------
+
+      1st reduction:                 StudentSubmission.digitSum 0N
+      2nd reduction:                 1N
+
+      ------------------- EXPECTED AND ACTUAL -------------------
+
+      🎯 Expected result:            0N
+      ❌ Actual result:              1N
+
+      =========================== END ===========================
+         at Assertify.Assertify.Test(FSharpExpr`1 expr, FSharpOption`1 message) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Assertify.fs:line 361
+         at Tests.a) digitSum Random (with)@110.Invoke(Nat n) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 110
+         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+      Stack Trace:
+          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at FsCheck.Runner.runner[a](Config config, a prop)
+         at FsCheck.Runner.check[a](Config config, a p)
+         at FsCheck.Check.One[Testable](Config config, Testable property)
+         at Tests.Tests.a) digitSum Random (with)() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 109
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(119): error TESTERROR:
+      b) sortedDigits Examples (with) (2ms): Error Message: Test method Tests+Tests.b) sortedDigits Examples (with) threw exception:
+      System.Exception:
+      =================== COMPACT TEST RESULT ===================
+
+      💤 No comment from Harry Hacker!
+
+      ------------------ EXPRESSION REDUCTIONS ------------------
+
+      📝 Expression ToString:        Call (None, sortedDigits, [Call (None, FromInt32, [Value (1111)])])
+      🧪 Tested/Failed expression:   StudentSubmission.sortedDigits 1111N
+      ✅ Simplified expression:      sortedDigits (FromInt32 1111)
+
+      ------------------------------
+
+      1st reduction:                 StudentSubmission.sortedDigits 1111N
+      2nd reduction:                 false
+
+      ------------------- EXPECTED AND ACTUAL -------------------
+
+      🎯 Expected result:            true
+      ❌ Actual result:              false
+
+      =========================== END ===========================
+      Stack Trace:
+          at Assertify.Assertify.Test(FSharpExpr`1 expr, FSharpOption`1 message) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Assertify.fs:line 361
+         at Tests.Tests.b) sortedDigits Examples (with)() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 119
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs(128): error TESTERROR:
+      b) sortedDigits Random (with) (7ms): Error Message: Test method Tests+Tests.b) sortedDigits Random (with) threw exception:
+      System.Exception: Falsifiable, after 13 tests (0 shrinks) (StdGen (867933461, 297439050)):
+      Original:
+      99N
+      with exception:
+      System.Exception:
+      =================== COMPACT TEST RESULT ===================
+
+      💤 No comment from Harry Hacker!
+
+      ------------------ EXPRESSION REDUCTIONS ------------------
+
+      📝 Expression ToString:        Call (None, sortedDigits, [ValueWithName (99N, n)])
+      🧪 Tested/Failed expression:   StudentSubmission.sortedDigits n
+      ✅ Simplified expression:      sortedDigits 99N
+
+      ------------------------------
+
+      1st reduction:                 StudentSubmission.sortedDigits 99N
+      2nd reduction:                 false
+
+      ------------------- EXPECTED AND ACTUAL -------------------
+
+      🎯 Expected result:            true
+      ❌ Actual result:              false
+
+      =========================== END ===========================
+         at Assertify.Assertify.Test(FSharpExpr`1 expr, FSharpOption`1 message) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Assertify.fs:line 361
+         at Tests.b) sortedDigits Random (with)@129.Invoke(Nat n) in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 129
+         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+
+      Stack Trace:
+          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at FsCheck.Runner.runner[a](Config config, a prop)
+         at FsCheck.Runner.check[a](Config config, a p)
+         at FsCheck.Check.One[Testable](Config config, Testable property)
+         at Tests.Tests.b) sortedDigits Random (with)() in D:\Bachelorarbeit\24-ba-jakob-meyerhoefer\latex\assets\src\ExampleErrorMessages\Tests.fs:line 128
+         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+
+Test summary: total: 8, failed: 8, succeeded: 0, skipped: 0, duration: 1.4s
+Build failed with 8 error(s) in 7.1s
