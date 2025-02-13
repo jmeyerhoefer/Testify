@@ -1,0 +1,2 @@
+[pygments.lexers]
+custom_fsharp = custom_fsharp_lexer:CustomFSharpLexer

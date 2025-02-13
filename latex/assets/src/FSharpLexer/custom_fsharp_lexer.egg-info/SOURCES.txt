@@ -1,0 +1,8 @@
+custom_fsharp_lexer.py
+setup.py
+custom_fsharp_lexer.egg-info/PKG-INFO
+custom_fsharp_lexer.egg-info/SOURCES.txt
+custom_fsharp_lexer.egg-info/dependency_links.txt
+custom_fsharp_lexer.egg-info/entry_points.txt
+custom_fsharp_lexer.egg-info/requires.txt
+custom_fsharp_lexer.egg-info/top_level.txt

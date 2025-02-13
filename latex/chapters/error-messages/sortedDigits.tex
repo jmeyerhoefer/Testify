@@ -3,16 +3,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\paragraph{Task b)} Implement a method \lstinline[basicstyle=\ttfamily]|sortedDigits: Nat -> bool|,
-that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and returns
-\lstinline[basicstyle=\ttfamily]|true| if the digits are in ascending order and \lstinline[basicstyle=\ttfamily]|false| otherwise. Examples:
+Implement a method \fsharp|sortedDigits: Nat -> bool|,
+that takes a natural number \fsharp|n| as input and returns
+\fsharp|true| if the digits are in ascending order and \fsharp|false| otherwise. Examples:
 \begin{center}\begin{multicols}{2}
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 0N = true|\\
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 5N = true|\\
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 159N = true|\\
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 1111N = true|\\
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 1101N = false|\\
-	\lstinline[basicstyle=\ttfamily]|sortedDigits 543N = false|
+	\fsharp|sortedDigits 0N = true|\\
+	\fsharp|sortedDigits 5N = true|\\
+	\fsharp|sortedDigits 159N = true|\\
+	\fsharp|sortedDigits 1111N = true|\\
+	\fsharp|sortedDigits 1101N = false|\\
+	\fsharp|sortedDigits 543N = false|
 \end{multicols}\end{center}
 
 
@@ -21,13 +21,16 @@ that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and ret
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\lstinputlisting[
-	linerange			= sortedDigitsStudentBegin-sortedDigitsStudentEnd,
-	firstnumber			= 0,
-	caption				= {Student submission for \texttt{sortedDigits}},
-	label				= studentSubmissionSortedDigits,
-	linebackgroundcolor	= {\ifnum\value{lstnumber}=8 \color{red!30} \else \color{colorBackground} \fi}
-]{assets/src/ExampleErrorMessages/StudentSubmission.fs}
+\fsharpinput%
+{Student submission for \fsharp|sortedDigits|}%
+{studentSubmissionSortedDigits}%
+{
+	rangestartafterstring = ////sortedDigitsStudentBegin),
+	rangestopbeforestring = ////sortedDigitsStudentEnd),
+	highlightlines = {8},
+	highlightcolor = red!30
+}%
+{assets/src/ExampleErrorMessages/StudentSubmission.fs}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -35,13 +38,16 @@ that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and ret
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\lstinputlisting[
-	linerange			= sortedDigitsSolutionBegin-sortedDigitsSolutionEnd,
-	firstnumber			= 0,
-	caption				= {Sample solution for \texttt{sortedDigits}},
-	label				= sampleSolutionSortedDigits,
-	linebackgroundcolor	= {\ifnum\value{lstnumber}=8 \color{green!30} \else \color{colorBackground} \fi}
-]{assets/src/ExampleErrorMessages/Tests.fs}
+\fsharpinput%
+{Sample solution for \fsharp|sortedDigits|}%
+{sampleSolutionSortedDigits}%
+{
+	rangestartafterstring = ////sortedDigitsSolutionBegin),
+	rangestopbeforestring = ////sortedDigitsSolutionEnd),
+	highlightlines = {8},
+	highlightcolor = green!30
+}%
+{assets/src/ExampleErrorMessages/Tests.fs}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,12 +56,14 @@ that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and ret
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\lstinputlisting[
-	linerange			= sortedDigitsExamplesBegin-sortedDigitsExamplesEnd,
-	firstnumber			= 0,
-	caption				= {Example tests for \texttt{sortedDigits}},
-	label				= exampleTestsSortedDigits
-]{assets/src/ExampleErrorMessages/Tests.fs}
+\fsharpinput%
+{Example tests for \fsharp|sortedDigits|}%
+{exampleTestsSortedDigit}%
+{
+	rangestartafterstring = ////sortedDigitsExamplesBegin),
+	rangestopbeforestring = ////sortedDigitsExamplesEnd),
+}%
+{assets/src/ExampleErrorMessages/Tests.fs}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,24 +71,22 @@ that takes a natural number \lstinline[basicstyle=\ttfamily]|n| as input and ret
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{lstlisting}[
-	style               = Output,
-	caption				= {Output of examples tests for \texttt{sortedDigits}},
-	label				= outputExampleTestsSortedDigits
-]
+\begin{fsharpoutput}%
+{Output of examples tests for \fsharp|sortedDigits|}%
+{outputExampleTestsSortedDigits}
 b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sortedDigits Examples threw exception:
       Swensen.Unquote.AssertionFailedException: Test failed:
 
-      StudentSubmission.(*@\hlcolor{colorKeyword!50}{sortedDigits 1111N}@*) = true
+      StudentSubmission.|\hlbox[colorKeyword]{sortedDigits 1111N}| = true
       StudentSubmission.sortedDigits 1111N = true
-      (*@\hlcolor{red!50}{false}@*) = (*@\hlcolor{green!50}{true}@*)
+      |\hlbox[red]{false}| = |\hlbox[green]{true}|
       false
 
       Stack Trace:
           at Tests.Tests.b) sortedDigits Examples() in path\to\Tests.fs:line 80
          at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
          at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-\end{lstlisting}
+\end{fsharpoutput}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -90,9 +96,9 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 
 \begin{center}
 	\begin{tabular}{|l|l|}\hline
-		Tested expression & \texttt{\hlcolor{colorKeyword!50}{sortedDigits 123N}}\\ \hline
-		Expected result & \texttt{\hlcolor{green!50}{true}}\\ \hline
-		Actual result & \texttt{\hlcolor{red!50}{false}}\\ \hline
+		Tested expression & \hlbox[colorKeyword]{\out|sortedDigits 123N|}\\ \hline
+		Expected result & \hlbox[green]{\out|true|}\\ \hline
+		Actual result & \hlbox[red]{\out|false|}\\ \hline
 	\end{tabular}
 \end{center}
 
@@ -103,12 +109,14 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\lstinputlisting[
-	linerange			= sortedDigitsRandomBegin-sortedDigitsRandomEnd,
-	firstnumber			= 0,
-	caption				= {Random tests for \texttt{sortedDigits}},
-	label				= randomTestsSortedDigits
-]{assets/src/ExampleErrorMessages/Tests.fs}
+\fsharpinput%
+{Random tests for \fsharp|sortedDigits|}%
+{randomTestsSortedDigits}%
+{
+	rangestartafterstring = ////sortedDigitsRandomBegin),
+	rangestopbeforestring = ////sortedDigitsRandomEnd)
+}%
+{assets/src/ExampleErrorMessages/Tests.fs}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,18 +124,16 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{lstlisting}[
-	style 				= Output,
-	caption				= {Output of random tests for \texttt{sortedDigits}},
-	label				= outputRandomTestsSortedDigits
-]
-(*@\hlcolor{colorKeyword!50}{b) sortedDigits Random}@*) (3ms): Error Message: Test method Tests+Tests.b) sortedDigits Random threw exception:
+\begin{fsharpoutput}%
+{Output of random tests for \fsharp|sortedDigits|}%
+{outputRandomTestsSortedDigits}
+|\hlbox[colorKeyword]{b) sortedDigits Random}| (3ms): Error Message: Test method Tests+Tests.b) sortedDigits Random threw exception:
       System.Exception: Falsifiable, after 5 tests (0 shrinks) (StdGen (867569077, 297439050)):
-      (*@\hlcolor{colorKeyword!50}{Original:}@*)
-      (*@\hlcolor{colorKeyword!50}{33N}@*)
+      |\hlbox[colorKeyword]{Original:}|
+      |\hlbox[colorKeyword]{33N}|
       with exception:
       Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed.
-      (*@\hlcolor{green!50}{Expected:<True>}@*). (*@\hlcolor{red!50}{Actual:<False>}@*).
+      |\hlbox[green]{Expected:<True>}|. |\hlbox[red]{Actual:<False>}|.
          at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
          at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
       ions/Assert.AreEqual.cs:line 201
@@ -137,14 +143,14 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 
       Stack Trace:
           at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
-         at <StartupCode$\dollar$FsCheck>.$\dollar$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
          at FsCheck.Runner.runner[a](Config config, a prop)
          at FsCheck.Runner.check[a](Config config, a p)
          at FsCheck.Check.One[Testable](Config config, Testable property)
          at Tests.Tests.b) sortedDigits Random() in path\to\Tests.fs:line 89
          at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
          at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-\end{lstlisting}
+\end{fsharpoutput}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -154,19 +160,18 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 
 \begin{center}
 	\begin{tabular}{|l|l|}\hline
-		% Tested expression &
-		% 	$\underbrace{
-		% 	\texttt{\hlcolor{colorMethod!50}{b) sortedDigits Random}}
-		% 	\quad\text{and}\quad
-		% 	\texttt{\hlcolor{colorKeyword!50}{Original: 33N}}
-		% 	}_{\displaystyle\Longrightarrow\quad\texttt{\normalsize\hlcolor{colorKeyword!50}{sortedDigits 33N}}}$\\ \hline
 		Tested expression &
 			$\left.\begin{array}{rr}
-			    \texttt{\hlcolor{colorKeyword!50}{b) sortedDigits Random}}\\
-			    \texttt{\hlcolor{colorKeyword!50}{Original: 33N}}
+			    \hlbox[colorKeyword]{\out|b) sortedDigits Random|}\\
+			    \hlbox[colorKeyword]{\out|Original: 33N|}
             \end{array}\right\}
-            \texttt{sortedDigits 33N}$\\ \hline
-		Expected result & \texttt{\hlcolor{green!50}{Expected:<True>}} $\Longrightarrow$ \texttt{\hlcolor{green!50}{True}} (actually \texttt{\hlcolor{green!50}{true}})\\ \hline
-		Actual result & \texttt{\hlcolor{red!50}{Actual:<False>}} $\Longrightarrow$ \texttt{\hlcolor{red!50}{False}} (actually \texttt{\hlcolor{red!50}{false}})\\ \hline
+            \text{\out|sortedDigits 33N|}$\\ \hline
+		Expected result & \hlbox[green]{\out|Expected:<True>|} $\Longrightarrow$ \hlbox[green]{\out|True|} (actually \hlbox[green]{\out|true|})\\ \hline
+		Actual result & \hlbox[red]{\out|Actual:<False>|} $\Longrightarrow$ \hlbox[red]{\out|False|} (actually \hlbox[red]{\out|false|})\\ \hline
 	\end{tabular}
 \end{center}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

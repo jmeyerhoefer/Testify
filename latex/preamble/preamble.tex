@@ -28,7 +28,7 @@
 
 % tikz
 \usepackage{tikz}
-    \usetikzlibrary{external} % Externalizes Tikz graphics - speeds up compilation if unchanged.
+	\usetikzlibrary{external} % Externalizes Tikz graphics - speeds up compilation if unchanged.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,15 +36,15 @@
 
 
 \usepackage[
-    a4paper,
-    top=35mm,
-    bottom=40mm,
-    inner=35mm,
-    outer=40mm,
-    bindingoffset=5mm,
-    marginparsep=5mm,
-    marginparwidth=40mm,
-    %showframe  % Can be enabled to debug the page geometry
+	a4paper,
+	top=35mm,
+	bottom=40mm,
+	inner=35mm,
+	outer=40mm,
+	bindingoffset=5mm,
+	marginparsep=5mm,
+	marginparwidth=40mm,
+	%showframe  % Can be enabled to debug the page geometry
 ]{geometry}
 
 
@@ -53,9 +53,9 @@
 
 
 \usepackage[
-    headsepline,
-    footsepline,
-    draft=false     % Draft mode adds "ruler" instead of header/footer, we never want that!
+	headsepline,
+	footsepline,
+	draft=false     % Draft mode adds "ruler" instead of header/footer, we never want that!
 ]{scrlayer-scrpage}
 
 
@@ -74,8 +74,8 @@
 
 
 \usepackage[
-    font={normal,small,sl,color=black!80},
-    labelfont={normal,bf}
+	font={normal,small,sl,color=black!80},
+	labelfont={normal,bf}
 ]{caption}
 
 
@@ -84,8 +84,8 @@
 
 
 \usepackage[
-    bookmarksdepth=3,   % bookmark levels in the PDF.
-    bookmarksnumbered   % Show section numbering in bookmark
+	bookmarksdepth=3,   % bookmark levels in the PDF.
+	bookmarksnumbered   % Show section numbering in bookmark
 ]{hyperref}
 
 
@@ -94,10 +94,10 @@
 
 
 \usepackage[
-    backend=biber,
-    style=alphabetic,
-    minnames=4,
-    maxnames=10
+	backend=biber,
+	style=alphabetic,
+	minnames=4,
+	maxnames=10
 ]{biblatex}
 
 
@@ -131,8 +131,8 @@
 
 \makeatletter
 \hypersetup{
-    pdftitle = {\@title},
-    pdfauthor= {\@author}
+	pdftitle = {\@title},
+	pdfauthor= {\@author}
 }
 \makeatother
 
@@ -142,7 +142,7 @@
 
 % svg
 \usepackage{svg}
-    \setsvg{inkscapeversion=1.4}
+	\setsvg{inkscapeversion=1.4}
 
 \usepackage{csquotes}
 \usepackage{graphicx}
@@ -159,99 +159,100 @@
 
 \usepackage{color}
 \usepackage[table]{xcolor}
-\definecolor{colorAttribute}{rgb}{0.3,0.78,0.69}
-\definecolor{colorBackground}{rgb}{0.95,0.95,0.92}
-\definecolor{colorComment}{rgb}{0,0.5,0}
-\definecolor{colorDelimiter}{rgb}{0.8,0,0.5}
-\definecolor{colorIdentifier}{rgb}{0,0,0}
-\definecolor{colorKeyword}{rgb}{0.3,0.5,0.8}
-\definecolor{colorMethod}{rgb}{1,0.5,0.2}
-\definecolor{colorNumbering}{rgb}{0.5,0.5,0.5}
-\definecolor{colorString}{rgb}{1,0.5,0}
+\definecolor{colorAttribute}{rgb}{0.3, 0.78, 0.69}
+\definecolor{colorBackground}{rgb}{0.95, 0.95, 0.92}
+\definecolor{colorBackgroundMonokai}{HTML}{272822}
+\definecolor{colorComment}{rgb}{0, 0.5, 0}
+\definecolor{colorDelimiter}{rgb}{0.8, 0, 0.5}
+\definecolor{colorIdentifier}{rgb}{0, 0, 0}
+\definecolor{colorKeyword}{rgb}{0.3, 0.5, 0.8}
+\definecolor{colorLineBreakSymbol}{rgb}{0, 0, 0}
+\definecolor{colorMethod}{rgb}{1, 0.5, 0.2}
+\definecolor{colorNumbering}{rgb}{0, 0, 0}
+\definecolor{colorString}{rgb}{1, 0.5, 0}
+\definecolor{colorTCB}{rgb}{0.5, 0.5, 0.5}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % listings
 
-
+\usepackage{comment}
+\begin{comment}
 \usepackage{listings}
-\usepackage{lstautogobble}
-\usepackage{upquote}
-
 \newcommand{\dollar}{\mbox{\textdollar}}
 \newcommand{\hlcolor}[2]{\sethlcolor{#1}\hl{#2}}
 
 \lstdefinestyle{FSharp}%
 {
-    % keywords
-    morekeywords={
-        let, new, match, with, rec, open, module, namespace, type, of, member,
-        and, for, while, true, false, in, do, begin, end, fun, function, return, yield, option,
-        try, mutable, if, then, else, cloud, async, static, use, abstract, interface, inherit, finally,
-        Nat, int, float, double, bool, string, char, unit, list, array, set, seq,
-        List, Array, String, Set, Seq, Some, None,
-        RegExp, Eps, Lit, Cat, Empty, Or, Star,
-        TestMethod, Timeout, Config, QuickThrowOnFailure, AreEqual, Check, One,
-        Assertify, (?)
-    },
-    otherkeywords={let!, return!, do!, yield!, use!, var, from, select, where, order, by},
-    alsoother={`},
-    % colors
-    basicstyle          = \scriptsize\ttfamily,
-    backgroundcolor     = \color{colorBackground},
-    keywordstyle        = \color{colorKeyword},
-    commentstyle        = \color{colorComment},
-    identifierstyle     = \color{colorIdentifier},
-    stringstyle         = \color{colorString},
-    morecomment         = [l][\color{colorComment}]{///},
-    morecomment         = [l][\color{colorComment}]{//},
-    % strings, delimiters
-    morestring          = [b]",
-    moredelim           = [s][\color{colorDelimiter}]{<@}{@>},
-    moredelim           = [s][\color{colorMethod}]{``}{``},
-    moredelim           = [s][\color{colorAttribute}]{[<}{>]},
-    literate            =%
-        {(?)}{{(\textcolor{colorMethod}{?})}}1
-        % {->}{{$\to$}}1
-        {<=}{{$\leq$}}1
-        {>=}{{$\geq$}}1
-        {|>}{$\vartriangleright$}1
-        {<|}{{$\vartriangleleft$}}1,
-    % range
-    rangeprefix         = ////, % [1]
-    rangesuffix         = ),
-    includerangemarker  = false, % [2]
-    % line numbering
-    numbers             = left,
-    numbersep           = 5pt,
-    numberstyle         = \tiny\color{colorNumbering},
-    % text
-    showstringspaces    = false,
-    keepspaces          = false,
-    showspaces          = false,
-    showtabs            = false,
-    breakatwhitespace   = false,
-    breaklines          = true,
-    mathescape          = true,
-    escapeinside        = {(*@}{@*)},
-    tabsize             = 4,
-    sensitive           = true,
-    extendedchars       = true,
-    captionpos          = b,
-    % other
-    aboveskip           = \bigskipamount,
-    xleftmargin         = \parindent,
-    framexleftmargin    = 0em
+	% keywords
+	morekeywords={
+		let, new, match, with, rec, open, module, namespace, type, of, member,
+		and, for, while, true, false, in, do, begin, end, fun, function, return, yield, option,
+		try, mutable, if, then, else, cloud, async, static, use, abstract, interface, inherit, finally,
+		Nat, int, float, double, bool, string, char, unit, list, array, set, seq,
+		List, Array, String, Set, Seq, Some, None,
+		RegExp, Eps, Lit, Cat, Empty, Or, Star,
+		TestMethod, Timeout, Config, QuickThrowOnFailure, AreEqual, Check, One,
+		Assertify, (?)
+	},
+	otherkeywords={let!, return!, do!, yield!, use!, var, from, select, where, order, by},
+	alsoother={`},
+	% colors
+	basicstyle          = \scriptsize\ttfamily,
+	backgroundcolor     = \color{colorBackground},
+	keywordstyle        = \color{colorKeyword},
+	commentstyle        = \color{colorComment},
+	identifierstyle     = \color{colorIdentifier},
+	stringstyle         = \color{colorString},
+	morecomment         = [l][\color{colorComment}]{///},
+	morecomment         = [l][\color{colorComment}]{//},
+	% strings, delimiters
+	morestring          = [b]",
+	moredelim           = [s][\color{colorDelimiter}]{<@}{@>},
+	moredelim           = [s][\color{colorMethod}]{``}{``},
+	moredelim           = [s][\color{colorAttribute}]{[<}{>]},
+	literate            =%
+		{(?)}{{(\textcolor{colorMethod}{?})}}1
+		% {->}{{$\to$}}1
+		{<=}{{$\leq$}}1
+		{>=}{{$\geq$}}1
+		{|>}{$\vartriangleright$}1
+		{<|}{{$\vartriangleleft$}}1,
+	% range
+	rangeprefix         = ////, % [1]
+	rangesuffix         = ),
+	includerangemarker  = false, % [2]
+	% line numbering
+	numbers             = left,
+	numbersep           = 5pt,
+	numberstyle         = \tiny\color{colorNumbering},
+	% text
+	showstringspaces    = false,
+	keepspaces          = false,
+	showspaces          = false,
+	showtabs            = false,
+	breakatwhitespace   = false,
+	breaklines          = true,
+	mathescape          = true,
+	escapeinside        = {(*@}{@*)},
+	tabsize             = 4,
+	sensitive           = true,
+	extendedchars       = true,
+	captionpos          = b,
+	% other
+	aboveskip           = \bigskipamount,
+	xleftmargin         = \parindent,
+	framexleftmargin    = 0em
 }
 
-\lstdefinestyle{Output}%
+\lstdefinestyle{OutputX}%
 {
 	basicstyle			= \scriptsize\ttfamily,
 	keywords			= {},
 }
 
 \lstset{style=FSharp}
-
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -260,23 +261,30 @@
 \usepackage{tcolorbox}
 \newcommand{\todo}[1]%
 {
-    \vspace{0.5em}\par\noindent
-    \begin{tcolorbox}%
-    [
-        colback = blue!10,
-        colframe = blue,
-        title = TODO,
-        fonttitle = \bfseries
-    ]
-        \begin{minipage}[t]{\dimexpr\hsize-2\fboxsep-2\fboxrule-10pt\relax}
-            \ifx\empty#1\empty
-                Apparently there is something to do.
-            \else
-                #1
-            \fi
-        \end{minipage}
-    \end{tcolorbox}
-    \vspace{0.5em}\par\noindent
+	\vspace{0.5em}\par\noindent
+	\begin{tcolorbox}%
+	[
+		colback = blue!20,
+		colframe = blue,
+		coltitle = white,
+		colbacktitle = blue,
+		title = TODO,
+		fonttitle = \bfseries,
+		leftrule = 0.5mm,
+		top = 2mm,
+		bottom = 2mm,
+		center title,
+		attach boxed title to top*
+	]
+		\begin{minipage}[t]{\dimexpr\hsize-2\fboxsep-2\fboxrule-10pt\relax}
+			\ifx\empty#1\empty
+				Apparently there is something to do.
+			\else
+				#1
+			\fi
+		\end{minipage}
+	\end{tcolorbox}
+	\vspace{0.5em}\par\noindent
 }
 
 
@@ -289,22 +297,190 @@
 \newcommand{\todoitem}{\item}
 \newenvironment{todolist}%
 {%
-    \vspace{0.5em}\par\noindent
-    \begin{tcolorbox}%
-    [
-        colback = blue!10,
-        colframe = blue,
-        title = TODO,
-        fonttitle = \bfseries
-    ]
-        \begin{todoenumerate}
+	\vspace{0.5em}\par\noindent
+	\begin{tcolorbox}%
+	[
+		colback = blue!20,
+		colframe = blue,
+		coltitle = white,
+		colbacktitle = blue,
+		title = TODO,
+		fonttitle = \bfseries,
+		leftrule = 0.5mm,
+		top = 2mm,
+		bottom = 2mm,
+		center title,
+		attach boxed title to top*
+	]
+		\begin{todoenumerate}
 }%
 {%
-        \end{todoenumerate}
-    \end{tcolorbox}
-    \vspace{0.5em}\par\noindent
+		\end{todoenumerate}
+	\end{tcolorbox}
+	\vspace{0.5em}\par\noindent
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{minted}
+\usepackage{lstautogobble}
+\usepackage{upquote}
+
+
+\setminted%
+{
+	fontsize = \small,
+	extrakeywordstype = {
+		Nat, int, TestMethod, Timeout, test
+	}
+}
+
+
+% INLINE USAGE: \fsharp|...|
+\newmintinline[fsharp]{fsharp}%
+{
+	style = colorful
+}
+
+
+% INLINE USAGE: \out|...|
+\newmintinline[out]{fsharp}%
+{
+	style = bw
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\tcbuselibrary{most}
+\tcbuselibrary{minted}
+
+
+\newcounter{fsharpcounter}
+\renewcommand{\thefsharpcounter}{\thechapter.\arabic{fsharpcounter}}
+
+
+\renewcommand{\theFancyVerbLine}%
+{
+	\ttfamily\textcolor{colorNumbering}{\tiny\arabic{FancyVerbLine}}
+}
+
+
+\tcbset%
+{
+	listing engine = minted,
+	colback = colorTCB!10,
+	colbacktitle = colorTCB!70,
+	colframe = colorTCB!70,
+	coltitle = black,
+	center title,
+	attach boxed title to bottom*,
+	leftrule = 5mm,
+	top = 0mm,
+	bottom = 0mm,
+	before = {\par\smallskip\parindent=0pt},
+	after = {\par\smallskip},
+	listing only = true,
+	enhanced = true,
+	minted style = colorful,
+	minted language = fsharp,
+	minted options = {
+		linenos = true,
+		breaklines = true,
+		breaksymbolleft = \tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
+		breakbytokenanywhere = true,
+		fontsize = \scriptsize,
+		stripnl = true,
+		tabsize = 4,
+		autogobble = true,
+		xleftmargin = -1em,
+		numbersep = 3pt
+	}
+}
+
+
+\newcommand{\inputlinenumbersoverlay}%
+{
+	\begin{tcbclipinterior}
+		\fill[colorTCB!40] (frame.south west) rectangle ([xshift = 5mm]frame.north west);
+	\end{tcbclipinterior}
+}
+
+
+% CODE USAGE: \begin{fsharpcode}{title}{add minted options} ... \end{fsharpcode}
+\newtcblisting[use counter = fsharpcounter, number within = chapter]{fsharpcode}[4][gray]%
+{
+	title = \textbf{Listing \thefsharpcounter:} #2,
+	label = #3,
+	colback = #1!10,
+	colbacktitle = #1!70,
+	colframe = #1!70,
+	minted options app = {#4},
+	overlay = {\inputlinenumbersoverlay}
+}
+
+
+% CODE USAGE: \begin{fsharpcode}{title}{add minted options} ... \end{fsharpcode}
+\newtcblisting[use counter = fsharpcounter, number within = chapter]{fsharpoutput}[3][gray]%
+{
+	title = \textbf{Listing \thefsharpcounter:} #2,
+	label = #3,
+	colback = #1!10,
+	colbacktitle = #1!70,
+	colframe = #1!70,
+	minted style = bw,
+	minted options app = {,
+		ignorelexererrors = true,
+		escapeinside = ||
+	},
+	overlay = {\inputlinenumbersoverlay}
+}
+
+
+% INPUT USAGE: \fsharpinput{title}{add minted options}{file}
+\newtcbinputlisting[use counter = fsharpcounter, number within = chapter]{\fsharpinput}[5][gray]%
+{
+	title = \textbf{Listing \thefsharpcounter:} #2,
+	label = #3,
+	colback = #1!10,
+	colbacktitle = #1!70,
+	colframe = #1!70,
+	listing file = #5,
+	minted options app = {#4},
+	overlay = {\inputlinenumbersoverlay}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newtcbox{\hlbox}[1][red]%
+{
+	on line,
+	arc = 2pt,
+	colback = #1!10!white,
+	colframe = #1!50!black,
+	boxsep = 0pt,
+	boxrule = 0pt,
+	% left
+	left = 1pt,
+	leftrule = 1pt,
+	% right
+	right = 1pt,
+	rightrule = 1pt,
+	% top
+	top = 2pt,
+	toprule = 1pt,
+	% bottom
+	bottom = 2pt,
+	bottomrule = 1pt
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
