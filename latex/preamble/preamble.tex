@@ -142,7 +142,7 @@
 
 % svg
 \usepackage{svg}
-	\setsvg{inkscapeversion=1.4}
+\setsvg{inkscapeversion=1.4}
 
 \usepackage{csquotes}
 \usepackage{graphicx}
@@ -152,6 +152,8 @@
 \usepackage{multicol}
 \usepackage{lstlinebgrd}
 \usepackage{etoolbox}
+\usepackage{array}
+\usepackage{colortbl}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,86 +176,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% listings
-
-\usepackage{comment}
-\begin{comment}
-\usepackage{listings}
-\newcommand{\dollar}{\mbox{\textdollar}}
-\newcommand{\hlcolor}[2]{\sethlcolor{#1}\hl{#2}}
-
-\lstdefinestyle{FSharp}%
-{
-	% keywords
-	morekeywords={
-		let, new, match, with, rec, open, module, namespace, type, of, member,
-		and, for, while, true, false, in, do, begin, end, fun, function, return, yield, option,
-		try, mutable, if, then, else, cloud, async, static, use, abstract, interface, inherit, finally,
-		Nat, int, float, double, bool, string, char, unit, list, array, set, seq,
-		List, Array, String, Set, Seq, Some, None,
-		RegExp, Eps, Lit, Cat, Empty, Or, Star,
-		TestMethod, Timeout, Config, QuickThrowOnFailure, AreEqual, Check, One,
-		Assertify, (?)
-	},
-	otherkeywords={let!, return!, do!, yield!, use!, var, from, select, where, order, by},
-	alsoother={`},
-	% colors
-	basicstyle          = \scriptsize\ttfamily,
-	backgroundcolor     = \color{colorBackground},
-	keywordstyle        = \color{colorKeyword},
-	commentstyle        = \color{colorComment},
-	identifierstyle     = \color{colorIdentifier},
-	stringstyle         = \color{colorString},
-	morecomment         = [l][\color{colorComment}]{///},
-	morecomment         = [l][\color{colorComment}]{//},
-	% strings, delimiters
-	morestring          = [b]",
-	moredelim           = [s][\color{colorDelimiter}]{<@}{@>},
-	moredelim           = [s][\color{colorMethod}]{``}{``},
-	moredelim           = [s][\color{colorAttribute}]{[<}{>]},
-	literate            =%
-		{(?)}{{(\textcolor{colorMethod}{?})}}1
-		% {->}{{$\to$}}1
-		{<=}{{$\leq$}}1
-		{>=}{{$\geq$}}1
-		{|>}{$\vartriangleright$}1
-		{<|}{{$\vartriangleleft$}}1,
-	% range
-	rangeprefix         = ////, % [1]
-	rangesuffix         = ),
-	includerangemarker  = false, % [2]
-	% line numbering
-	numbers             = left,
-	numbersep           = 5pt,
-	numberstyle         = \tiny\color{colorNumbering},
-	% text
-	showstringspaces    = false,
-	keepspaces          = false,
-	showspaces          = false,
-	showtabs            = false,
-	breakatwhitespace   = false,
-	breaklines          = true,
-	mathescape          = true,
-	escapeinside        = {(*@}{@*)},
-	tabsize             = 4,
-	sensitive           = true,
-	extendedchars       = true,
-	captionpos          = b,
-	% other
-	aboveskip           = \bigskipamount,
-	xleftmargin         = \parindent,
-	framexleftmargin    = 0em
-}
-
-\lstdefinestyle{OutputX}%
-{
-	basicstyle			= \scriptsize\ttfamily,
-	keywords			= {},
-}
-
-\lstset{style=FSharp}
-\end{comment}
-
+% TCOLORBOX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -264,17 +187,16 @@
 	\vspace{0.5em}\par\noindent
 	\begin{tcolorbox}%
 	[
-		colback = blue!20,
-		colframe = blue,
-		coltitle = white,
-		colbacktitle = blue,
+		% title
 		title = TODO,
 		fonttitle = \bfseries,
-		leftrule = 0.5mm,
-		top = 2mm,
-		bottom = 2mm,
+		coltitle = white,
+		colbacktitle = blue,
 		center title,
-		attach boxed title to top*
+		% frame
+		colback = blue!20,
+		colframe = blue,
+		enhanced = true
 	]
 		\begin{minipage}[t]{\dimexpr\hsize-2\fboxsep-2\fboxrule-10pt\relax}
 			\ifx\empty#1\empty
@@ -300,17 +222,16 @@
 	\vspace{0.5em}\par\noindent
 	\begin{tcolorbox}%
 	[
-		colback = blue!20,
-		colframe = blue,
-		coltitle = white,
-		colbacktitle = blue,
+		% title
 		title = TODO,
 		fonttitle = \bfseries,
-		leftrule = 0.5mm,
-		top = 2mm,
-		bottom = 2mm,
+		coltitle = white,
+		colbacktitle = blue,
 		center title,
-		attach boxed title to top*
+		% frame
+		colback = blue!20,
+		colframe = blue,
+		enhanced = true
 	]
 		\begin{todoenumerate}
 }%
@@ -322,6 +243,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MINTED/TCBLISTING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -332,25 +254,57 @@
 
 \setminted%
 {
-	fontsize = \small,
 	extrakeywordstype = {
 		Nat, int, TestMethod, Timeout, test
 	}
 }
 
 
-% INLINE USAGE: \fsharp|...|
+% \fsharp|...|
 \newmintinline[fsharp]{fsharp}%
 {
+	fontsize = \small,
 	style = colorful
 }
 
 
-% INLINE USAGE: \out|...|
+% \out|...|
 \newmintinline[out]{fsharp}%
 {
+	fontsize = \small,
 	style = bw
 }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% \makeatletter
+
+
+% \newcommand\listingsname{List of Listings}
+% \newcommand\listoftcblistings%
+% {
+% 	\chapter*{\listingsname}\@starttoc{lol}
+% }
+
+
+% \tcbset%
+% {
+%   	listing/.code args={#1#2#3#4}{%
+%   		\refstepcounter{#2}\label{#4}%
+%    		  \addcontentsline{lol}{section}{\protect\numberline{\csname the#2\endcsname} #3}, % new bit
+%   		\pgfkeysalso{title={\setlength{\hangindent}{\widthof{#1~\csname the#2\endcsname:\ }}\hangafter=1 \mbox{#1~\csname the#2\endcsname:\ }#3}}}%
+% }
+
+
+% \tcbset{
+% 	addtolol/.code={\addcontentsline{lol}{section}{\kvtcb@title}},
+% }
+
+% \show\kvtcb@title
+
+% \makeatother
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -360,110 +314,222 @@
 \tcbuselibrary{minted}
 
 
-\newcounter{fsharpcounter}
-\renewcommand{\thefsharpcounter}{\thechapter.\arabic{fsharpcounter}}
-
-
 \renewcommand{\theFancyVerbLine}%
 {
 	\ttfamily\textcolor{colorNumbering}{\tiny\arabic{FancyVerbLine}}
 }
 
 
-\tcbset%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP CODE - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\begin{fsharpcode}[optional color]%
+{title}%
+{label}%
+{further minted options}
+	CODE
+\end{fsharpcode}
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP CODE - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcblisting%
+[
+	auto counter,
+	number within = chapter,
+	number freestyle = {\noexpand\thechapter.\noexpand\arabic{\tcbcounter}.}
+]%
+{fsharpcode}[4][gray]%
 {
-	listing engine = minted,
-	colback = colorTCB!10,
-	colbacktitle = colorTCB!70,
-	colframe = colorTCB!70,
+	% title
+	title = {\textbf{Listing \thetcbcounter} #2},
+	fonttitle = \sffamily\small,
 	coltitle = black,
+	colbacktitle = #1!70,
 	center title,
 	attach boxed title to bottom*,
-	leftrule = 5mm,
+	% label
+	label = code:{#3},
+	% frame & skin
+	colback = #1!10,
+	colframe = #1!70,
+	enhanced = true,
+	% rules
+	leftrule = 4mm,
+	right = 0mm,
 	top = 0mm,
 	bottom = 0mm,
+	boxsep = 0.5mm, % 1mm
 	before = {\par\smallskip\parindent=0pt},
 	after = {\par\smallskip},
+	% minted
 	listing only = true,
-	enhanced = true,
+	listing engine = minted,
 	minted style = colorful,
 	minted language = fsharp,
 	minted options = {
+		fontsize = \scriptsize,
 		linenos = true,
+		xleftmargin = -1em,
+		numbersep = 0.1pt, % 2pt
 		breaklines = true,
 		breaksymbolleft = \tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
 		breakbytokenanywhere = true,
+		stripnl = true,
+		tabsize = 4,
+		autogobble = true
+	},
+	minted options app = {#4}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP OUTPUT - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\begin{fsharpoutput}[optional color]%
+{title}%
+{label}
+	CODE
+\end{fsharpoutput}
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP OUTPUT - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcblisting%
+[
+	auto counter,
+	number within = chapter,
+	number freestyle = {\noexpand\thechapter.\noexpand\arabic{\tcbcounter}.}
+]%
+{fsharpoutput}[3][gray]%
+{
+	% title
+	title = {\textbf{Listing \thetcbcounter} #2},
+	fonttitle = \sffamily\small,
+	coltitle = black,
+	colbacktitle = #1!70,
+	center title,
+	attach boxed title to bottom*,
+	% label
+	label = code:{#3},
+	% frame & skin
+	colback = #1!10,
+	colframe = #1!70,
+	enhanced = true,
+	% rules
+	leftrule = 4mm,
+	right = 0mm,
+	top = 0mm,
+	bottom = 0mm,
+	boxsep = 0.5mm, % 1mm
+	before = {\par\smallskip\parindent=0pt},
+	after = {\par\smallskip},
+	% minted
+	listing only = true,
+	listing engine = minted,
+	minted style = bw,
+	minted language = fsharp,
+	minted options = {
 		fontsize = \scriptsize,
+		linenos = true,
+		xleftmargin = -1em,
+		numbersep = 0.1pt, % 2pt
+		breaklines = true,
+		breaksymbolleft = \tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
+		breakbytokenanywhere = true,
 		stripnl = true,
 		tabsize = 4,
 		autogobble = true,
-		xleftmargin = -1em,
-		numbersep = 3pt
+		ignorelexererrors = true,
+		escapeinside = ||
 	}
 }
 
 
-\newcommand{\inputlinenumbersoverlay}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP INPUT - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\begin{fsharpinput}[optional color]%
+{title}%
+{label}%
+{further minted options}%
+{input file}
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FSHARP INPUT - USAGE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcbinputlisting%
+[
+	auto counter,
+	number within = chapter,
+	number freestyle = {\noexpand\thechapter.\noexpand\arabic{\tcbcounter}.}
+]%
+{\fsharpinput}[5][gray]%
 {
-	\begin{tcbclipinterior}
-		\fill[colorTCB!40] (frame.south west) rectangle ([xshift = 5mm]frame.north west);
-	\end{tcbclipinterior}
-}
-
-
-% CODE USAGE: \begin{fsharpcode}{title}{add minted options} ... \end{fsharpcode}
-\newtcblisting[use counter = fsharpcounter, number within = chapter]{fsharpcode}[4][gray]%
-{
-	title = \textbf{Listing \thefsharpcounter:} #2,
-	label = #3,
-	colback = #1!10,
+	% title
+	title = {\textbf{Listing \thetcbcounter} #2},
+	fonttitle = \sffamily\small,
+	coltitle = black,
 	colbacktitle = #1!70,
-	colframe = #1!70,
-	minted options app = {#4},
-	overlay = {\inputlinenumbersoverlay}
-}
-
-
-% CODE USAGE: \begin{fsharpcode}{title}{add minted options} ... \end{fsharpcode}
-\newtcblisting[use counter = fsharpcounter, number within = chapter]{fsharpoutput}[3][gray]%
-{
-	title = \textbf{Listing \thefsharpcounter:} #2,
-	label = #3,
-	colback = #1!10,
-	colbacktitle = #1!70,
-	colframe = #1!70,
-	minted style = bw,
-	minted options app = {,
-		ignorelexererrors = true,
-		escapeinside = ||
-	},
-	overlay = {\inputlinenumbersoverlay}
-}
-
-
-% INPUT USAGE: \fsharpinput{title}{add minted options}{file}
-\newtcbinputlisting[use counter = fsharpcounter, number within = chapter]{\fsharpinput}[5][gray]%
-{
-	title = \textbf{Listing \thefsharpcounter:} #2,
-	label = #3,
-	colback = #1!10,
-	colbacktitle = #1!70,
-	colframe = #1!70,
+	center title,
+	attach boxed title to bottom*,
+	% label
+	label = code:{#3},
+	% listing file
 	listing file = #5,
-	minted options app = {#4},
-	overlay = {\inputlinenumbersoverlay}
+	% frame & skin
+	colback = #1!10,
+	colframe = #1!70,
+	enhanced = true,
+	% rules
+	leftrule = 4mm,
+	right = 0mm,
+	top = 0mm,
+	bottom = 0mm,
+	boxsep = 0.5mm, % 1mm
+	before = {\par\smallskip\parindent=0pt},
+	after = {\par\smallskip},
+	% minted
+	listing only = true,
+	listing engine = minted,
+	minted style = colorful,
+	minted language = fsharp,
+	minted options = {
+		fontsize = \scriptsize,
+		linenos = true,
+		xleftmargin = -1em,
+		numbersep = 0.1pt, % 2pt
+		breaklines = true,
+		breaksymbolleft = \tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
+		breakbytokenanywhere = true,
+		stripnl = true,
+		tabsize = 4,
+		autogobble = true
+	},
+	minted options app = {#4}
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HIGHLIGHT BOX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\hlbox[optional color]{text}
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HIGHLIGHT BOX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newtcbox{\hlbox}[1][red]%
 {
 	on line,
 	arc = 2pt,
+	% color
 	colback = #1!10!white,
 	colframe = #1!50!black,
+	% box
 	boxsep = 0pt,
 	boxrule = 0pt,
 	% left
@@ -478,6 +544,51 @@
 	% bottom
 	bottom = 2pt,
 	bottomrule = 1pt
+}
+
+
+% \newcounter{figurecounter}
+% \renewcommand{\thefigurecounter}{\thechapter.\arabic{figurecounter}}
+% \renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TCB FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{comment}
+\begin{tcbfigure}[optional color]%
+{text}%
+{label}
+	GRAPHICS
+\end{tcbfigure}
+\end{comment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TCB FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newtcolorbox%
+[
+	number within = chapter,
+	blend into = figures
+]%
+{tcbfigure}[3][yellow]%
+{
+	% title
+	blend before title code = {\textbf{##1}\ },
+	title = {#2},
+	fonttitle = \sffamily,
+	coltitle = black,
+	colbacktitle = #1!70,
+	center title,
+	attach boxed title to bottom*,
+	% label
+	label = fig:{#3},
+	% placement
+	float = htb,
+	capture = hbox,
+	every float = \centering,
+	% frame & skin
+	colback = #1!10,
+	colframe = #1!70,
+	enhanced = true
 }
 
 
