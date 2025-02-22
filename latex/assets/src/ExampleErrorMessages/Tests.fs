@@ -66,9 +66,7 @@ type Tests () =
     member _.``a) digitSum Random`` (): unit =
         Check.One (
             { Config.QuickThrowOnFailure with EndSize = 1000 },
-            fun (n: Nat) -> Assert.AreEqual<Nat> (
-                digitSumSolution n, digitSum n
-            )
+            fun (n: Nat) -> Assert.AreEqual<Nat> (digitSumSolution n, digitSum n)
         ) ////digitSumRandomEnd)
 
     ////sortedDigitsExamplesBegin)
@@ -87,9 +85,7 @@ type Tests () =
     member _.``b) sortedDigits Random`` (): unit =
         Check.One (
             { Config.QuickThrowOnFailure with EndSize = 1000 },
-            fun (n: Nat) -> Assert.AreEqual<bool> (
-                sortedDigitsSolution n, sortedDigits n
-            )
+            fun (n: Nat) -> Assert.AreEqual<bool> (sortedDigitsSolution n, sortedDigits n)
         ) ////sortedDigitsRandomEnd)
 
     ////digitSumExamplesWithBegin)

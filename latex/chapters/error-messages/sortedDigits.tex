@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Example 2 - \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example 2 --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -22,7 +22,7 @@ that takes a natural number \fsharp|n| as input and returns
 
 
 \fsharpinput%
-{Student submission for \fsharp|sortedDigits|}%
+{Student submission for \texttt{sortedDigits}}%
 {studentSubmissionSortedDigits}%
 {
 	rangestartafterstring = ////sortedDigitsStudentBegin),
@@ -39,7 +39,7 @@ that takes a natural number \fsharp|n| as input and returns
 
 
 \fsharpinput%
-{Sample solution for \fsharp|sortedDigits|}%
+{Sample solution for \texttt{sortedDigits}}%
 {sampleSolutionSortedDigits}%
 {
 	rangestartafterstring = ////sortedDigitsSolutionBegin),
@@ -52,12 +52,12 @@ that takes a natural number \fsharp|n| as input and returns
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Example Tests - \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Example Tests --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \fsharpinput%
-{Example tests for \fsharp|sortedDigits|}%
+{Example tests for \texttt{sortedDigits}}%
 {exampleTestsSortedDigit}%
 {
 	rangestartafterstring = ////sortedDigitsExamplesBegin),
@@ -72,45 +72,49 @@ that takes a natural number \fsharp|n| as input and returns
 
 
 \begin{fsharpoutput}%
-{Output of examples tests for \fsharp|sortedDigits|}%
+{Output of examples tests for \texttt{sortedDigits}}%
 {outputExampleTestsSortedDigits}
 b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sortedDigits Examples threw exception:
-      Swensen.Unquote.AssertionFailedException: Test failed:
+   Swensen.Unquote.AssertionFailedException: Test failed:
 
-      StudentSubmission.|\hlbox[colorKeyword]{sortedDigits 1111N}| = true
-      StudentSubmission.sortedDigits 1111N = true
-      |\hlbox[red]{false}| = |\hlbox[green]{true}|
-      false
+   StudentSubmission.|\hlbox[colorKeyword]{sortedDigits 1111N}| = true
+   StudentSubmission.sortedDigits 1111N = true
+   |\hlbox[red]{false}| = |\hlbox[green]{true}|
+   false
 
-      Stack Trace:
-          at Tests.Tests.b) sortedDigits Examples() in path\to\Tests.fs:line 80
-         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   Stack Trace:
+		at Tests.Tests.b) sortedDigits Examples() in path\to\Tests.fs:line 80
+		at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+	  	at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 \end{fsharpoutput}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Key Information Example Tests - \texttt{sortedDigits}} %%%%%
+\subsubsection{Key Information Example Tests --- \texttt{sortedDigits}} %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{center}
-	\begin{tabular}{|l|l|}\hline
-		Tested expression & \hlbox[colorKeyword]{\out|sortedDigits 123N|}\\ \hline
-		Expected result & \hlbox[green]{\out|true|}\\ \hline
-		Actual result & \hlbox[red]{\out|false|}\\ \hline
-	\end{tabular}
-\end{center}
-
+% \begin{center}
+% 	\begin{tabular}{|l|l|}\hline
+% 		Tested expression & \hlbox[colorKeyword]{\out|sortedDigits 123N|}\\ \hline
+% 		Expected result & \hlbox[green]{\out|true|}\\ \hline
+% 		Actual result & \hlbox[red]{\out|false|}\\ \hline
+% 	\end{tabular}
+% \end{center}
+\begin{tcbtabular}{Title}{label}{R|L}{\normalsize}
+		\textbf{Tested expression} & \hlbox[colorKeyword]{\out|sortedDigits 123N|}\\ \hline
+		\textbf{Expected result} & \hlbox[green]{\out|true|}\\ \hline
+		\textbf{Actual result} & \hlbox[red]{\out|false|}\\ \hline
+\end{tcbtabular}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Random Tests - \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Random Tests --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \fsharpinput%
-{Random tests for \fsharp|sortedDigits|}%
+{Random tests for \texttt{sortedDigits}}%
 {randomTestsSortedDigits}%
 {
 	rangestartafterstring = ////sortedDigitsRandomBegin),
@@ -125,51 +129,59 @@ b) sortedDigits Examples (4ms): Error Message: Test method Tests+Tests.b) sorted
 
 
 \begin{fsharpoutput}%
-{Output of random tests for \fsharp|sortedDigits|}%
+{Output of random tests for \texttt{sortedDigits}}%
 {outputRandomTestsSortedDigits}
 |\hlbox[colorKeyword]{b) sortedDigits Random}| (3ms): Error Message: Test method Tests+Tests.b) sortedDigits Random threw exception:
-      System.Exception: Falsifiable, after 5 tests (0 shrinks) (StdGen (867569077, 297439050)):
-      |\hlbox[colorKeyword]{Original:}|
-      |\hlbox[colorKeyword]{33N}|
-      with exception:
-      Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed.
-      |\hlbox[green]{Expected:<True>}|. |\hlbox[red]{Actual:<False>}|.
-         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
-         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
-      ions/Assert.AreEqual.cs:line 201
-         at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
-         at Tests.b) sortedDigits Random@90.Invoke(Nat n) in path\to\Tests.fs:line 90
-         at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+   System.Exception: Falsifiable, after 5 tests (0 shrinks) (StdGen (867569077, 297439050)):
+   |\hlbox[colorKeyword]{Original:}|
+   |\hlbox[colorKeyword]{33N}|
+   with exception:
+   Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. |\hlbox[green]{Expected:<True>}|. |\hlbox[red]{Actual:<False>}|.
+	  	at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+	  	at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+		at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+	  	at Tests.b) sortedDigits Random@90.Invoke(Nat n) in path\to\Tests.fs:line 90
+	  	at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
 
-      Stack Trace:
-          at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
-         at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
-         at FsCheck.Runner.runner[a](Config config, a prop)
-         at FsCheck.Runner.check[a](Config config, a p)
-         at FsCheck.Check.One[Testable](Config config, Testable property)
-         at Tests.Tests.b) sortedDigits Random() in path\to\Tests.fs:line 89
-         at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-         at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+   Stack Trace:
+		at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+		at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+	  	at FsCheck.Runner.runner[a](Config config, a prop)
+	  	at FsCheck.Runner.check[a](Config config, a p)
+	  	at FsCheck.Check.One[Testable](Config config, Testable property)
+	  	at Tests.Tests.b) sortedDigits Random() in path\to\Tests.fs:line 89
+	  	at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+	  	at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 \end{fsharpoutput}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Key Information Random Tests - \texttt{sortedDigits}} %%%%%%
+\subsubsection{Key Information Random Tests --- \texttt{sortedDigits}} %%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{center}
-	\begin{tabular}{|l|l|}\hline
-		Tested expression &
+% \begin{center}
+% 	\begin{tabular}{|l|l|}\hline
+% 		Tested expression &
+% 			$\left.\begin{array}{rr}
+% 			    \hlbox[colorKeyword]{\out|b) sortedDigits Random|}\\
+% 			    \hlbox[colorKeyword]{\out|Original: 33N|}
+%             \end{array}\right\}
+%             \text{\out|sortedDigits 33N|}$\\ \hline
+% 		Expected result & \hlbox[green]{\out|Expected:<True>|} $\Longrightarrow$ \hlbox[green]{\out|True|} (actually \hlbox[green]{\out|true|})\\ \hline
+% 		Actual result & \hlbox[red]{\out|Actual:<False>|} $\Longrightarrow$ \hlbox[red]{\out|False|} (actually \hlbox[red]{\out|false|})\\ \hline
+% 	\end{tabular}
+% \end{center}
+\begin{tcbtabular}{Title}{label}{r|L}{\normalsize}
+		\textbf{Tested expression} &
 			$\left.\begin{array}{rr}
-			    \hlbox[colorKeyword]{\out|b) sortedDigits Random|}\\
-			    \hlbox[colorKeyword]{\out|Original: 33N|}
-            \end{array}\right\}
-            \text{\out|sortedDigits 33N|}$\\ \hline
-		Expected result & \hlbox[green]{\out|Expected:<True>|} $\Longrightarrow$ \hlbox[green]{\out|True|} (actually \hlbox[green]{\out|true|})\\ \hline
-		Actual result & \hlbox[red]{\out|Actual:<False>|} $\Longrightarrow$ \hlbox[red]{\out|False|} (actually \hlbox[red]{\out|false|})\\ \hline
-	\end{tabular}
-\end{center}
+				\hlbox[colorKeyword]{\out|b) sortedDigits Random|}\\
+				\hlbox[colorKeyword]{\out|Original: 33N|}
+			\end{array}\right\}
+			\text{\out|sortedDigits 33N|}$\\ \hline
+		\textbf{Expected result} & \hlbox[green]{\out|Expected:<True>|} $\Longrightarrow$ \hlbox[green]{\out|True|} (actually \hlbox[green]{\out|true|})\\ \hline
+		\textbf{Actual result} & \hlbox[red]{\out|Actual:<False>|} $\Longrightarrow$ \hlbox[red]{\out|False|} (actually \hlbox[red]{\out|false|})\\ \hline
+\end{tcbtabular}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

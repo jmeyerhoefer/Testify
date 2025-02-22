@@ -5,10 +5,7 @@
 
 \todo{Bla bla bla}
 
-
-\begin{tcbfigure}{Some figure}{blablabla}
-    \includegraphics[scale = 0.5]{../error-pattern/data/Exercises/GdP23/Statistics/buildResultsColumnChart-Total.png}
-\end{tcbfigure}
+In this chapter I will go over the data I analyzed.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,7 +13,70 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Describe how you gathered and analyzed semester data.}
+The data I analyzed was collected during winter semester 2023/2024.
+The data was anonymized and forwarded to me by my supervisor.
+
+
+\begin{todolist}
+    \item Number of students
+    \item Average semester (ranging from \textit{lowest} to \textit{highest})
+    \item Total number of submissions
+    \item \(12\) sheets with \(16\) relevant tasks (programming tasks)
+    \item TODO
+\end{todolist}
+
+
+The relevant part of this data set were the submissions in the following directory structure:
+
+\begin{tcolorbox}[fontupper = \footnotesize]
+    \dirtree{%
+        .1 /{\color{red!70!black}<ExerciseId>}/.
+            .2 Templates/.
+                .3 {\color{red!70!black}<SheetId>}/.
+                    .4 {\color{red!70!black}<AssignmentId>}/.
+                        .5 \_solution/.
+                            .6 {\color{red!70!black}<AssignmentName>}\texttt{.}fs\DTcomment{Solution}.
+                        .5 template/.
+                            .6 Mini\texttt{.}fs.
+                            .6 Types\texttt{.}fs.
+                            .6 {\color{red!70!black}<AssignmentName>}\texttt{.}fs\DTcomment{Template}.
+                            .6 Tests\texttt{.}fs\DTcomment{Tests}.
+            .2 Uploads/.
+                .3 {\color{red!70!black}<SheetId>}/.
+                    .4 {\color{red!70!black}<GroupId>}\_{\color{red!70!black}<TeamId>}/.
+                        .5 {\color{red!70!black}<AssignmentId>}/\DTcomment{Submissions}.
+                            .6 {\color{red!70!black}<Timestamp>}-{\color{red!70!black}<AssignmentName>}\texttt{.}fs\DTcomment{Format}.
+                            .6 \DTcomment{Other submissions}.
+    }
+\end{tcolorbox}
+\noindent The students were provided with a zip file usually containing \texttt{Mini.fs}, \texttt{Types.fs} and \texttt{{\color{red!70!black}<AssignmentName>}.fs}.
+They do not have access to the tests, but they are able to execute them via \href{https://exclaim.cs.rptu.de}{ExClaim}.
+\textbf{\texttt{Mini.fs}} is a library of useful methods and basic types that are used throughout all of the assignments.
+The type \fsharp|Nat| for example describes a natural number including zero (\(\mathbb{N}_0\)), written as a non-negative integer with postfix `\texttt{N}'.
+\textbf{\texttt{Types.fs}} containts assignment specific type definitions, e.g.: Tree representation, Map representation, etc.
+\textbf{\texttt{{\color{red!70!black}<AssignmentName>}.fs}} then contains the methods that are supposed to be implemented.
+Let's take for example a method that returns the minimum of \(3\) natural numbers:
+
+\begin{fsharpcodeshort}{Template}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    failwith "TODO"
+\end{fsharpcodeshort}
+\noindent The method is implemented with the placeholder \fsharp|failwith "TODO"| to ensure compilation.
+The students are supposed to replace the \fsharp|failwith "TODO"| with their implementation of that method.
+\begin{fsharpcodeshort}{Sample Solution}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    min (min a b) c
+\end{fsharpcodeshort}
+\noindent In the sample solution the placeholder was replaced by a compact solution for the assignment. Submissions may contain \fsharp|match|-statements,
+\fsharp|if|-\fsharp|else|-statements or similar structures, which also valid.
+
+
+\begin{todolist}
+    \item i also had the timestamps of executed tests and deleted files
+    \item Each submission is stored with a timestamp
+    \item To analyze this data reconstructed all snapshots during test execution and
+        ran them again inside of docker containers to extract the results of \texttt{dotnet build} and \texttt{dotnet test}.
+\end{todolist}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,6 +85,12 @@
 
 
 \todo{Present the success rates for project compilation.}
+\begin{tcbfigure}%
+{{Build Stability Analysis: Success and failure counts for .NET builds, with overall success percentage.}}%
+{buildResultsColumnChartTotal}%
+{Build Stability Analysis}
+    \includegraphics[scale = 0.5]{../error-pattern/data/Exercises/GdP23/Statistics/buildResultsColumnChart-Total.png}
+\end{tcbfigure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,14 +99,112 @@
 
 
 \todo{Analyze the percentage of passed tests.}
+\begin{tcbfigure}%
+{{Submission Performance Analysis: Success rate of initial and final submissions across different exercises.}}%
+{testResultsColumnChartFirstAndLastSubmissionCombined}%
+{Submission Performance Analysis}
+    \includegraphics[scale = 0.5]{../error-pattern/data/Exercises/GdP23/Statistics/testResultsColumnChartFirstAndLastSubmission-Combined.png}
+\end{tcbfigure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Insights and Patterns} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \todo{Highlight key patterns and findings from the data.}
+
+\begin{tcbtable}{The top 10 of \fs error codes in all submissions}{fsharpErrorCodes}{ccp{7cm}}{\footnotesize}
+    \textbf{Pos} & \textbf{FSharp Error Code} & \textbf{Short Description \& Example}\\\hline\hline
+    \nth{1}  & \textit{FS0001} & \RaggedRight%
+        {
+            The type 'X' (e.g. \fsharp{bool}) does not match the type 'Y' (e.g. \fsharp{int}).\newline
+            \begin{fsharpcodeshort}{}
+            let x: int = #\hlbox{true}%
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{2}  & \textit{FS0058} & \RaggedRight%
+        {
+            Unexpected syntax or possible incorrect indentation.\newline
+            \begin{fsharpcodeshort}{}
+            let f x = if x then 1 else
+            #\hlbox{-1}%
+            \end{fsharpcodeshort}
+
+        }\\\hline
+    \nth{3}  & \textit{FS0588} & \RaggedRight%
+        {
+            The block following this 'X' (e.g. \fsharp{let}) is unfinished. Every code block is an expression and must have a result.\newline
+            \begin{fsharpcodeshort}{}
+            let add a b =
+                #\hlbox{let}% result = a + b
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{4}  & \textit{FS0597} & \RaggedRight%
+        {
+            Successive arguments should be separated by spaces or tupled, and arguments involving function or method applications should be parenthesized.\newline
+            \begin{fsharpcodeshort}{}
+            printfn "%d" #\hlbox{List.min([1; 2])}%
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{5}  & \textit{FS3524} & \RaggedRight%
+        {
+            Expecting expression.\newline
+            \begin{fsharpcodeshort}{}
+            if 1 < 2 then 1 else#\hlbox{\phantom{X}}%
+            \end{fsharpcodeshort}
+        }\\\hline
+% \end{tcbtable}
+% \begin{tcbtable}{The top 10 of \fs error codes in all submissions (\nth{6} - \nth{10})}{fsharpErrorCodes2}{ccp{7cm}}
+    \nth{6}  & \textit{FS3546} & \RaggedRight%
+        {
+            Expecting pattern.\newline
+            \begin{fsharpcodeshort}{}
+            type Ex = | A of int * int
+            match A(1,2) with A (#\hlbox{,}% y) -> y
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{7}  & \textit{FS0033} & \RaggedRight%
+        {
+            The type 'X' expects $m$ type argument(s) but is given $n$.\newline
+            \begin{fsharpcodeshort}{}
+            type Ex<'a,'b> = {A:'a; B:'b}
+            let ex: #\hlbox{Ex<int>}% = {A=1; B=2}
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{8}  & \textit{FS0800} & \RaggedRight%
+        {
+            Invalid use of a type name.\newline
+            \begin{fsharpcodeshort}{}
+            type Ex = {A: int; B: int}
+            let ex = #\hlbox{Ex}%
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{9}  & \textit{FS3156} & \RaggedRight%
+        {
+            Unexpected token 'X' or incomplete expression.\newline
+            \begin{fsharpcodeshort}{}
+            let add a b = a #\hlbox{+}%
+            \end{fsharpcodeshort}
+        }\\\hline
+    \nth{10} & \textit{FS0727} & \RaggedRight%
+        {
+            This union case expects $n$ arguments in tupled form, but was given $m$.\newline
+            \begin{fsharpcodeshort}{}
+            type Ex = | A of int * int
+            match A (1, 2) with #\hlbox{A x y}% -> x
+            \end{fsharpcodeshort}
+        }
+\end{tcbtable}
+
+
+\begin{tcbfigure}%
+{{Error Code Analysis: Distribution and frequency of \fs error codes across all exercises and submissions.}}%
+{buildResultsColumnChartTop10Errors}%
+{Error Code Analysis}
+    \includegraphics[scale = 0.5]{../error-pattern/data/Exercises/GdP23/Statistics/buildResultsColumnChartTop10Errors.png}
+\end{tcbfigure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

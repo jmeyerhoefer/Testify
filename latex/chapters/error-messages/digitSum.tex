@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Example 1 - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example 1 --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -19,7 +19,7 @@ that takes a natural number \fsharp|n| as input and returns its digit sum. Examp
 
 
 \fsharpinput%
-{Student submission for \fsharp|digitSum|}%
+{Student submission for \texttt{digitSum}}%
 {studentSubmissionDigitSum}%
 {
 	rangestartafterstring = ////digitSumStudentBegin),
@@ -36,7 +36,7 @@ that takes a natural number \fsharp|n| as input and returns its digit sum. Examp
 
 
 \fsharpinput%
-{Sample solution for \fsharp|digitSum|}%
+{Sample solution for \texttt{digitSum}}%
 {sampleSolutionDigitSum}%
 {
 	rangestartafterstring = ////digitSumSolutionBegin),
@@ -49,12 +49,12 @@ that takes a natural number \fsharp|n| as input and returns its digit sum. Examp
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Example Tests - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Example Tests --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \fsharpinput%
-{Example tests for \fsharp|digitSum|}%
+{Example tests for \texttt{digitSum}}%
 {exampleTestsDigitSum}%
 {
 	rangestartafterstring = ////digitSumExamplesBegin),
@@ -69,45 +69,43 @@ that takes a natural number \fsharp|n| as input and returns its digit sum. Examp
 
 
 \begin{fsharpoutput}%
-{Output of examples tests for \fsharp|digitSum|}%
+{Output of examples tests for \texttt{digitSum}}%
 {outputExampleTestsDigitSum}
 a) digitSum Examples (388ms): Error Message: Test method Tests+Tests.a) digitSum Examples threw exception:
-		Swensen.Unquote.AssertionFailedException: Test failed:
+	Swensen.Unquote.AssertionFailedException: Test failed:
 
-		StudentSubmission.|\hlbox[colorKeyword]{digitSum 123N}| = 6N
-		StudentSubmission.digitSum 123N = 6N
-		|\hlbox[red]{7N}| = |\hlbox[green]{6N}|
-		false
+	StudentSubmission.|\hlbox[colorKeyword]{digitSum 123N}| = 6N
+	StudentSubmission.digitSum 123N = 6N
+	|\hlbox[red]{7N}| = |\hlbox[green]{6N}|
+	false
 
-		Stack Trace:
-			 at Tests.Tests.a) digitSum Examples() in path\to\Tests.fs:line 57
-			at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-			at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+	Stack Trace:
+		at Tests.Tests.a) digitSum Examples() in path\to\Tests.fs:line 57
+		at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+		at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 \end{fsharpoutput}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Key Information Example Tests - \texttt{digitSum}} %%%%%%%%%
+\subsubsection{Key Information Example Tests --- \texttt{digitSum}} %%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{center}
-	\begin{tabular}{|l|l|}\hline
-		Tested expression & \hlbox[colorKeyword]{\out|digitSum 123N|}\\ \hline
-		Expected result & \hlbox[green]{\out|6N|}\\ \hline
-		Actual result & \hlbox[red]{\out|7N|}\\ \hline
-	\end{tabular}
-\end{center}
+\begin{tcbtabular}{Key Information Example Tests --- \texttt{digitSum}}{keyInfoExampleDigitSum1}{R|L}{\normalsize}
+	\textbf{Tested expression} & \hlbox[colorKeyword]{\out|digitSum 123N|}\\\hline
+	\textbf{Expected result} & \hlbox[green]{\out|6N|}\\\hline
+	\textbf{Actual result} & \hlbox[red]{\out|7N|}
+\end{tcbtabular}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Random Tests - \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Random Tests --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \fsharpinput%
-{Random tests for \fsharp|digitSum|}%
+{Random tests for \texttt{digitSum}}%
 {randomTestsDigitSum}%
 {
 	rangestartafterstring = ////digitSumRandomBegin),
@@ -122,33 +120,31 @@ a) digitSum Examples (388ms): Error Message: Test method Tests+Tests.a) digitSum
 
 
 \begin{fsharpoutput}%
-{Output of random tests for \fsharp|digitSum|}%
+{Output of random tests for \texttt{digitSum}}%
 {outputRandomTestsDigitSum}
 |\hlbox[colorKeyword]{a) digitSum Random}| (74ms): Error Message: Test method Tests+Tests.a) digitSum Random threw exception:
-		System.Exception: Falsifiable, after 1 test (1 shrink) (StdGen (1765833463, 297438798)):
-		|\hlbox[colorKeyword]{Original:}|
-		|\hlbox[colorKeyword]{11N}|
-		Shrunk:
-		0N
-		with exception:
-		Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed.
-		|\hlbox[green]{Expected:<0>}|. |\hlbox[red]{Actual:<1>}|.
-			at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
-			at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assert
-		ions/Assert.AreEqual.cs:line 201
-			at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
-			at Tests.a) digitSum Random@69.Invoke(Nat n) in path\to\Tests.fs:line 69
-			at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
+	System.Exception: Falsifiable, after 1 test (1 shrink) (StdGen (1765833463, 297438798)):
+	Original:
+	11N
+	|\hlbox[colorKeyword]{Shrunk:}|
+	|\hlbox[colorKeyword]{0N}|
+	with exception:
+	Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException: Assert.AreEqual failed. |\hlbox[green]{Expected:<0>}|. |\hlbox[red]{Actual:<1>}|.
+		at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowAssertFailed(String assertionName, String message) in /_/src/TestFramework/TestFramework/Assertions/Assert.cs:line 60
+		at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual, IEqualityComparer`1 comparer, String message, Object[] parameters) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 201
+		at Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual[T](T expected, T actual) in /_/src/TestFramework/TestFramework/Assertions/Assert.AreEqual.cs:line 34
+		at Tests.a) digitSum Random@69.Invoke(Nat n) in path\to\Tests.fs:line 69
+		at FsCheck.Testable.evaluate[a,b](FSharpFunc`2 body, a a)
 
-		Stack Trace:
-			 at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
-			at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
-			at FsCheck.Runner.runner[a](Config config, a prop)
-			at FsCheck.Runner.check[a](Config config, a p)
-			at FsCheck.Check.One[Testable](Config config, Testable property)
-			at Tests.Tests.a) digitSum Random() in path\to\Tests.fs:line 68
-			at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-			at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+	Stack Trace:
+		at Microsoft.FSharp.Core.PrintfModule.PrintFormatToStringThenFail@1448.Invoke(String message)
+		at <StartupCode$FsCheck>.$Runner.get_throwingRunner@382.FsCheck.IRunner.OnFinished(String name, TestResult testResult)
+		at FsCheck.Runner.runner[a](Config config, a prop)
+		at FsCheck.Runner.check[a](Config config, a p)
+		at FsCheck.Check.One[Testable](Config config, Testable property)
+		at Tests.Tests.a) digitSum Random() in path\to\Tests.fs:line 68
+		at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+		at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 \end{fsharpoutput}
 
 
@@ -157,18 +153,16 @@ a) digitSum Examples (388ms): Error Message: Test method Tests+Tests.a) digitSum
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\begin{center}
-	\begin{tabular}{|l|l|}\hline
-		Tested expression &
-			$\left.\begin{array}{rr}
-				 \hlbox[colorKeyword]{\out|a) digitSum Random|}\\
-	 			\hlbox[colorKeyword]{\out|Original: 11N|}
-				\end{array}\right\}
-				\text{\out|digitSum 11N|}$\\ \hline
-		Expected result & \hlbox[green]{\out|Expected:<0>|} $\Longrightarrow$ \hlbox[green]{\out|0|} (actually \hlbox[green]{\out|0N|})\\ \hline
-		Actual result & \hlbox[red]{\out|Actual:<1>|} $\Longrightarrow$ \hlbox[red]{\out|1|} (actually \hlbox[red]{\out|1N|})\\ \hline
-	\end{tabular}
-\end{center}
+\begin{tcbtabular}{Title}{label}{r|L}{\normalsize}
+	\textbf{Tested expression} &
+	$\left.\begin{array}{rr}
+		\hlbox[colorKeyword]{\out|a) digitSum Random|}\\
+		\hlbox[colorKeyword]{\out|Shrunk: 0N|}
+	\end{array}\right\}
+	\text{\out|digitSum 0N|}$\\\hline
+	\textbf{Expected result} & \hlbox[green]{\out|Expected:<0>|} $\Longrightarrow$ \hlbox[green]{\out|0|} (actually \hlbox[green]{\out|0N|})\\\hline
+	\textbf{Actual result} & \hlbox[red]{\out|Actual:<1>|} $\Longrightarrow$ \hlbox[red]{\out|1|} (actually \hlbox[red]{\out|1N|})
+\end{tcbtabular}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

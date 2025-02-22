@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Assertify: A Class for Improving Error Messages} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Assertify: A Library for Improving Error Messages} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{}
+Assertify describes a library of various methods and classes to improve error messages during testing.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11,7 +11,19 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{State the goals and design principles behind Assertify.}
+% \todo{State the goals and design principles behind Assertify.}
+
+\noindent Assertify incorporates functionalities to enhance the debugging and testing experience by providing clearer, more informative error messages.
+Traditional assertion failures often yield cryptic outputs, making it difficult to identify the root cause of an issue.
+Assertify addresses this by offering detailed, structured feedback, including expression simplifications, expected vs. actual values, and reduction history.
+The design principles behind Assertify focus on:
+\begin{enumerate}[label=\textbf{(\arabic*)}]
+    \item \textbf{Clarity} -- Displaying test failures in a structured and easily readable format.
+    \item \textbf{Context} -- Providing additional context through expression reductions and history tracking.
+    \item \textbf{Usability} -- Ensuring that error messages are helpful for students and developers alike.
+    \item \textbf{Flexibility} -- Supporting different levels of verbosity for various debugging needs.
+\end{enumerate}
+By integrating these principles, Assertify streamlines the debugging process and improves the efficiency of error resolution.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -19,7 +31,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Provide technical details on how Assertify wraps tests and improves output.}
+% \todo{Provide technical details on how Assertify wraps tests and improves output.}
+
+Assertify is implemented as a wrapper around standard test assertions, enriching the output with structured details. The core mechanism involves capturing the tested expressions, simplifying them where possible, and formatting the results into a well-structured report.
+Key implementation details include:
+\begin{itemize}
+    \item \textbf{Expression Reduction:} Assertify simplifies complex expressions, stripping unnecessary details while preserving meaningful structure.
+    \item \textbf{History Tracking:} The system logs successfully evaluated expressions leading up to a failure, providing insight into the progression of computations.
+        This is especially helpful if a succession of operations are executed on the same data structure and said data structure is correctly implemented for the majority of operations
+        and only fails when a specific edge case occurs (e.g. an (almost) full linked list encounters a out-of-bounds index error).
+        Then the history of operations might be helpful for novices to recreate the error because the order of operations is crutial to whether or not a operation fails.
+    \item \textbf{Verbose and Compact Modes:} Users can toggle between detailed explanations and minimalistic outputs.
+    \item \textbf{Enhanced Formatting:} Utilizing structured markers and color-coded elements, Assertify highlights critical differences between expected and actual results.
+\end{itemize}
+By wrapping around existing test frameworks, Assertify seamlessly integrates into existing workflows, enhancing error visibility without requiring significant changes to test code.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,15 +52,139 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Compare previous error messages with Assertify's outputs.}
+% \todo{Compare previous error messages with Assertify's outputs.}
 
+
+Traditional assertion failures often return extremely detailed messages that require additional effort to decipher.
+Assertify enhances this by providing detailed comparisons. 
+The enhanced output not only shows expected vs. actual values but also presents the exact expression tested, making debugging significantly easier.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example 1 --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\todo{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Example Tests --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{todolist}
+    \item Compare old and new test results (old: \ref{fsharp:{outputExampleTestsDigitSum}})
+\end{todolist}
+
+
+\begin{fsharpoutput}%
+{Assertify output of examples tests for \texttt{digitSum}}%
+{assertifyOutputExampleTestsDigitSum}
+-------------------- TESTED EXPRESSION -----------------------
+Tested/Failed expression:   StudentSubmission.digitSum 123N
+|{\color{blue}Simplified expression:      digitSum 123N}|
+------------------- EXPECTED AND ACTUAL ----------------------
+|{\color{green!70!black}Expected result:            6N}|
+|{\color{red}Actual result:              7N}|
+\end{fsharpoutput}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Random Tests --- \texttt{digitSum}} %%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{todolist}
+    \item Compare old and new test results (old: \ref{fsharp:{outputRandomTestsDigitSum}})
+\end{todolist}
+
+
+\begin{fsharpoutput}%
+{Assertify output of examples tests for \texttt{digitSum}}%
+{assertifyOutputExampleTestsDigitSum}
+-------------------- TESTED EXPRESSION -----------------------
+Tested/Failed expression:   StudentSubmission.digitSum n
+|{\color{blue}Simplified expression:      digitSum 0N}|
+------------------- EXPECTED AND ACTUAL ----------------------
+|{\color{green!70!black}Expected result:            0N}|
+|{\color{red}Actual result:              1N}|
+\end{fsharpoutput}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Example 2 --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\todo{}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Example Tests --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{todolist}
+    \item Compare old and new test results (old: \ref{fsharp:{outputExampleTestsSortedDigits}})
+\end{todolist}
+
+
+\begin{fsharpoutput}%
+{Assertify output of examples tests for \texttt{sortedDigits}}%
+{assertifyOutputExampleTestsSortedDigits}
+-------------------- TESTED EXPRESSION -------------------------
+Tested/Failed expression:   StudentSubmission.sortedDigits 1111N
+|{\color{blue}Simplified expression:      sortedDigits 1111N}|
+------------------- EXPECTED AND ACTUAL ------------------------
+|{\color{green!70!black}Expected result:            true}|
+|{\color{red}Actual result:              false}|
+\end{fsharpoutput}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Random Tests --- \texttt{sortedDigits}} %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{todolist}
+    \item Compare old and new test results (old: \ref{fsharp:{outputRandomTestsSortedDigits}})
+\end{todolist}
+
+
+\begin{fsharpoutput}%
+{Assertify output of examples tests for \texttt{sortedDigits}}%
+{assertifyOutputExampleTestsSortedDigits}
+-------------------- TESTED EXPRESSION -----------------------
+Tested/Failed expression:   StudentSubmission.sortedDigits n
+|{\color{blue}Simplified expression:      sortedDigits 33N}|
+------------------- EXPECTED AND ACTUAL ----------------------
+|{\color{green!70!black}Expected result:            true}|
+|{\color{red}Actual result:              false}|
+\end{fsharpoutput}
+    
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Usability and Design Considerations} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Discuss design decisions to enhance clarity and usability for students.}
+% \todo{Discuss design decisions to enhance clarity and usability for students.}
+
+Assertify is designed with a strong focus on usability, particularly for students learning programming and debugging. Key considerations include:
+\begin{itemize}
+    \item \textbf{Readable Error Reports:} Formatting failures in a structured, natural-language format ensures accessibility.
+    \item \textbf{Minimal Intrusion:} Assertify seamlessly integrates with existing test frameworks without requiring major changes.
+    \item \textbf{Customizability:} Users can adjust verbosity levels and enable/disable history tracking based on their needs.
+    \item \textbf{Color Coding and Annotations:} Highlighting key differences improves readability and makes debugging more intuitive.
+\end{itemize}
+These design choices collectively improve the debugging experience, reducing frustration and helping developers quickly understand and fix issues.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
