@@ -17,6 +17,7 @@
 \usepackage{tgtermes}
 \renewcommand{\familydefault}{\sfdefault}
 
+
 \makeatletter
 \renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
 \makeatother
@@ -67,7 +68,7 @@
 
 
 % Style
-\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}% Put "chapter" oder "appendix" in front of the chapter number in running head
+\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}% Put "chapter" or "appendix" in front of the chapter number in running head
 \clearpairofpagestyles
 \ohead{\headmark}
 \automark[chapter]{chapter}
@@ -92,7 +93,8 @@
 
 \usepackage[
 	bookmarksdepth=3,   % bookmark levels in the PDF.
-	bookmarksnumbered   % Show section numbering in bookmark
+	bookmarksnumbered,   % Show section numbering in bookmark
+	colorlinks=true
 ]{hyperref}
 
 
@@ -177,7 +179,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\def\fs{\texttt{F\#}\ }
+\def\fs{\texttt{F\#}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -450,6 +452,7 @@
 	boxsep = 0.5mm, % 1mm
 	before = {\par\smallskip\parindent=0pt},
 	after = {\par\smallskip},
+	breakable, % REMOVE IF SOMETHING WEIRD HAPPENS
 	% minted
 	listing only = true,
 	listing engine = minted,
@@ -609,12 +612,19 @@
 
 
 \newtcblisting%
-{fsharpcodeshort}[1]
+{fsharpcodeshort}[2]
 {
 	IfBlankTF = {#1}{notitle = true}{title = #1},
 	top = 0mm,
 	bottom = 0mm,
-	listing only,
+	boxrule = 1pt,
+	IfBlankTF = {#2}%
+		{listing only = true}%
+		{
+			listing and comment = true,
+			comment = {#2}
+		},
+	% beforeafter skip = 1pt,
 	listing engine = minted,
 	minted style = colorful,
 	minted language = fsharp,
@@ -730,7 +740,8 @@ TODO
 	% label
 	label = tbl:{#3},
 	% tabulars
-	tabulars = {@{\extracolsep{5mm}\hspace{5mm}}#4@{\hspace{5mm}}},
+	tabulars = {@{\hspace{5mm}}#4@{\hspace{5mm}}},
+	% tabulars = {@{}#4@{}},
 	% tabulars = {#4},
 	% placement
 	floatplacement = !htb,
@@ -739,7 +750,7 @@ TODO
 	% frame & skin
 	colback = #1!10,
 	colframe = #1!70,
-	enhanced = true,
+	enhanced jigsaw = true,
 	% rules
 	left = 0mm,
 	right = 0mm,

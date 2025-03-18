@@ -3,9 +3,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Bla bla bla}
+% \todo{Bla bla bla}
 
-In this chapter I will go over the data I analyzed.
+In this chapter I will go over the data I analyzed: What data, how it was collected and so on.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -13,9 +13,58 @@ In this chapter I will go over the data I analyzed.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-The data I analyzed was collected during winter semester 2023/2024.
-The data was anonymized and forwarded to me by my supervisor.
+The data set I analyzed was collected during winter semester 2023/2024 in the module \href{https://modhb.rptu.de/mhb/modules/INF-02-01-M-2/}{Concepts of Programming}.
+The data was anonymized and forwarded to me by my supervisor. There were \(220\) students in total submitting their files individually.
+During the semester the students had to complete \(12\) sheets with a total of \(16\) relevant tasks. \textit{Relevant} in this case means that these were coding tasks.
+The students were provided with a template project containing the following:
+\begin{itemize}
+    \item A file called \texttt{Mini.fs} -- a small library of useful methods and basic types that are used throughout all of the assignments.
+        For instance \texttt{Mini.fs} simplifies the user input and output to shift the focus away from all possible edge cases of I/O this early on.
+        Mostly used is the type \fsharp|Nat|, describing a natural number including zero (\(\mathbb{N}_0\)),
+        written as a non-negative integer with postfix `\texttt{N}': \fsharp|0N|, \fsharp|1N|, \(\dotsc\), \fsharp|1234N|, etc.
+    \item Further assignment-specific types (e.g. type definition of a linked list and the individual nodes)
+    \item All relevant methods with their method signature and a placeholder\\
+        \fsharp|failwith "TODO"| for the body
+\end{itemize}
+They did not have access to the tests, but they were able to execute them via \href{https://exclaim.cs.rptu.de}{ExClaim} by simply pressing a button to verify their solutions individually.
+Through this in particular I had access to all submissions for a single assignment to analyze the progress of each student.\\[5pt]
+To illustrate, consider a method that returns the minimum of \(3\) natural numbers. The template for this method might look as follows:
+\begin{fsharpcodeshort}{Template}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    failwith "TODO"
+\end{fsharpcodeshort}
+\noindent The method is implemented with the placeholder \fsharp|failwith "TODO"| to ensure compilation even if not all methods are implemented so that they are still able to test their solution at any point.
+The students are supposed to replace this \fsharp|failwith "TODO"| with their own implementation of that method.
+\begin{fsharpcodeshort}{Sample Solution}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    min (min a b) c
+\end{fsharpcodeshort}
+\noindent In this sample solution the placeholder was replaced by a compact solution for the assignment. Student submissions may very well contain \fsharp|match|-statements,\\
+\fsharp|if|-\fsharp|else|-statements or similar structures, which are also considered to be valid solutions.\\[5pt]
+With this data I reconstructed every single submission snapshot, i.e. which files did a student submit when tests were executed.
+Then I used Docker containers to collect the results of the build (Command: \texttt{dotnet build}) and test process (Command: \texttt{dotnet test}) for further analysis.
+The results of that will be elaborated in the following sections.
 
+\begin{comment}
+\noindent The students were provided with a zip file usually containing \texttt{Mini.fs}, \texttt{Types.fs} and \texttt{{\color{red!70!black}<AssignmentName>}.fs}.
+\textbf{\texttt{Mini.fs}} is a library of useful methods and basic types that are used throughout all of the assignments.
+The type \fsharp|Nat| for example describes a natural number including zero (\(\mathbb{N}_0\)), written as a non-negative integer with postfix `\texttt{N}'.
+\textbf{\texttt{Types.fs}} containts assignment specific type definitions, e.g.: Tree representation, Map representation, etc.
+\textbf{\texttt{{\color{red!70!black}<AssignmentName>}.fs}} then contains the methods that are supposed to be implemented.
+Let's take for example a method that returns the minimum of \(3\) natural numbers:
+
+\begin{fsharpcodeshort}{Template}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    failwith "TODO"
+\end{fsharpcodeshort}
+\noindent The method is implemented with the placeholder \fsharp|failwith "TODO"| to ensure compilation.
+The students are supposed to replace the \fsharp|failwith "TODO"| with their implementation of that method.
+\begin{fsharpcodeshort}{Sample Solution}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
+    min (min a b) c
+\end{fsharpcodeshort}
+\noindent In the sample solution the placeholder was replaced by a compact solution for the assignment. Submissions may contain \fsharp|match|-statements,
+\fsharp|if|-\fsharp|else|-statements or similar structures, which also valid.
 
 \begin{todolist}
     \item Number of students
@@ -25,10 +74,8 @@ The data was anonymized and forwarded to me by my supervisor.
     \item TODO
 \end{todolist}
 
-
-The relevant part of this data set were the submissions in the following directory structure:
-
-\begin{tcolorbox}[fontupper = \footnotesize]
+\noindent The relevant part of this data -- the submissions -- were given in the following directory structure:
+\begin{tcolorbox}[fontupper = \footnotesize, boxrule = 1pt]
     \dirtree{%
         .1 /{\color{red!70!black}<ExerciseId>}/.
             .2 Templates/.
@@ -45,38 +92,18 @@ The relevant part of this data set were the submissions in the following directo
                 .3 {\color{red!70!black}<SheetId>}/.
                     .4 {\color{red!70!black}<GroupId>}\_{\color{red!70!black}<TeamId>}/.
                         .5 {\color{red!70!black}<AssignmentId>}/\DTcomment{Submissions}.
-                            .6 {\color{red!70!black}<Timestamp>}-{\color{red!70!black}<AssignmentName>}\texttt{.}fs\DTcomment{Format}.
+                            .6 {\color{red!70!black}<SubmissionTimestamp>}-{\color{red!70!black}<AssignmentName>}\texttt{.}fs\DTcomment{Format}.
                             .6 \DTcomment{Other submissions}.
     }
 \end{tcolorbox}
-\noindent The students were provided with a zip file usually containing \texttt{Mini.fs}, \texttt{Types.fs} and \texttt{{\color{red!70!black}<AssignmentName>}.fs}.
-They do not have access to the tests, but they are able to execute them via \href{https://exclaim.cs.rptu.de}{ExClaim}.
-\textbf{\texttt{Mini.fs}} is a library of useful methods and basic types that are used throughout all of the assignments.
-The type \fsharp|Nat| for example describes a natural number including zero (\(\mathbb{N}_0\)), written as a non-negative integer with postfix `\texttt{N}'.
-\textbf{\texttt{Types.fs}} containts assignment specific type definitions, e.g.: Tree representation, Map representation, etc.
-\textbf{\texttt{{\color{red!70!black}<AssignmentName>}.fs}} then contains the methods that are supposed to be implemented.
-Let's take for example a method that returns the minimum of \(3\) natural numbers:
-
-\begin{fsharpcodeshort}{Template}
-let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
-    failwith "TODO"
-\end{fsharpcodeshort}
-\noindent The method is implemented with the placeholder \fsharp|failwith "TODO"| to ensure compilation.
-The students are supposed to replace the \fsharp|failwith "TODO"| with their implementation of that method.
-\begin{fsharpcodeshort}{Sample Solution}
-let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
-    min (min a b) c
-\end{fsharpcodeshort}
-\noindent In the sample solution the placeholder was replaced by a compact solution for the assignment. Submissions may contain \fsharp|match|-statements,
-\fsharp|if|-\fsharp|else|-statements or similar structures, which also valid.
-
 
 \begin{todolist}
-    \item i also had the timestamps of executed tests and deleted files
-    \item Each submission is stored with a timestamp
-    \item To analyze this data reconstructed all snapshots during test execution and
-        ran them again inside of docker containers to extract the results of \texttt{dotnet build} and \texttt{dotnet test}.
+\item i also had the timestamps of executed tests and deleted files
+\item Each submission is stored with a timestamp
+\item To analyze this data reconstructed all snapshots during test execution and
+ran them again inside of docker containers to extract the results of \texttt{dotnet build} and \texttt{dotnet test}.
 \end{todolist}
+\end{comment}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -115,87 +142,91 @@ let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
 
 \todo{Highlight key patterns and findings from the data.}
 
-\begin{tcbtable}{The top 10 of \fs error codes in all submissions}{fsharpErrorCodes}{ccp{7cm}}{\footnotesize}
-    \textbf{Pos} & \textbf{FSharp Error Code} & \textbf{Short Description \& Example}\\\hline\hline
-    \nth{1}  & \textit{FS0001} & \RaggedRight%
-        {
-            The type 'X' (e.g. \fsharp{bool}) does not match the type 'Y' (e.g. \fsharp{int}).\newline
-            \begin{fsharpcodeshort}{}
-            let x: int = #\hlbox{true}%
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{2}  & \textit{FS0058} & \RaggedRight%
-        {
-            Unexpected syntax or possible incorrect indentation.\newline
-            \begin{fsharpcodeshort}{}
-            let f x = if x then 1 else
-            #\hlbox{-1}%
-            \end{fsharpcodeshort}
-
-        }\\\hline
-    \nth{3}  & \textit{FS0588} & \RaggedRight%
-        {
-            The block following this 'X' (e.g. \fsharp{let}) is unfinished. Every code block is an expression and must have a result.\newline
-            \begin{fsharpcodeshort}{}
-            let add a b =
-                #\hlbox{let}% result = a + b
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{4}  & \textit{FS0597} & \RaggedRight%
-        {
-            Successive arguments should be separated by spaces or tupled, and arguments involving function or method applications should be parenthesized.\newline
-            \begin{fsharpcodeshort}{}
-            printfn "%d" #\hlbox{List.min([1; 2])}%
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{5}  & \textit{FS3524} & \RaggedRight%
-        {
-            Expecting expression.\newline
-            \begin{fsharpcodeshort}{}
-            if 1 < 2 then 1 else#\hlbox{\phantom{X}}%
-            \end{fsharpcodeshort}
-        }\\\hline
-% \end{tcbtable}
-% \begin{tcbtable}{The top 10 of \fs error codes in all submissions (\nth{6} - \nth{10})}{fsharpErrorCodes2}{ccp{7cm}}
-    \nth{6}  & \textit{FS3546} & \RaggedRight%
-        {
-            Expecting pattern.\newline
-            \begin{fsharpcodeshort}{}
-            type Ex = | A of int * int
-            match A(1,2) with A (#\hlbox{,}% y) -> y
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{7}  & \textit{FS0033} & \RaggedRight%
-        {
-            The type 'X' expects $m$ type argument(s) but is given $n$.\newline
-            \begin{fsharpcodeshort}{}
-            type Ex<'a,'b> = {A:'a; B:'b}
-            let ex: #\hlbox{Ex<int>}% = {A=1; B=2}
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{8}  & \textit{FS0800} & \RaggedRight%
-        {
-            Invalid use of a type name.\newline
-            \begin{fsharpcodeshort}{}
-            type Ex = {A: int; B: int}
-            let ex = #\hlbox{Ex}%
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{9}  & \textit{FS3156} & \RaggedRight%
-        {
-            Unexpected token 'X' or incomplete expression.\newline
-            \begin{fsharpcodeshort}{}
-            let add a b = a #\hlbox{+}%
-            \end{fsharpcodeshort}
-        }\\\hline
-    \nth{10} & \textit{FS0727} & \RaggedRight%
-        {
-            This union case expects $n$ arguments in tupled form, but was given $m$.\newline
-            \begin{fsharpcodeshort}{}
-            type Ex = | A of int * int
-            match A (1, 2) with #\hlbox{A x y}% -> x
-            \end{fsharpcodeshort}
+\newpage
+\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{1} -- \nth{5})}{fsharpErrorCodes1}{>{\raggedright\arraybackslash}m{0.6cm} >{\raggedright\arraybackslash}m{2cm} m{8.9cm}}{\footnotesize}
+    \textbf{Pos} & \textbf{Error code} & \textbf{Code example with resulting error message}\\\hline\hline\noalign{\vskip 1mm}
+    \nth{1} & \texttt{FS0001} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0001: This expression was expected to have type 'int' but here has type 'bool'.%
         }
+        let x: int = #\hlbox{true}%
+        \end{fsharpcodeshort}
+        \\\hline\noalign{\vskip 1mm}
+    \nth{2}  & \texttt{FS0058} &
+        \begin{fsharpcodeshort}{}{{\color{red}\ttfamily\raggedright
+            error FS0058: Unexpected syntax or possible incorrect indentation: this token is offside of context started at position (1:11).
+            Try indenting this further. To continue using non-conforming indentation, pass the '--strict-indentation-' flag to the compiler, or set the language version to F\# 7.%
+        }}
+        let f x = if x then 1 else
+        #\hlbox{-1}%
+        \end{fsharpcodeshort}
+        \\\hline\noalign{\vskip 1mm}
+    \nth{3}  & \texttt{FS0588} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0588: The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.%
+        }
+        let add a b =
+            #\hlbox{let}% result = a + b
+        \end{fsharpcodeshort}
+        \\\hline\noalign{\vskip 1mm}
+    \nth{4}  & \texttt{FS0597} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0597: Successive arguments should be separated by spaces or tupled, and arguments involving function or method applications should be parenthesized.
+        }
+        printfn "%d" #\hlbox{List.min([1; 2])}%
+        \end{fsharpcodeshort}
+        \\\hline\noalign{\vskip 1mm}
+    \nth{5}  & \texttt{FS3524} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS3524: Expecting expression.
+        }
+        if 1 < 2 then 1 else#\hlbox{\phantom{X}}%
+        \end{fsharpcodeshort}
+\end{tcbtable}
+\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{6} -- \nth{10})}{fsharpErrorCodes2}{>{\raggedright\arraybackslash}m{0.6cm} >{\raggedright\arraybackslash}m{2cm} m{8.9cm}}{\footnotesize}
+    \textbf{Pos} & \textbf{Error code} & \textbf{Code example with resulting error message}\\\hline\hline\noalign{\vskip 1mm}
+    \nth{6}  & \texttt{FS3546} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS3546: Expecting pattern.
+        }
+        type Ex = | A of int * int
+        match A(1,2) with A (#\hlbox{,}% y) -> y
+        \end{fsharpcodeshort}
+        \vskip 1mm\\\hline\noalign{\vskip 1mm}
+    \nth{7}  & \texttt{FS0033} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0033: The type 'FSI\_0002.Ex<\_,\_>' expects 2 type argument(s) but is given 1.
+        }
+        type Ex<'a,'b> = {A:'a; B:'b}
+        let ex: #\hlbox{Ex<int>}% = {A=1; B=2}
+        \end{fsharpcodeshort}
+        \vskip 1mm\\\hline\noalign{\vskip 1mm}
+    \nth{8}  & \texttt{FS0800} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0800: Invalid use of a type name.
+        }
+        type Ex = {A: int; B: int}
+        let ex = #\hlbox{Ex}%
+        \end{fsharpcodeshort}
+        \vskip 1mm\\\hline\noalign{\vskip 1mm}
+    \nth{9}  & \texttt{FS3156} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS3156: Unexpected token '+' or incomplete expression.
+        }
+        let add a b = a #\hlbox{+}%
+        \end{fsharpcodeshort}
+        \vskip 1mm\\\hline\noalign{\vskip 1mm}
+    \nth{10} & \texttt{FS0727} &
+        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
+            error FS0727: This union case expects 2 arguments in tupled form, but was given 0.\\
+            The missing field arguments may be any of:\\
+                \qquad int\\
+                \qquad int
+        }
+        type Ex = | A of int * int
+        match A (1, 2) with #\hlbox{A x y}% -> x
+        \end{fsharpcodeshort}
+        \vskip 1mm
 \end{tcbtable}
 
 
