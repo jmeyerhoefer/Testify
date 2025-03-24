@@ -1,9 +1,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{Problem Analysis: Issues with Existing Error Messages} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sctn:errorMessages} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{}
+% \todo{}
+
+
+In this chapter I will explain known issues for novices when working with error messages.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -11,11 +15,21 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Show examples of unhelpful or ambiguous error messages.}
+% \todo{Show examples of unhelpful or ambiguous error messages.}
+
+Error messages often require the programmer to not only know what was actually tested but how it was tested as well.
+For instance are characteristics of data structures sometimes tested multiple times between altering the stored data (e.g. adding or removing elements).
+To then comprehend the error message of such a test fully would require one to know every alteration done before the test/assertion failed to reproduce and retrace the steps
+and by that find the flaw in their implementation.\\[5pt]
+Furthermore are some error messages formatted in a manner such that essential data for novices is broken up and/or hidden.
+In particular does \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting.assert.areequal?view=mstest-net-3.8}{\texttt{Assert.AreEqual}}
+not show which method/expression was tested when the error occurred and rather focues on the input.
+Without including the name of the tested method in the signature of the test method a student would not be able to connect the test results with any particular part of their code which renders the error message basically useless.
+Even if the name is included you still have to connect the separate pieces to reconstruct the explicit method call that caused this error message.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \newpage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 

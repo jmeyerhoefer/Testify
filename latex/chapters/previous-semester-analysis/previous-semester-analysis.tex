@@ -15,9 +15,11 @@ In this chapter I will go over the data I analyzed: What data, how it was collec
 
 The data set I analyzed was collected during winter semester 2023/2024 in the module \href{https://modhb.rptu.de/mhb/modules/INF-02-01-M-2/}{Concepts of Programming}.
 The data was anonymized and forwarded to me by my supervisor. There were \(220\) students in total submitting their files individually.
-During the semester the students had to complete \(12\) sheets with a total of \(16\) relevant tasks. \textit{Relevant} in this case means that these were coding tasks.
+During this semester the students had to complete \(12\) sheets with \(16\) tasks that are relevant.
+\textit{Relevant} in this case means that these were coding tasks with unit tests to automatically detect the correctness of the submission.
 The students were provided with a template project containing the following:
-\begin{itemize}
+
+\begin{itemize}[nosep]
     \item A file called \texttt{Mini.fs} -- a small library of useful methods and basic types that are used throughout all of the assignments.
         For instance \texttt{Mini.fs} simplifies the user input and output to shift the focus away from all possible edge cases of I/O this early on.
         Mostly used is the type \fsharp|Nat|, describing a natural number including zero (\(\mathbb{N}_0\)),
@@ -26,24 +28,57 @@ The students were provided with a template project containing the following:
     \item All relevant methods with their method signature and a placeholder\\
         \fsharp|failwith "TODO"| for the body
 \end{itemize}
-They did not have access to the tests, but they were able to execute them via \href{https://exclaim.cs.rptu.de}{ExClaim} by simply pressing a button to verify their solutions individually.
-Through this in particular I had access to all submissions for a single assignment to analyze the progress of each student.\\[5pt]
+
+\noindent The unit tests normally consist of:
+\begin{itemize}[nosep]
+    \item Example tests that verify edge cases and specific method calls given in the problem definition.
+        If the goal is to implement a method, the problem definition lists multiple method calls that emphasize the functioning of said method.
+    \item Random tests that verify an implementation against random input.
+\end{itemize}
+
+\noindent They did not have access to these tests, but they were able to execute them on the same platform where they submit their solutions (\href{https://exclaim.cs.rptu.de}{ExClaim}).
+They do not have to execute any commands or change working directories in a terminal, but can rather verify their solutions individually by a simple button press.
+Through this in particular I had access to all submissions for a single assignment -- in other words the history -- to analyze the progression.\\[5pt]
 To illustrate, consider a method that returns the minimum of \(3\) natural numbers. The template for this method might look as follows:
+
 \begin{fsharpcodeshort}{Template}{}
 let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
     failwith "TODO"
 \end{fsharpcodeshort}
+
 \noindent The method is implemented with the placeholder \fsharp|failwith "TODO"| to ensure compilation even if not all methods are implemented so that they are still able to test their solution at any point.
-The students are supposed to replace this \fsharp|failwith "TODO"| with their own implementation of that method.
+The students are supposed to replace this \fsharp|failwith "TODO"| with their own implementation of that method. The problem definition then might list:
+\begin{center}\begin{multicols}{2}
+    \noindent
+    \fsharp|minimumOfThreeNumbers 1N 2N 3N|
+    \fsharp|minimumOfThreeNumbers 2N 3N 1N|
+    \fsharp|minimumOfThreeNumbers 0N 0N 0N|
+    \fsharp|minimumOfThreeNumbers 2N 2N 3N|
+\end{multicols}\end{center}
+\noindent to illustrate that neither the order of the input nor duplicates influence the end result. So exactly these method calls would be used for the example tests.
+
 \begin{fsharpcodeshort}{Sample Solution}{}
 let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat =
     min (min a b) c
 \end{fsharpcodeshort}
+
 \noindent In this sample solution the placeholder was replaced by a compact solution for the assignment. Student submissions may very well contain \fsharp|match|-statements,\\
 \fsharp|if|-\fsharp|else|-statements or similar structures, which are also considered to be valid solutions.\\[5pt]
-With this data I reconstructed every single submission snapshot, i.e. which files did a student submit when tests were executed.
+The given data set consists of:
+\begin{itemize}[nosep]
+    \item All project templates including the unit tests
+    \item All uploaded files uniquely identified with timestamps and group/team IDs
+    \item Timestamps of executed tests
+    \item Timestamps of deletions or updates of files by the students
+\end{itemize}
+
+\noindent With this data I reconstructed every single submission snapshot, i.e. which files were uploaded when tests were executed.
 Then I used Docker containers to collect the results of the build (Command: \texttt{dotnet build}) and test process (Command: \texttt{dotnet test}) for further analysis.
 The results of that will be elaborated in the following sections.
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+
 
 \begin{comment}
 \noindent The students were provided with a zip file usually containing \texttt{Mini.fs}, \texttt{Types.fs} and \texttt{{\color{red!70!black}<AssignmentName>}.fs}.
@@ -111,7 +146,12 @@ ran them again inside of docker containers to extract the results of \texttt{dot
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Present the success rates for project compilation.}
+% \todo{Present the success rates for project compilation.}
+
+In total there are \(12812\) submission snapshots, i.e. instances where students uploaded one or multiple files to test their implementation.
+Of all snapshots \(6829\) (\(53.30\%\)) are compilable, while the other \(5983\) (\(46.70\%\)) snapshots failed to build and therefore no test results can be determined.
+For graphical representation see figure \ref{fig:{buildResultsColumnChartTotal}} on page \pageref{fig:{buildResultsColumnChartTotal}}.
+
 \begin{tcbfigure}%
 {{Build Stability Analysis: Success and failure counts for .NET builds, with overall success percentage.}}%
 {buildResultsColumnChartTotal}%
@@ -125,7 +165,14 @@ ran them again inside of docker containers to extract the results of \texttt{dot
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Analyze the percentage of passed tests.}
+% \todo{Analyze the percentage of passed tests.}
+
+An interesting measure is to compare the first compilable snapshot with the last to track the overall progress.
+Through that following semesters with access to optimized test results and feedback can be compared to this one to look for possible improvements.
+In the winter semester 2023/2024 the first compilable snapshot achieved \(57.53\%\) passed tests on average, while the last one achieved \(87.99\%\) passed tests on average.
+In the following figure the percentage of passed tests of the first and last compilable snapshot are given for each assignment indicidually.
+For graphical representation see figure \ref{fig:{testResultsColumnChartFirstAndLastSubmissionCombined}} on page \pageref{fig:{testResultsColumnChartFirstAndLastSubmissionCombined}}.
+
 \begin{tcbfigure}%
 {{Submission Performance Analysis: Success rate of initial and final submissions across different exercises.}}%
 {testResultsColumnChartFirstAndLastSubmissionCombined}%
@@ -140,85 +187,215 @@ ran them again inside of docker containers to extract the results of \texttt{dot
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Highlight key patterns and findings from the data.}
+% \todo{Highlight key patterns and findings from the data.}
 
-\newpage
-\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{1} -- \nth{5})}{fsharpErrorCodes1}{>{\raggedright\arraybackslash}m{0.6cm} >{\raggedright\arraybackslash}m{2cm} m{8.9cm}}{\footnotesize}
-    \textbf{Pos} & \textbf{Error code} & \textbf{Code example with resulting error message}\\\hline\hline\noalign{\vskip 1mm}
-    \nth{1} & \texttt{FS0001} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0001: This expression was expected to have type 'int' but here has type 'bool'.%
+
+For all of the failed submissions, i.e. the snapshots that were unable to build successfully, I looked at all occurring error codes.
+In table \ref{tbl:{fsharpErrorCodes1}} (Place 1 to 5 of the Top 10) on page \pageref{tbl:{fsharpErrorCodes1}}
+and table \ref{tbl:{fsharpErrorCodes2}} (Place 6 to 10 of the Top 10) on page \pageref{tbl:{fsharpErrorCodes2}} is the top 10 given with a percentage on how much that error code makes up in relation to all errors,
+as well as a short code snippet that triggers that error code. In total \(94\) different error codes occurred, the distribution is show in figure \ref{fig:{buildResultsColumnChartTop10Errors}} on page \pageref{fig:{buildResultsColumnChartTop10Errors}}.
+Now I will go briefly over the two most common errors, because they alone make up over \(50\%\) of all errors:
+\begin{itemize}[nosep]
+    \item \textbf{FS0001:} Type mismatch
+    \item \textbf{FS0058:} Offside lines
+\end{itemize}
+Every third error is a type mismatch (error code: FS0001), which can occur on multiple instances, when in one way or a another type \texttt{A} is expected, but it given is a value of type \texttt{B} and it is not possible to implicitly cast type \texttt{B} to type \texttt{A}.\\
+A few instances of that being:
+\pagebreak
+\begin{itemize}[nosep]
+    \item \textbf{Assigning variables/attributes:}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'int' but here has type 'string'.%
+        }
+        let x: int = "Hello"
+        \end{fsharpcodeshort}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'int' but here has type 'string'.%
+        }
+        type A = {X: int}
+        let a: A = {X = "Hello"}
+        \end{fsharpcodeshort}
+        % \begin{itemize}[nosep]
+        %     \item \fsharp|let x: int = "Hello"|\\
+        %         \textit{error FS0001: This expression was expected to have type 'int' but here has type 'string'}
+        %     \item \fsharp|type A = {X: int}| followed by \fsharp|let a: A = {X = "Hello"}|
+        % \end{itemize}
+    \item \textbf{Returning values:}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'bool' but here has type 'int'.%
+        }
+        let f (): bool = 0
+        \end{fsharpcodeshort}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'int' but here has type 'float'.%
+        }
+        let f (n: float): int = n
+        \end{fsharpcodeshort}
+        While this would be ok \fsharp|let f (n: int): float = n|.
+        % \begin{itemize}[nosep]
+        %     \item \fsharp|let f (): bool = 0|
+        %     \item \fsharp|let f (n: float): int = n|, while this would be ok\\
+        %         \fsharp|let f (n: int): float = n|
+        % \end{itemize}
+    \item \textbf{Inconsistency when branching or matching:}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: All branches of an 'if' expression must return values implicitly convertible to the type of the first branch, which here is 'string'. This branch returns a value of type 'int'.%
+        }
+        let foo x = if x <> 0 then "Hello" else 4711
+        \end{fsharpcodeshort}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: All branches of a pattern match expression must return values implicitly convertible to the type of the first branch, which here is 'string'. This branch returns a value of type 'float'.%
+        }
+        match 1.0 with | 1.0 -> "Hello" | _ -> 0.0
+        \end{fsharpcodeshort}
+        % \begin{itemize}[nosep]
+        %     \item \fsharp|let foo x = if x <> 0 then "Hello" else 4711|\\
+        %         The error message for this varies a little bit different: \textit{error FS0001: All branches of an 'if' expression must return values implicitly convertible to the type of the first branch, which here is 'string'. This branch returns a value of type 'int'.}
+        %     \item \fsharp{match 1.0 with | 1.0 -> "Hello" | _ -> 0.0}\\
+        %         Similarly to the example above: \textit{ error FS0001: All branches of a pattern match expression must return values implicitly convertible to the type of the first branch, which here is 'string'. This branch returns a value of type 'float'.}
+        % \end{itemize}
+    \item \textbf{Calling functions wrong:}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'int' but here has type 'int * int'.%
+        }
+        let multiply x y = x * y
+        multiply (1, 2)
+        \end{fsharpcodeshort}
+        Correct would be \fsharp|multiply 1 2|.
+    \item \textbf{Operator precedence, i.e. the order of how operators are applied:}
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+            \textcolor{red}{error FS0001}: The type 'string' does not match the type 'unit'.%
+        }
+        let s = printf "What is your name? "; System.Console.ReadLine ()
+        printfn "Your name is: " + s
+        \end{fsharpcodeshort}
+        Correct would be \fsharp|printfn ("Your name is: " + s)|.
+\end{itemize}
+\pagebreak
+Every fifth error has to do with offside lines/indentation (error code: FS0058) which means that some structured construct such as \fsharp|if|/\fsharp|then|/\fsharp|else|, \fsharp|try|/\fsharp|with|, \fsharp|let|, etc.
+introduced an offside line and the indentation is not the same at any line of that block or there is no indentation to begin with.
+Examples include when an implementation of a method is places on a new line after the method signature and there is no offset of the code or inconsistent offset.
+
+\begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+    \textcolor{red}{error FS0058}: Unexpected syntax or possible incorrect indentation: this token is offside of context started at position (1:1). Try indenting this further.
+    To continue using non-conforming indentation, pass the '--strict-indentation-' flag to the compiler, or set the language version to F\# 7.%
+}
+let foo (x: int) =
+if x <> 0 then "A" else "B"
+\end{fsharpcodeshort}
+
+\begin{fsharpcodeshort}{}{\ttfamily\raggedright\footnotesize
+    \textcolor{red}{error FS0058}: The '|' tokens separating rules of this pattern match are misaligned by one column. Consider realigning your code or using further indentation.%
+}
+match 1.0 with
+ | 1.0 -> "A"
+| _ -> "B"
+\end{fsharpcodeshort}
+\noindent To illustrate an actual example of that is the method to compute the minimum of three numbers \texttt{minimumOfThreeNumbers}:
+
+\begin{fsharpcodeshort}{}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat = 
+    failwith "TODO"
+\end{fsharpcodeshort}
+\noindent Here is an example of what a random submission for that assignment looks like:
+
+\begin{fsharpcodeshortwithspaces}{}{\ttfamily\raggedright\footnotesize
+    \textcolor{red}{error FS0058}: Unexpected syntax or possible incorrect indentation: this token is offside of context started at position (7:1). Try indenting this further.To continue using non-conforming indentation, pass the '--strict-indentation-' flag to the compiler, or set the language version to F\# 7.%
+}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat = 
+if a <= b then
+     if a <= c then a else c
+else
+    if b <= c then b else c
+\end{fsharpcodeshortwithspaces}
+\noindent which is algorithmically not wrong, in fact indenting the code correctly like
+\begin{fsharpcodeshortwithspaces}{}{}
+let minimumOfThreeNumbers (a: Nat) (b: Nat) (c: Nat): Nat = 
+    if a <= b then
+        if a <= c then a else c
+    else
+        if b <= c then b else c
+\end{fsharpcodeshortwithspaces}
+\noindent will not only compile but implement the method to have the desired purpose.
+
+\pagebreak
+\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{1} -- \nth{5})}{fsharpErrorCodes1}{>{\raggedright\arraybackslash}m{0.7cm} >{\centering\arraybackslash}m{1cm} >{\centering\arraybackslash}m{9.8cm}}{\footnotesize}
+    \textbf{Pos} & \textbf{\%} & \textbf{Code example with resulting error code/message}\\\hline\hline\noalign{\vskip 1mm}
+    \nth{1} & \(35.35\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0001}: This expression was expected to have type 'int' but here has type 'bool'.%
         }
         let x: int = #\hlbox{true}%
         \end{fsharpcodeshort}
         \\\hline\noalign{\vskip 1mm}
-    \nth{2}  & \texttt{FS0058} &
-        \begin{fsharpcodeshort}{}{{\color{red}\ttfamily\raggedright
-            error FS0058: Unexpected syntax or possible incorrect indentation: this token is offside of context started at position (1:11).
+    \nth{2} & \(20.69\%\) &
+        \begin{fsharpcodeshort}{}{{\ttfamily\raggedright
+            \textcolor{red}{error FS0058}: Unexpected syntax or possible incorrect indentation: this token is offside of context started at position (1:11).
             Try indenting this further. To continue using non-conforming indentation, pass the '--strict-indentation-' flag to the compiler, or set the language version to F\# 7.%
         }}
         let f x = if x then 1 else
         #\hlbox{-1}%
         \end{fsharpcodeshort}
         \\\hline\noalign{\vskip 1mm}
-    \nth{3}  & \texttt{FS0588} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0588: The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.%
+    \nth{3} & \(15.28\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0588}: The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.%
         }
         let add a b =
             #\hlbox{let}% result = a + b
         \end{fsharpcodeshort}
         \\\hline\noalign{\vskip 1mm}
-    \nth{4}  & \texttt{FS0597} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0597: Successive arguments should be separated by spaces or tupled, and arguments involving function or method applications should be parenthesized.
+    \nth{4} & \(9.42\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0597}: Successive arguments should be separated by spaces or tupled, and arguments involving function or method applications should be parenthesized.
         }
         printfn "%d" #\hlbox{List.min([1; 2])}%
         \end{fsharpcodeshort}
         \\\hline\noalign{\vskip 1mm}
-    \nth{5}  & \texttt{FS3524} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS3524: Expecting expression.
+    \nth{5} & \(4.45\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS3524}: Expecting expression.
         }
         if 1 < 2 then 1 else#\hlbox{\phantom{X}}%
         \end{fsharpcodeshort}
 \end{tcbtable}
-\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{6} -- \nth{10})}{fsharpErrorCodes2}{>{\raggedright\arraybackslash}m{0.6cm} >{\raggedright\arraybackslash}m{2cm} m{8.9cm}}{\footnotesize}
-    \textbf{Pos} & \textbf{Error code} & \textbf{Code example with resulting error message}\\\hline\hline\noalign{\vskip 1mm}
-    \nth{6}  & \texttt{FS3546} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS3546: Expecting pattern.
+\pagebreak
+\begin{tcbtable}{The top 10 of \fs{} error codes in all submissions (\nth{6} -- \nth{10})}{fsharpErrorCodes2}{>{\raggedright\arraybackslash}m{0.7cm} >{\centering\arraybackslash}m{1cm} >{\centering\arraybackslash}m{9.8cm}}{\footnotesize}
+    \textbf{Pos} & \textbf{\%} & \textbf{Code example with resulting error message}\\\hline\hline\noalign{\vskip 1mm}
+    \nth{6} & \(2.70\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS3546}: Expecting pattern.
         }
         type Ex = | A of int * int
         match A(1,2) with A (#\hlbox{,}% y) -> y
         \end{fsharpcodeshort}
-        \vskip 1mm\\\hline\noalign{\vskip 1mm}
-    \nth{7}  & \texttt{FS0033} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0033: The type 'FSI\_0002.Ex<\_,\_>' expects 2 type argument(s) but is given 1.
+        \\\hline\noalign{\vskip 1mm}
+    \nth{7} & \(1.82\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0033}: The type 'FSI\_0002.Ex<\_,\_>' expects 2 type argument(s) but is given 1.
         }
         type Ex<'a,'b> = {A:'a; B:'b}
         let ex: #\hlbox{Ex<int>}% = {A=1; B=2}
         \end{fsharpcodeshort}
-        \vskip 1mm\\\hline\noalign{\vskip 1mm}
-    \nth{8}  & \texttt{FS0800} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0800: Invalid use of a type name.
+        \\\hline\noalign{\vskip 1mm}
+    \nth{8} & \(1.66\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0800}: Invalid use of a type name.
         }
         type Ex = {A: int; B: int}
         let ex = #\hlbox{Ex}%
         \end{fsharpcodeshort}
-        \vskip 1mm\\\hline\noalign{\vskip 1mm}
-    \nth{9}  & \texttt{FS3156} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS3156: Unexpected token '+' or incomplete expression.
+        \\\hline\noalign{\vskip 1mm}
+    \nth{9} & \(1.34\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS3156}: Unexpected token '+' or incomplete expression.
         }
         let add a b = a #\hlbox{+}%
         \end{fsharpcodeshort}
-        \vskip 1mm\\\hline\noalign{\vskip 1mm}
-    \nth{10} & \texttt{FS0727} &
-        \begin{fsharpcodeshort}{}{\color{red}\ttfamily\raggedright
-            error FS0727: This union case expects 2 arguments in tupled form, but was given 0.\\
+        \\\hline\noalign{\vskip 1mm}
+    \nth{10} & \(0.68\%\) &
+        \begin{fsharpcodeshort}{}{\ttfamily\raggedright
+            \textcolor{red}{error FS0727}: This union case expects 2 arguments in tupled form, but was given 0.\\
             The missing field arguments may be any of:\\
                 \qquad int\\
                 \qquad int
@@ -226,7 +403,8 @@ ran them again inside of docker containers to extract the results of \texttt{dot
         type Ex = | A of int * int
         match A (1, 2) with #\hlbox{A x y}% -> x
         \end{fsharpcodeshort}
-        \vskip 1mm
+        \\\hline\noalign{\vskip 1mm}
+    other & \(6.61\%\) & ---
 \end{tcbtable}
 
 
