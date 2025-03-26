@@ -49,15 +49,59 @@ Even if the name is included you still have to connect the separate pieces to re
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Analyze what critical information is missing in these messages.}
+% \todo{Analyze what critical information is missing in these messages.}
 
+
+One thing error messages lack is information about the context of a failed test.
+Consider an implementation of a singly linked list with no duplicates. The linked list contains the attributes: pointer to both the first and last node of the list and the size of list.
+Each node contains a value and a pointer to the next element.
+
+\begin{tcbtikz}{Illustration singly linked list}{singlyLinkedList}{}
+    % \draw[step=.5cm,gray,very thin] (-6, -6) grid (6, 6);
+    % \path[draw=black, fill=black] (0, 0) circle (.05cm);
+    \begin{scope}[xshift=-5mm]
+        \node[font=\large] at (0, 1) {\textbf{Data:} \(\{\, 1,2,\dotsc,10 \,\}\)};
+        \node[state, fill=white] at (-5, 0) (n1) {1};
+        \path[-{Stealth[length=2mm,width=2mm]}, red] (-5, -1) edge node [below, yshift=-2mm] {\textbf{first}} (n1);
+        \node[state, fill=white] at (-3, 0) (n2) {2};
+        \draw[-{Stealth[length=2mm,width=2mm]}] (n1) edge node [above,yshift=1mm] {next} (n2);
+        \draw[-{Stealth[length=2mm,width=2mm]}] (n2.east) to node [above,yshift=1mm] {next} ([xshift=1cm]n2.east);
+        \path[draw=black, fill=black] (-1, 0) circle (.05cm);
+        \path[draw=black, fill=black] (-.5, 0) circle (.05cm);
+        \path[draw=black, fill=black] (0, 0) circle (.05cm);
+        \node[state, fill=white] at (2, 0) (n9) {9};
+        \draw[-{Stealth[length=2mm,width=2mm]}] (.5, 0) to node [above,yshift=1mm] {next} (1.5, 0);
+        \node[state, fill=white] at (4, 0) (n10) {10};
+        \draw[-{Stealth[length=2mm,width=2mm]}] (n9) edge node [above,yshift=1mm] {next} (n10);
+        \draw[-{Stealth[length=2mm,width=2mm]}] (n10.east) to node [above,yshift=1mm] {next} ([xshift=1cm]n10.east);
+        \path[-{Stealth[length=2mm,width=2mm]}, red] (4, -1) edge node [below, yshift=-2mm] {\textbf{last}} (n10);
+        \node[font=\large] at (6, 0) {null};
+        \node[font=\large, red] at (0, -1) {\textbf{size} = \(10\)};
+    \end{scope}
+\end{tcbtikz}
+
+\noindent Furthermore consider the implemented methods:
+\begin{itemize}[nosep]
+    \item \fsharp|pushFront: 'a -> LinkedList -> unit|
+    \item \fsharp|pushBack: 'a -> LinkedList -> unit|
+    \item \fsharp|insertAtIndex: 'a -> int -> LinkedList -> unit|
+    \item \fsharp|remove: 'a -> LinkedList -> unit|
+\end{itemize}
+
+\noindent These methods would need to be tested for an empty and non-empty list.
+As well as whether combinations of method application do not break the list, namely: Inserting and element and then removing it, removing elements until the list is empty and so on.
+% For this illustration I will more or less formulate pseudo-code.
+
+\todo{Illustrate how tests for this example might leave gaps because it misses the information of what was actually tested.
+How many elements were inserting before the removal of an element somehow failed?
+Introduce idea of a \textbf{history}, so that every error message comes with a history of the executed operations before something failed.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Challenges for Novices in Deriving Test Information} %%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\todo{Explain why deciphering test expectations is hard for beginners.}
+\todo{Explain why deciphering test expectations is hard for beginners. Elaborate that the information is spread across the entire error message and one has to derive essential information.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

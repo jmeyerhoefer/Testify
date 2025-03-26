@@ -36,8 +36,25 @@
 
 % tikz
 \usepackage{tikz}
-\usetikzlibrary{external} % Externalizes Tikz graphics - speeds up compilation if unchanged.
-
+\usetikzlibrary{%
+	external, % Externalizes Tikz graphics - speeds up compilation if unchanged.
+	automata,
+	arrows,
+	arrows.meta,
+	decorations.pathmorphing,
+	backgrounds,
+	fit,
+	positioning,
+	shapes.symbols,
+	shapes,
+	shapes.geometric,
+	chains,
+	shapes.multipart,
+	shapes.misc,
+	matrix,
+	scopes,
+	calc
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page Geometry Layout
@@ -104,7 +121,8 @@
 
 \usepackage[
 	backend=biber,
-	style=alphabetic,
+	% style=alphabetic,
+	style=numeric-verb,
 	minnames=4,
 	maxnames=10
 ]{biblatex}
@@ -201,6 +219,7 @@
 
 \usepackage{color}
 \usepackage[table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
 \definecolor{colorAttribute}{rgb}{0.3, 0.78, 0.69}
 \definecolor{colorBackground}{rgb}{0.95, 0.95, 0.92}
 \definecolor{colorBackgroundMonokai}{HTML}{272822}
@@ -296,7 +315,7 @@
 \setminted%
 {
 	extrakeywordstype = {
-		Nat, int, TestMethod, Timeout, test, printfn, failwith
+		Nat, int, TestMethod, Timeout, test, printfn, failwith, LinkedList
 	}
 }
 
@@ -742,6 +761,48 @@
 	colframe = #1!70,
 	enhanced = true
 }
+
+\newtcolorbox%
+[
+	number within = chapter,
+	blend into = figures
+]%
+{tcbtikz}[4][Salmon]%
+{
+	% title
+	blend before title code = {\textbf{##1}\ },
+	title = {#2},
+	IfEmptyTF = {#4}{short title = #2}{short title = #4},
+	fonttitle = \sffamily,
+	coltitle = black,
+	colbacktitle = #1!70,
+	center title,
+	attach boxed title to bottom*,
+	% label
+	label = tikz:{#3},
+	% placement
+	floatplacement = !htb,
+	% capture = hbox,
+	float,
+	every float = \centering,
+	% frame & skin
+	colback = #1!10,
+	colframe = #1!70,
+	enhanced = true,
+	tikz upper={
+		shorten >= 1pt,
+		every initial by arrow/.style = {-{Stealth[length=2mm,width=2mm]}},
+		node distance = 2cm,
+		on grid,
+		auto
+	},
+	left = 1mm,
+	right = 1mm,
+	top = 1mm,
+	bottom = 1mm
+}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
