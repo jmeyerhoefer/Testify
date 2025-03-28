@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("TeamCount")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f7e5669d01efd886257442a598f6211b283809a")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0cd187f2294a2808dbaa626a8d06a5a106cd5b91")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("TeamCount")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("TeamCount")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]
