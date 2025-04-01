@@ -2,111 +2,126 @@
 \chapter{Related Work} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-In this chapter, I will elaborate on findings from related work, primarily focusing on two papers:
-The first is by Becker et al. \cite{becker} that investigates the helpfulness compiler error messages
-and the second paper about whether or not programmers actually read error messages by Barik et al. \cite{barik}, which is also referenced in the first one.
-Their work provides a comprehensive analysis of the challenges faced by novice programmers when dealing with compiler error messages and
-suggests various ways to improve these messages to enhance learning outcomes.
-According to Barik et al. \cite{barik} programmers do in fact read error messages. Novices interact with them just as much by trying to decrypt them, researching what they mean
-and how that corresponds to their implementations.
-At the worst students simply copy-paste their code and the according error message into any available AI and ask it to fix the problem.
-
+Understanding the challenges novice programmers face when dealing with compiler error messages is a topic of growing importance in computing education research.
+Compiler diagnostics are often the first line of feedback that learners receive during programming tasks.
+However, this feedback is frequently described as inadequate, cryptic, and even detrimental to learning.
+This chapter synthesizes findings from two key studies in this area:
+Becker et al.'s extensive literature review on compiler error messages \cite{becker},
+and Barik et al.'s empirical eye-tracking study that explores how developers interact with such messages in practice \cite{barik}.\\[5pt]
+\noindent Becker et al. \cite{becker} conducted a comprehensive review of over 300 publications spanning several decades,
+categorizing research according to pedagogical relevance, technical challenge, enhancement efforts, and empirical findings.
+Their work emphasizes the longstanding and pervasive problem of unhelpful error messages, particularly in introductory programming contexts.
+Barik et al. \cite{barik} complement this with rigorous experimental data:
+their eye-tracking study with 56 novice and intermediate participants reveals not only that developers do read compiler error messages,
+but also that these messages demand cognitive effort comparable to reading source code, and that difficulty in interpreting them significantly predicts task performance.\\[5pt]
+\noindent These two studies provide a robust framework for understanding both the qualitative and quantitative aspects of compiler error messages,
+and form the foundation for discussing their educational implications and potential improvements.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Challenges for Novice Programmers} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Learning to program involves mastering syntax, logic, and problem decomposition—skills that are cognitively demanding on their own.
+Compiler error messages, instead of supporting the learning process, often act as additional hurdles.
+Becker et al. \cite{becker} stress that from the early days of computing education, these messages have been described as inadequate, confusing, and unhelpful, especially for beginners.
+Their review cites evidence as early as the 1960s and includes anecdotes from instructors and students alike, such as one student claiming: ``If compiler errors were worth one Euro, I would be a millionaire.''\\[5pt]
+\noindent Becker et al. identify two categories of difficulty:
 
-% \todo{Describe common difficulties novices face when learning programming.}
-
-Barik et al. \cite{barik} names important findings in their paper that pose challenges for programmers, novices and further progressed programmers alike:
-\begin{itemize}[nosep]
-    \item Error messages are comparably difficult to read as reading plain source code.
-    \item The difficulty in understanding error messages is a significant predictor of participants' performance on tasks.
-    \item And lastly participants' spend \(13-25\%\) of their total assignment reading error messages.
-        That is a considerable portion of that time, considering that this means of \(4\) hours coding, \(31\) to \(60\) minutes are speant with only reading error messages.
+\begin{itemize}
+    \item \textbf{Internal difficulties:} Emotional reactions such as frustration, anxiety, and intimidation are frequently triggered by error messages.
+        These reactions reduce learners' confidence and self-efficacy, leading to lower persistence.
+    \item \textbf{External difficulties:} Error messages often contain terminology that assumes a level of programming expertise.
+        Moreover, the feedback may be imprecise or even misleading—such as one error producing multiple, contradictory messages depending on compiler or context.
 \end{itemize}
-One of the significant barriers to learning programming is the difficulty that novices face in interpreting compiler error messages.
-Becker et al. highlight that compiler messages are often cryptic, overly technical, and not designed with educational usability in mind \cite{becker}.
-Many students struggle with understanding the cause of errors, leading to frustration, increased cognitive load, and decreased motivation.\\[5pt]
-Research has shown that compiler error messages can act as ``barriers to progress'' \cite{becker},
-causing students to spend excessive time debugging trivial syntax issues rather than focusing on problem-solving and program design.
-Additionally, misconceptions about error messages often lead to incorrect debugging strategies, which further hinder learning progress.
 
+\noindent Barik et al. \cite{barik} provide empirical reinforcement for these observations.
+Their eye-tracking data revealed that:
+
+\begin{itemize}
+    \item Developers allocate between 13-25\% of their total task time to reading compiler messages.
+        For a four-hour assignment, this amounts to roughly 30-60 minutes focused solely on error interpretation.
+    \item Reading difficulty of error messages was statistically significant in predicting the correctness of solutions (\(p < .0001\)), with an \(R^2\) value of \(0.16\), indicating a non-negligible effect.
+    \item Most participants repeatedly revisited the same error message areas, suggesting cognitive overload and uncertainty about how to proceed.
+\end{itemize}
+
+\noindent Barik et al. also introduced the concept of ``revisits'' as a proxy for cognitive difficulty, showing that increased revisits to error messages correlated with lower task performance.
+This aligns with earlier findings from psychology that repeated eye fixations are markers of comprehension difficulty.\\[5pt]
+\noindent Together, these studies show that novice programmers are not only slowed down by error messages,
+but their overall learning trajectories may be compromised when the messages are ambiguous, misleading, or too technical.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Role of Error Messages in Learning} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Compiler error messages serve as one of the few immediate feedback mechanisms available to learners when an instructor is not present.
+From a pedagogical standpoint, these messages could be powerful tools for formative assessment—guiding learners to identify misconceptions, reflect on their understanding, and improve incrementally.
+However, Becker et al. \cite{becker} and Barik et al. \cite{barik} highlight a gap between this potential and the reality of current message design.\\[5pt]
+\noindent Barik et al. categorize the factors influencing student engagement with error messages into internal and external factors:
 
-% \todo{Discuss how error messages impact the debugging and learning process.}
-
-
-Compiler error messages play a crucial role in the debugging and learning process.
-Becker et al. point out that error messages are one of the primary feedback mechanisms for students learning to program.\\[5pt]
-When designed effectively, these messages can facilitate learning by providing clear guidance on how to correct mistakes.
-However, standard compiler messages are often ambiguous or misleading, requiring students to rely on trial and error or seek external help to resolve issues.
-Research has demonstrated that students who repeatedly encounter confusing error messages may develop negative attitudes toward programming, reducing persistence and motivation.\\[5pt]
-Barik et al. \cite{barik} name internal and external factors, that affect students:
-\begin{itemize}[nosep]
-    \item \textbf{Internal factors:}
-        These refer to the ways students personally react to and interact with error messages.
-        Research shows that students often find compiler error messages frustrating, intimidating, and confusing, which can negatively impact their confidence.
-        As a result, they tend to distrust error messages, even though they do read them.
-        Furthermore, error messages influence students' behavior when programming, although this is something many instructors have already observed firsthand.
-    \item \textbf{External factors:}
-        These involve external influences on how students experience error messages.
-        Studies indicate that the way students interact with error messages can be linked to traditional academic success metrics and is an observable aspect of their programming behavior.
-        Additionally, dealing with error messages can consume valuable teaching time and resources.
-        Moreover, the programming environment itself plays a crucial role in shaping a student's experience with error messages, as different environments provide varying levels of clarity and support.
+\begin{itemize}
+    \item \textbf{Internal factors:} Many learners find error messages overwhelming or accusatory in tone.
+        Such emotional responses are not trivial; they directly impact engagement and willingness to persist in debugging tasks.
+        Some learners internalize the messages as a reflection of their own inadequacy, which can reinforce imposter syndrome.
+    \item \textbf{External factors:} Learning environments often do not support constructive interaction with error messages.
+        The design of many IDEs prioritizes functionality over usability, and educational tools often lack scaffolding features like message disambiguation,
+        inline explanations, or novice-friendly vocabulary.
 \end{itemize}
 
-
+\noindent Becker et al. argue that compiler error messages are often misaligned with the kinds of mistakes students actually make.
+The error messages may accurately describe what the compiler failed to parse or infer, but not why the student made the mistake in the first place.
+This disconnect can lead students to apply ineffective or even counterproductive debugging strategies, such as removing entire code blocks until the error disappears.\\[5pt]
+\noindent Moreover, learners often resort to \textit{externalizing} the debugging process—copy-pasting errors into search engines or
+generative AI models without developing a meaningful understanding of the underlying issue.
+While such strategies may offer short-term fixes, they hinder long-term skill acquisition.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Existing Approaches to Improving Error Messages} %%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+Various approaches have been proposed and implemented to improve the usability of error messages, especially for beginners.
+Becker et al. classify these approaches into three major categories:
 
-% \todo{Review current solutions and their limitations.}
-
-
-Several approaches have been proposed to improve the effectiveness of compiler error messages.
-Becker et al. categorize these improvements into three main areas:
-
-\begin{itemize}[nosep]
-    \item \textbf{Enhanced Error Messages:} Modifying existing messages to make them more understandable for novices.
-        This includes providing clearer wording, suggestions for corrections, and context-sensitive hints.
-    \item \textbf{Integrated Debugging Tools:} Some educational programming environments incorporate intelligent tutoring systems that analyze student errors and provide targeted feedback.
-    \item \textbf{Community-Driven Solutions:} Platforms like Stack Overflow and online programming forums allow students to find explanations and solutions for common compiler errors.
-        Some IDEs now integrate crowdsourced solutions to improve debugging assistance.
+\begin{itemize}
+    \item \textbf{Enhanced Error Messages:} These are efforts to rewrite or augment the default messages produced by compilers.
+        Enhancements include simplifying technical language, offering concrete examples, and suggesting specific code changes.
+    \item \textbf{Intelligent Feedback Systems:} Educational IDEs and learning platforms have begun to integrate features such as syntax-aware hint systems, Quick Fix options, and context-sensitive help.
+        Some tools also utilize AI-based tutoring systems to adapt feedback based on user history.
+    \item \textbf{Community and Data-Driven Solutions:} Platforms like Stack Overflow, along with repositories of commonly asked questions and typical fixes,
+        help crowdsource explanations and debugging strategies. Some environments are beginning to embed such resources directly into the IDE.
 \end{itemize}
 
-\noindent Despite these advancements, Becker et al. \cite{becker} note that many of these solutions have limitations, not only that but in many programming languages it is still the case that:
-Firstly, a isolated error may cause different error messages depending on the context and furthermore, the same error messages can be produce by entirely diffent and definite errors.
-While enhanced messages and debugging tools can improve comprehension, they may still fail to address deeper misconceptions about programming concepts.
-Additionally, community-driven solutions are not always reliable, as the quality of responses varies.
-
+\noindent Despite these promising developments, Becker et al. caution that many of these systems are still reactive and heuristic in nature.
+For instance, Quick Fix suggestions may resolve a syntax issue but reinforce a faulty conceptual model.
+Moreover, compiler behaviors are inconsistent: the same logical error might yield different messages across compilers or languages, or even different versions of the same compiler.
+This inconsistency further complicates error interpretation for learners.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Educational Feedback Theories} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The effectiveness of error messages should be evaluated through the lens of educational feedback theory.
+According to Becker et al. \cite{becker}, error messages can be thought of as a form of formative feedback, which is essential for learning when it is:
 
-% \todo{Summarize relevant feedback theories from educational research.}
+\begin{itemize}
+    \item \textbf{Timely:} Delivered immediately after the error occurs.
+    \item \textbf{Specific:} Clearly identifies the nature and location of the error.
+    \item \textbf{Actionable:} Provides guidance on how to resolve the issue and avoid it in the future.
+\end{itemize}
 
+\noindent In addition, feedback should support a \textit{growth mindset} by framing errors as learning opportunities.
+Becker et al. argue that current compiler messages often fall short in this regard. Instead of promoting understanding, they frequently confuse or discourage learners.
+Some studies advocate for adaptive feedback systems that adjust based on the user's proficiency.\\[5pt]
+\noindent For example, beginners could receive verbose messages with explanations, while advanced users might prefer concise diagnostics.
+This personalization of feedback is consistent with Vygotsky's concept of the Zone of Proximal Development (ZPD),
+where instructional scaffolding enables learners to tackle challenges just beyond their current capability.\\[5pt]
+\noindent Barik et al. suggest that IDEs and compilers could benefit from being ``situationally aware''—adapting their diagnostics based on coding context, user behavior, and even gaze tracking data.
+Such intelligent systems would align with principles of human-computer interaction and could lead to more meaningful and effective educational interventions.
 
-The importance of feedback in education has been widely studied in pedagogical research, and several theories can be applied to compiler error messages.
-Becker et al. discuss how principles from feedback theory, such as formative assessment and scaffolding, can be leveraged to improve error messages.
-Effective feedback should be timely, specific, and actionable, enabling students to correct their mistakes and understand underlying concepts.\\[5pt]
-Furthermore, research suggests that error messages should be designed to support a growth mindset.
-Encouraging messages that normalize errors as part of the learning process can help students develop resilience and persistence in programming.
-Some studies advocate for adaptive error messages that adjust based on a student's experience level,
-providing more detailed explanations for beginners while offering concise feedback for more advanced learners.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% References %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Note: Ensure these entries exist in your BibTeX file.
+% \bibitem{becker} Becker et al. (2019). Compiler Error Messages Considered Unhelpful: The Landscape of Text-Based Programming Error Message Research.
+% \bibitem{barik} Barik et al. (2017). Do Developers Read Compiler Error Messages?
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -13,7 +13,6 @@
         "packagesPath": "C:\\Users\\jakob\\.nuget\\packages\\",
         "outputPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\evaluation\\template\\obj\\",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "C:\\Users\\jakob\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
@@ -34,7 +33,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {

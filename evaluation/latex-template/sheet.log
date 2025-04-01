@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.11)  1 APR 2025 02:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.11)  1 APR 2025 16:29
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -1060,59 +1060,63 @@ LaTeX Font Info:    Trying to load font information for U+fontawesomefree3 on in
 \pydata@fh@_7B03871D0EC21EE5D91F65DB25C19CAE.data.minted=\write7
 \openout7 = `_7B03871D0EC21EE5D91F65DB25C19CAE.data.minted'.
 
-runsystem(latexminted config  --timestamp 20250401020939 7B03871D0EC21EE5D91F65DB25C19CAE)...executed.
+runsystem(latexminted config  --timestamp 20250401162915 7B03871D0EC21EE5D91F65DB25C19CAE)...executed.
 
  (_7B03871D0EC21EE5D91F65DB25C19CAE.config.minted)
-runsystem(latexminted cleanconfig  --timestamp 20250401020939 7B03871D0EC21EE5D91F65DB25C19CAE)...executed.
+runsystem(latexminted cleanconfig  --timestamp 20250401162915 7B03871D0EC21EE5D91F65DB25C19CAE)...executed.
 
  (_minted/colorful.style.minted) (_minted/43F46FC8C41419E444F28821AA2AD1F7.highlight.minted
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1.
  (D:\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ))
+LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <14.4> not available
+(Font)              Font shape `T1/lmss/bx/n' tried instead on input line 33.
+LaTeX Font Info:    Trying to load font information for U+fontawesomefree1 on input line 33.
+ (D:\Programs\MiKTeX\tex/latex/fontawesome5\ufontawesomefree1.fd)
 
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 37.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 40.
 (D:\Programs\MiKTeX\tex/latex/lm\ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 37.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 40.
  (D:\Programs\MiKTeX\tex/latex/lm\omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 37.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 40.
  (D:\Programs\MiKTeX\tex/latex/lm\omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 37.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 40.
  (D:\Programs\MiKTeX\tex/latex/lm\omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 37.
+(Font)              <12> on input line 40.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 37.
+(Font)              <8> on input line 40.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 37.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 37.
+(Font)              <6> on input line 40.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 40.
  (D:\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 37.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 40.
  (D:\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 <assets/img/rptu-logo-minimal6.png, id=43, 683.4333pt x 177.7842pt>
 File: assets/img/rptu-logo-minimal6.png Graphic file (type png)
 <use assets/img/rptu-logo-minimal6.png>
-Package pdftex.def Info: assets/img/rptu-logo-minimal6.png  used on input line 37.
+Package pdftex.def Info: assets/img/rptu-logo-minimal6.png  used on input line 40.
 (pdftex.def)             Requested size: 45.16513pt x 11.74983pt.
  [1{C:/Users/jakob/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}
 
-{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free3.enc} <./assets/img/rptu-logo-minimal6.png>]
+{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free3.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free1.enc} <./assets/img/rptu-logo-minimal6.png>]
 
 File: assets/img/rptu-logo-minimal6.png Graphic file (type png)
 <use assets/img/rptu-logo-minimal6.png>
-Package pdftex.def Info: assets/img/rptu-logo-minimal6.png  used on input line 46.
+Package pdftex.def Info: assets/img/rptu-logo-minimal6.png  used on input line 49.
 (pdftex.def)             Requested size: 45.16513pt x 11.74983pt.
 [2] (sheet.aux)
  ***********
@@ -1123,17 +1127,17 @@ Package rerunfilecheck Info: File `sheet.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 44516 strings out of 473530
- 1002779 string characters out of 5727300
- 1688584 words of memory out of 5000000
- 67017 multiletter control sequences out of 15000+600000
- 589366 words of font info for 63 fonts, out of 8000000 for 9000
+ 44554 strings out of 473530
+ 1003837 string characters out of 5727300
+ 1689712 words of memory out of 5000000
+ 67049 multiletter control sequences out of 15000+600000
+ 592439 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  115i,22n,110p,11069b,1014s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <D:/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmss12.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmtk10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmtt12.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmtt8.pfb>
-Output written on sheet.pdf (2 pages, 200467 bytes).
+Output written on sheet.pdf (2 pages, 203414 bytes).
 PDF statistics:
- 100 PDF objects out of 1000 (max. 8388607)
- 5 named destinations out of 1000 (max. 500000)
- 178 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 108 PDF objects out of 1000 (max. 8388607)
+ 6 named destinations out of 1000 (max. 500000)
+ 186 words of extra memory for PDF output out of 10000 (max. 10000000)
 

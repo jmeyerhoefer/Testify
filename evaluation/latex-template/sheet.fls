@@ -472,6 +472,11 @@ INPUT D:\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
 INPUT D:\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt12.tfm
 INPUT D:\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtk10.tfm
 INPUT D:\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt8.tfm
+INPUT D:\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmssbx10.tfm
+INPUT D:\Programs\MiKTeX\tex\latex\fontawesome5\ufontawesomefree1.fd
+INPUT D:\Programs\MiKTeX\tex\latex\fontawesome5\ufontawesomefree1.fd
+INPUT D:\Programs\MiKTeX\tex\latex\fontawesome5\ufontawesomefree1.fd
+INPUT D:\Programs\MiKTeX\fonts\tfm\public\fontawesome5\fa5free1solid.tfm
 INPUT D:\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT D:\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
 INPUT D:\Programs\MiKTeX\tex\latex\lm\ot1lmr.fd
@@ -516,6 +521,7 @@ INPUT .\assets\img\rptu-logo-minimal6.png
 INPUT C:\Users\jakob\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
 INPUT D:\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT D:\Programs\MiKTeX\fonts\enc\dvips\fontawesome5\fa5free3.enc
+INPUT D:\Programs\MiKTeX\fonts\enc\dvips\fontawesome5\fa5free1.enc
 INPUT .\assets\img\rptu-logo-minimal6.png
 INPUT .\assets\img\rptu-logo-minimal6.png
 INPUT .\assets\img\rptu-logo-minimal6.png

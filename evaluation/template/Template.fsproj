@@ -9,9 +9,10 @@
     <ItemGroup Label="Code">
         <Compile Include="Mini.fs" />
         <Compile Include="Types.fs" />
-	    <Compile Include="Sample.fs" />
-        <Compile Include="Assertify.fs" />
+	    <Compile Include="Implementation.fs" />
         <Compile Include="Tests.fs" />
+        <Compile Include="Assertify.fs" />
+        <Compile Include="AssertifyTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
