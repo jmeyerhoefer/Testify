@@ -1,0 +1,273 @@
+% !TEX root = ../../sheet.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{assets/preamble/variables.tex} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper, fontsize=12pt]{scrbook} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage[
+	headsepline=1pt,
+	footsepline=0pt,
+	draft=false,
+	automark,
+	autooneside=false,
+	markcase=noupper
+]{scrlayer-scrpage}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage[
+	a4paper,
+	top=35mm,
+	bottom=30mm,
+	left=20mm,
+	right=20mm,
+	head=20pt,
+	%showframe
+]{geometry}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{lmodern}
+\usepackage{tgtermes}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+
+\makeatletter
+\renewcommand\familydefault{\sfdefault}
+\renewcommand\scshape{\usefont{T1}{qtm}{m}{sc}\selectfont}
+\makeatother
+
+
+\DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{tikz}
+\usetikzlibrary%
+{
+	external,
+	automata,
+	arrows,
+	arrows.meta,
+	decorations.pathmorphing,
+	backgrounds,
+	fit,
+	positioning,
+	shapes.symbols,
+	shapes,
+	shapes.geometric,
+	chains,
+	shapes.multipart,
+	shapes.misc,
+	matrix,
+	scopes,
+	calc
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PACKAGES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{blindtext}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks]{hyperref}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fontawesome5}
+\usepackage{efbox}
+\usepackage{minted}
+\usepackage{lstautogobble}
+\usepackage{upquote}
+\usepackage{xparse}
+\usepackage{tcolorbox}
+\tcbuselibrary{most, documentation, minted}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TITLE FORMAT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\setcounter{secnumdepth}{3}
+\newcommand\marker{\faIcon{tasks}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CHAPTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \makeatletter
+% \renewcommand*{\chapterformat}{\marker\enskip\thechapter\enskip}
+% \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+% \let\oldchapter\chapter
+% \RenewDocumentCommand{\chapter}{s o m}{%
+% 	\IfBooleanTF{#1}%
+% 		{%
+% 			\IfValueTF{#2}%
+% 				{\oldchapter*{\marker~#3}\markboth{#2}{}}%
+% 				{\oldchapter*{\marker~#3}}%
+% 		}%
+% 		{\IfValueTF{#2}{\oldchapter[#2]{#3}}{\oldchapter{#3}}}%
+% }
+% \makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\renewcommand\thesection{Task\enskip\arabic{section}:\enskip}
+\renewcommand*{\sectionformat}{\marker\enskip\thesection\enskip}
+\renewcommand{\sectionmark}[1]{\gdef\rightmark{#1}}
+\let\oldsection\section
+\RenewDocumentCommand{\section}{s o m}{%
+	\IfBooleanTF{#1}%
+		{%
+			\IfValueTF{#2}%
+				{\oldsection*{\marker~#3}\markboth{#2}{}}%
+				{\oldsection*{\marker~#3}}%
+		}%
+		{\IfValueTF{#2}{\oldsection[#2]{#3}}{\oldsection{#3}}}%
+}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUBSECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \makeatletter
+% \renewcommand*{\subsectionformat}{\marker\enskip\thesubsection\enskip}
+% \let\oldsubsection\subsection
+% \RenewDocumentCommand{\subsection}{s o m}{%
+% 	\IfBooleanTF{#1}%
+% 		{%
+% 			\IfValueTF{#2}%
+% 				{\oldsubsection*{\marker~#3}\markboth{#2}{}}%
+% 				{\oldsubsection*{\marker~#3}}%
+% 		}%
+% 		{\IfValueTF{#2}{\oldsubsection[#2]{#3}}{\oldsubsection{#3}}}%
+% }
+% \makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SUBSUBSECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \makeatletter
+% \renewcommand*{\subsubsectionformat}{\marker\enskip}
+% \let\oldsubsubsection\subsubsection
+% \RenewDocumentCommand{\subsubsection}{s o m}{%
+% 	\IfBooleanTF{#1}%
+% 		{%
+% 			\IfValueTF{#2}%
+% 				{\oldsubsubsection*{\marker~#3}\markboth{#2}{}}%
+% 				{\oldsubsubsection*{\marker~#3}}%
+% 		}%
+% 		{\IfValueTF{#2}{\oldsubsubsection[#2]{#3}}{\oldsubsubsection{#3}}}%
+% }
+% \makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HEADER AND FOOTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\setkomafont{pageheadfoot}{\normalfont}
+\clearpairofpagestyles
+
+\makeatletter
+\lehead{\@author}
+\lohead{\@author}
+
+\chead{\href{http://www.rptu.de/}{\includegraphics[height=1em]{assets/img/rptu-logo-minimal6.png}}}
+
+\rehead{\bachelor}
+\rohead{\bachelor}
+
+\cfoot*{\pagemark}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MINTED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newcounter{fsharpcounter}
+\def\thefsharpcounter{\thechapter.\arabic{fsharpcounter}}
+
+
+\renewcommand{\theFancyVerbLine}%
+{
+	\ttfamily\textcolor{black}{\scriptsize\arabic{FancyVerbLine}}
+}
+
+
+\setminted%
+{
+	extrakeywordstype = {
+		Nat, int, array, TestMethod, Timeout, test, printfn, failwith, LinkedList, EntryPoint
+	}
+}
+
+
+\newmintinline[fsharp]{fsharp}%
+{
+	fontsize = \small,
+	style = colorful
+}
+
+
+\newtcblisting{fsharpcode}[1][black]%
+{
+	notitle,
+	colframe = #1,
+	colback = #1!10,
+	left = 5mm,
+	boxrule = 1pt,
+	top = 1mm,
+	bottom = 1mm,
+    enhanced,
+    listing only = true,
+	listing engine = minted,
+	minted style = colorful,
+	minted language = fsharp,
+	minted options = {
+		fontsize = \normalsize,
+		linenos = true,
+		numbersep = 1mm,
+        xleftmargin = 0mm,
+		breaklines = true,
+		breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+		breakbytokenanywhere = true,
+		stripnl = true,
+		tabsize = 4,
+		autogobble = true
+	},
+    overlay = {
+        \begin{tcbclipinterior}
+            \fill[#1!30] (frame.south west)
+                rectangle ([xshift=5mm]frame.north west);
+        \end{tcbclipinterior}
+    }
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
