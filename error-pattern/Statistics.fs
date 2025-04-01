@@ -252,13 +252,20 @@ let generateTestResultsFirstAndLastSubmission (exerciseId: string) (relevantTask
         |> fun (firstSubmissions: string list, lastSubmissions: string list) ->
             let firstSubmissionsAverage, _, _: float * int * int = getAveragePassedTestsInfos firstSubmissions
             let lastSubmissionAverage, _, _: float * int * int = getAveragePassedTestsInfos lastSubmissions
-            Chart.Column (
+            let chart: GenericChart = Chart.Column (
                 Name = $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}",
                 values = [ firstSubmissionsAverage; lastSubmissionAverage ],
                 Keys = [ $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}: First"; $"%s{taskInfo.SheetId}-%s{taskInfo.AssignmentId}: Last" ],
                 Width = 0.25
             )
+            firstSubmissionsAverage, lastSubmissionAverage, chart
     )
+    |> fun (lst: (float * float * GenericChart) list) ->
+        let averageFirst: float = lst |> List.averageBy (fun (a: float, _, _) -> a)
+        printfn $"Average First: %f{averageFirst}"
+        let averageLast: float = lst |> List.averageBy (fun (_, b: float, _) -> b)
+        printfn $"Average Last: %f{averageLast}"
+        lst |> List.map (fun (_, _, chart: GenericChart) -> chart)
     |> Chart.combine
     |> Chart.savePNG (Path.Combine (statisticsPath, "testResultsColumnChartFirstAndLastSubmission-Combined"))
 
@@ -289,24 +296,28 @@ let generateBuildResultsTop10Errors (exerciseId: string): unit =
     )
     |> Chart.savePNG (Path.Combine (statisticsPath, "buildResultsColumnChartTop10Errors"))
 
+    let totalCount: int = errorCodes |> Seq.sumBy snd
+    // printfn $"{totalCount}"
+
     let errorCodesTableRows: string list seq =
         errorCodes
         |> Seq.mapi (fun (index: int) (code: string, count: int) ->
             let errorCode: int = int Regex.Match(code, @"FS(\d{4})").Groups[1].Value
             let errorCodeDescription: ErrorCodeDescription = getErrorCodeDescription errorCode
-            [ string (index + 1); code; errorCodeDescription.ShortDescription; string count ]
+            [ string (index + 1); code; errorCodeDescription.ShortDescription; string count; string (Math.Round((double count / double totalCount) * 100.0, 3)) + "%" ]
         )
     Chart.Table (
         Name = "Top error codes",
-        headerValues = [ "<b>#</b>"; "<b>Error code</b>"; "<b>Short Description</b>"; "<b>Count</b>" ],
+        headerValues = [ "<b>#</b>"; "<b>Error code</b>"; "<b>Short Description</b>"; "<b>Count</b>"; "<b>Percentage</b>" ],
         cellsValues = errorCodesTableRows,
         CellsMultiAlign = [
             StyleParam.HorizontalAlign.Center
             StyleParam.HorizontalAlign.Center
             StyleParam.HorizontalAlign.Left
             StyleParam.HorizontalAlign.Right
+            StyleParam.HorizontalAlign.Right
         ],
-        MultiColumnWidth = [ 40.; 70.; 300.; 60. ]
+        MultiColumnWidth = [ 40.; 70.; 300.; 60.; 60.]
     )
     |> fun (genericChart: GenericChart) ->
         genericChart
@@ -329,8 +340,8 @@ let generateStatistics (exerciseId: string) (relevantTasks: TaskInfo list): unit
     // generateTestResultsStatisticsTotal exerciseId
     // generateTestResultsStatisticsPerTask exerciseId relevantTasks
     // generateTestResultsStatisticsPerTaskCombined exerciseId relevantTasks
-    // generateTestResultsFirstAndLastSubmission exerciseId relevantTasks
-    generateBuildResultsTop10Errors exerciseId
+    generateTestResultsFirstAndLastSubmission exerciseId relevantTasks
+    // generateBuildResultsTop10Errors exerciseId
 
 
 // EOF
