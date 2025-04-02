@@ -7,42 +7,151 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+\setboolean{lsg}{true}
+\input{assets/preamble/solution.tex}
+
+
 \makeatletter
 \begin{center}
-    {\LARGE\bfseries \@title}
+	\ifthenelse{\boolean{lsg}}%
+		{\bfseries {\Large Lösungshinweise/-vorschläge zu}\\{\LARGE \@title}}%
+		{\LARGE\bfseries \@title}
 \end{center}
 \makeatother
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Entwurfsmuster} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+In dieser Aufgabe geht es um Beispielanwendungen des Peano und Leibniz Entwurfsmuster.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\section{Lists}
-\blindtext[1]
-\begin{fsharpcode}
-module Program
-
-[<EntryPoint>]
-let main (args: string array): int =
-    0
-\end{fsharpcode}
 
 
 \subsection{Peano Entwurfsmuster}
+In dieser Teilaufgabe geht es um das Peano Entwurfsmuster.
+\begin{tasks}
+	\item Schreiben Sie eine Funktion \fsharp|add: Nat -> Nat|, die alle natürlichen Zahlen bis \fsharp|n| aufaddiert.
+		Gehen Sie nach dem Peano Entwurfsmuster vor.\\[5pt]
+		Beispiele:\vspace{-.5\baselineskip}
+		\begin{multicols}{4}
+			\noindent
+			\fsharp|add 0N = 0N|\\
+			\fsharp|add 2N = 3N|\\
+			\fsharp|add 3N = 6N|\\
+			\fsharp|add 10N = 55N|
+		\end{multicols}
+		\begin{solution}
+		let rec add (n: Nat): Nat =
+			if n = 0N then 0N
+			else n + add (n - 1N)
+		\end{solution}
+
+	\item Schreiben Sie eine rekursive Funktion \fsharp|mod5: Nat -> Nat|, die für eine gegebene Zahl \fsharp|n| den Rest der Ganzzahldivision durch \fsharp|5| berechnet.
+		Es soll also \fsharp|mod5 n = n % 5| gelten. Gehen Sie nach Peano Entwurfsmuster vor.
+		Verwenden Sie \emph{nicht} die Funktionen \fsharp|/| oder \fsharp|%|.\\[5pt]
+		Beispiele:\vspace{-.5\baselineskip}
+		\begin{multicols}{5}
+			\noindent
+			\fsharp|mod5 0N = 0N|\\
+			\fsharp|mod5 1N = 1N|\\
+			\fsharp|mod5 2N = 2N|\\
+			\fsharp|mod5 3N = 3N|\\
+			\fsharp|mod5 4N = 4N|\\
+			\fsharp|mod5 5N = 0N|\\
+			\fsharp|mod5 19N = 4N|\\
+			\fsharp|mod5 20N = 0N|\\
+			\fsharp|mod5 21N = 1N|\\
+			\fsharp|mod5 22N = 2N|
+		\end{multicols}
+		\begin{solution}
+		let rec mod5 (n: Nat): Nat =
+			if n = 0N then 0N
+			else
+				let m: Nat = mod5 (n - 1N)
+				if m = 4N then 0N
+				else m + 1N
+		\end{solution}
+\end{tasks}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\vspace{\fill} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pagebreak %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{\fill}\pagebreak %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\section{Arrays}
-\begin{raggedright}
-    \blindtext[4]
-\end{raggedright}
+\subsection{Leibniz Entwurfsmuster}
+In dieser Teilaufgabe geht es um das Leibniz Entwurfsmuster.
+\begin{tasks}
+	\item Schreiben Sie eine Funktion \fsharp|add: Nat -> Nat|, die alle natürlichen Zahlen bis \fsharp|n| aufaddiert.
+		Gehen Sie nach dem Peano Entwurfsmuster vor.\\[5pt]
+		Beispiele:\vspace{-.5\baselineskip}
+		\begin{multicols}{4}
+			\noindent
+			\fsharp|add 0N = 0N|\\
+			\fsharp|add 2N = 3N|\\
+			\fsharp|add 3N = 6N|\\
+			\fsharp|add 10N = 55N|
+		\end{multicols}
+		\begin{solution3}
+		let rec add (n: Nat): Nat =
+			if n = 0N then #\hlbox[green]{0N}%
+			else n + add (n - 1N)
+		\end{solution3}
+		\begin{solution3}
+		let rec add (n: Nat): Nat =
+			if n = 0N then #\hlbox[green]{0N}% else n + add (n - 1N)
+		\end{solution3}
+		\begin{solution3}
+		let rec add n = if n = 0N then #\hlbox[green]{0N}% else n + add (n - 1N)
+		\end{solution3}
+
+	\item Schreiben Sie eine rekursive Funktion \fsharp|mod5: Nat -> Nat|, die für eine gegebene Zahl \fsharp|n| den Rest der Ganzzahldivision durch \fsharp|5| berechnet.
+		Es soll also \fsharp|mod5 n = n % 5| gelten. Gehen Sie nach Peano Entwurfsmuster vor.
+		Verwenden Sie \emph{nicht} die Funktionen \fsharp|/| oder \fsharp|%|.\\[5pt]
+		Beispiele:\vspace{-.5\baselineskip}
+		\begin{multicols}{5}
+			\noindent
+			\fsharp|mod5 0N = 0N|\\
+			\fsharp|mod5 1N = 1N|\\
+			\fsharp|mod5 2N = 2N|\\
+			\fsharp|mod5 3N = 3N|\\
+			\fsharp|mod5 4N = 4N|\\
+			\fsharp|mod5 5N = 0N|\\
+			\fsharp|mod5 19N = 4N|\\
+			\fsharp|mod5 20N = 0N|\\
+			\fsharp|mod5 21N = 1N|\\
+			\fsharp|mod5 22N = 2N|
+		\end{multicols}
+		\begin{solution3}
+		let rec mod5 (n: Nat): Nat =
+			if n = 0N then 0N
+			else
+				let m: Nat = mod5 (n - 1N)
+				if m = 4N then 0N
+				else m + 1N
+		\end{solution3}
+\end{tasks}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{\fill}\pagebreak %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Arrays} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\blindtext[1]
+\begin{fscode}[extrakeywords={Item}]
+type Item<'a> =
+	{
+		mutable elem: 'a
+		mutable next: option<Item<'a>>
+		mutable lst: 'a list
+	}
+\end{fscode}
+\blindtext[2]
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

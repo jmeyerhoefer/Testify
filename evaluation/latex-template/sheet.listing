@@ -1,5 +1,6 @@
-module Program
-
-[<EntryPoint>]
-let main (args: string array): int =
-    0
+		let rec mod5 (n: Nat): Nat =
+			if n = 0N then 0N
+			else
+				let m: Nat = mod5 (n - 1N)
+				if m = 4N then 0N
+				else m + 1N

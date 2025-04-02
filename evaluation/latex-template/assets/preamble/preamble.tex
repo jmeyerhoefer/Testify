@@ -2,7 +2,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{assets/preamble/variables.tex} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[a4paper, fontsize=12pt]{scrbook} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper, fontsize=12pt]{scrartcl} %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -95,6 +95,12 @@
 \usepackage{lstautogobble}
 \usepackage{upquote}
 \usepackage{xparse}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{ifthen}
+\usepackage{comment}
+\usepackage{environ}
+\usepackage{calc}
 \usepackage{tcolorbox}
 \tcbuselibrary{most, documentation, minted}
 
@@ -108,30 +114,11 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% CHAPTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \makeatletter
-% \renewcommand*{\chapterformat}{\marker\enskip\thechapter\enskip}
-% \renewcommand{\chaptermark}[1]{\markboth{#1}{}}
-% \let\oldchapter\chapter
-% \RenewDocumentCommand{\chapter}{s o m}{%
-% 	\IfBooleanTF{#1}%
-% 		{%
-% 			\IfValueTF{#2}%
-% 				{\oldchapter*{\marker~#3}\markboth{#2}{}}%
-% 				{\oldchapter*{\marker~#3}}%
-% 		}%
-% 		{\IfValueTF{#2}{\oldchapter[#2]{#3}}{\oldchapter{#3}}}%
-% }
-% \makeatother
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SECTION %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \makeatletter
 \newcommand\sectionmarker{\faIcon{tasks}}
-\renewcommand\thesection{Aufgabe\enskip\arabic{section}:\enskip}
+\renewcommand\thesection{Aufgabe\enskip\arabic{section}:}
 \renewcommand*{\sectionformat}{\sectionmarker\enskip\thesection\enskip}
 \renewcommand{\sectionmark}[1]{\gdef\rightmark{#1}}
 \let\oldsection\section
@@ -152,7 +139,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \makeatletter
 \newcommand\subsectionmarker{\faIcon{edit}}
-\renewcommand\thesubsection{Teilaufgabe\enskip\arabic{section}\Alph{subsection}:\enskip}
+\renewcommand\thesubsection{Teilaufgabe\enskip\Alph{subsection}:}
 \renewcommand*{\subsectionformat}{\subsectionmarker\enskip\thesubsection\enskip}
 \let\oldsubsection\subsection
 \RenewDocumentCommand{\subsection}{s o m}{%
@@ -207,54 +194,48 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% MINTED %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% MINTED/TCOLORBOX %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+% fsharp counter
 \newcounter{fsharpcounter}
 \def\thefsharpcounter{\thechapter.\arabic{fsharpcounter}}
 
 
-\renewcommand{\theFancyVerbLine}%
-{
-	\ttfamily\textcolor{black}{\scriptsize\arabic{FancyVerbLine}}
-}
+% line numbers
+\renewcommand{\theFancyVerbLine}{\ttfamily\textcolor{black}{\scriptsize\arabic{FancyVerbLine}}\enskip}
 
 
-\setminted%
-{
-	extrakeywordstype = {
-		Nat, int, array, TestMethod, Timeout, test, printfn, failwith, LinkedList, EntryPoint
-	}
-}
+% minted options
+\setminted{extrakeywordstype={Nat, int, array, option, TestMethod, Timeout, test, printfn, failwith, LinkedList, EntryPoint}}
 
 
-\newmintinline[fsharp]{fsharp}%
-{
-	fontsize = \small,
-	style = colorful
-}
+% minted inline
+\newmintinline[fsharp]{fsharp}{fontsize=\small, style=colorful}
 
 
-\newtcblisting{fsharpcode}[1][black]%
+% fsharpcode environment
+\definecolor{fsharpcodeColor}{HTML}{000000}
+\newtcblisting{fsharpcode}[1][fsharpcodeColor]%
 {
 	notitle,
 	colframe = #1,
-	colback = #1!10,
+	colback = #1!5,
 	left = 5mm,
 	boxrule = 1pt,
 	top = 1mm,
 	bottom = 1mm,
-    enhanced,
-    listing only = true,
+	enhanced,
+	listing only = true,
 	listing engine = minted,
 	minted style = colorful,
 	minted language = fsharp,
 	minted options = {
-		fontsize = \normalsize,
+		fontsize = \small,
 		linenos = true,
 		numbersep = 1mm,
-        xleftmargin = 0mm,
+		xleftmargin = 0mm,
 		breaklines = true,
 		breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
 		breakbytokenanywhere = true,
@@ -262,14 +243,73 @@
 		tabsize = 4,
 		autogobble = true
 	},
-    overlay = {
-        \begin{tcbclipinterior}
-            \fill[#1!30] (frame.south west)
-                rectangle ([xshift=5mm]frame.north west);
-        \end{tcbclipinterior}
-    }
+	overlay = {
+		\begin{tcbclipinterior}
+			\fill[#1!30] (frame.south west)
+				rectangle ([xshift=5mm]frame.north west);
+		\end{tcbclipinterior}
+	}
+}
+
+
+% highlight box
+\newtcbox{\hlbox}[1][red]%
+{
+	on line,
+	arc = 2pt,
+	% color
+	colback = #1!10!white,
+	colframe = #1!50!black,
+	% box
+	boxsep = 0pt,
+	boxrule = 0pt,
+	% left
+	left = 1pt,
+	leftrule = 1pt,
+	% right
+	right = 1pt,
+	rightrule = 1pt,
+	% top
+	top = 2pt,
+	toprule = 1pt,
+	% bottom
+	bottom = 2pt,
+	bottomrule = 1pt
+}
+
+
+\newminted[fscode]{fsharp}%
+{
+	fontsize = \small,
+	breaklines = true,
+	breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+	breakbytokenanywhere = true,
+	stripnl = true,
+	tabsize = 4,
+	autogobble = true
 }
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BOOLEAN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% solution boolean
+\provideboolean{lsg}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ENUMERATE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% tasks listing
+\newcommand\tasksmarker{\faIcon{pen}}
+\newlist{tasks}{enumerate}{4}
+\setlist[tasks]{label=\tasksmarker\enskip\textbf{(\roman*)}, align=left}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

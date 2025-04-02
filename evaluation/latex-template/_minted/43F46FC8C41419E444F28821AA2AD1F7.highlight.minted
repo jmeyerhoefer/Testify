@@ -1,7 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{k}{module}\PYG{+w}{ }\PYG{n+nn}{Program}
-
-\PYG{o}{[\PYGZlt{}}\PYG{k+kt}{EntryPoint}\PYG{o}{\PYGZgt{}]}
-\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{main}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{args}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{k+kt}{array}\PYG{o}{)}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{o}{=}
-\PYG{+w}{    }\PYG{l+m+mi}{0}
-\end{MintedVerbatim}

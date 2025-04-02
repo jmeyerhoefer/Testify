@@ -1,0 +1,172 @@
+% !TEX root = ../../sheet.tex
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SOLUTION ENVIRONMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% solution environment
+\definecolor{solutionColor}{HTML}{0000ff}
+\definecolor{originalColor}{HTML}{000000}
+\ifthenelse{\boolean{lsg}}%
+{
+    % if lsg = true then tcolorbox
+	\newtcblisting{solution}%
+	{
+		notitle,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 0mm,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+	\newtcblisting{solution2}%
+	{
+		% notitle,
+		title = Lösung,
+		center title,
+		attach boxed title to bottom*,
+		colbacktitle = solutionColor,
+		fonttitle = \bfseries,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 0mm,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] ([yshift=16pt]frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+	\newtcblisting{solution3}%
+	{
+		% notitle,
+		% center title,
+		% colbacktitle = solutionColor,
+		% fonttitle = \bfseries,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		rightrule = 18pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 0mm,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\ifdim\tcbtextheight<1cm
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lsg};
+			\else
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lösung};
+			\fi
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+	\newtcblisting{original}[1]%
+	{
+		title = #1,
+		center title,
+		colframe = originalColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 0mm,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\begin{tcbclipinterior}
+				\fill[originalColor!25] (frame.south west)
+					rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+}%
+{
+    % if lsg = false then empty environment
+	\NewEnviron{solution}[2]{}{}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
