@@ -23,21 +23,23 @@
         <Compile Include="RingBuffer.fs" />
         <Compile Include="Decorator.fs" />
         <Compile Include="Assertify.fs" />
+        <Compile Include="AssertifyJSON.fs" />
         <Compile Include="Tests.fs"/>
+        <Compile Include="PropertyTests.fs"/>
         <Compile Include="Program.fs"/>
     </ItemGroup>
 
     <ItemGroup Label="Other">
         <Content Include=".gitignore" />
         <Content Include="README.md" />
-        <Content Include="docs\index.md" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
         <PackageReference Include="MSTest.TestAdapter" Version="3.6.2" />
         <PackageReference Include="MSTest.TestFramework" Version="3.6.2" />
-        <PackageReference Include="FsCheck" Version="2.16.6" />
+        <PackageReference Include="FsCheck" Version="3.3.1" />
+        <PackageReference Include="Newtonsoft.Json.FSharp" Version="3.2.2" />
         <PackageReference Include="Unquote" Version="7.0.0" />
     </ItemGroup>
 

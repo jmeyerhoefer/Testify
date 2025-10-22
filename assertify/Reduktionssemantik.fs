@@ -12,6 +12,15 @@ let ex4RegExp: RegExp<char> = Or (Lit 'a', Lit 'b')
 let ex5RegExp: RegExp<char> = Star (Lit 'a')
 
 
+// let rec isWord<'a> (r: RegExp<'a>): 'a list option =
+//     match r with
+//     | Eps -> Some []
+//     | Lit a -> Some [ a ]
+//     | Cat (r1, r2) ->
+//         match isWord r1, isWord r2 with
+//         | Some l1, Some l2 -> Some (l1 @ l2)
+//         | _ -> None
+//     | _ -> None
 let rec isWord<'a> (r: RegExp<'a>): 'a list option =
     match r with
     | Eps -> Some []
@@ -19,6 +28,7 @@ let rec isWord<'a> (r: RegExp<'a>): 'a list option =
     | Cat (r1, r2) ->
         match isWord r1, isWord r2 with
         | Some l1, Some l2 -> Some (l1 @ l2)
+        | Some l, _ | _, Some l -> Some l
         | _ -> None
     | _ -> None
 
