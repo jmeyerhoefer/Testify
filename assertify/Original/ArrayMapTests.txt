@@ -1,0 +1,51 @@
+module ArrayMapTests.TestsModule
+
+open Mini
+open Types
+open Microsoft.VisualStudio.TestTools.UnitTesting
+open FsCheck
+
+
+type ArbitraryModifiers =
+    static member Nat() =
+        Arb.from<bigint>
+        |> Arb.filter (fun i -> i >= 0I)
+        |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+
+let ex = [| 1; 2; 3; 4 |]
+
+[<TestClass>]
+type Tests() =
+    do Arb.register<ArbitraryModifiers>() |> ignore
+
+    [<TestMethod>] [<Timeout(1000)>]
+    member this.``a) map Beispiele`` (): unit =
+        Assert.AreEqual([ 2; 4; 6; 8 ], ArrayMap.map (fun x -> x * 2) ex |> Array.toList)
+        Assert.AreEqual([ 1; 2; 3; 4 ], ArrayMap.map (fun x -> x) ex |> Array.toList)
+        Assert.AreEqual([ 1; 2; 3; 4 ], ex |> Array.toList) // original array is not modified
+
+    [<TestMethod>] [<Timeout(10000)>]
+    member this.``a) map Zufallstests`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Nat -> Bool) (xs: Array<Nat>) ->
+            let ys = Array.copy xs
+            let expected = Array.map f xs
+            let actual = ArrayMap.map f xs
+            Assert.AreEqual(expected |> Array.toList, actual |> Array.toList)
+            Assert.AreEqual(ys |> Array.toList, xs |> Array.toList) // original array is not modified
+        )
+
+
+    [<TestMethod>] [<Timeout(1000)>]
+    member this.``b) inplaceMap Beispiele`` (): unit =
+        let xs = [| 1; 2; 3; 4 |]
+        ArrayMap.inplaceMap (fun x -> x * 2) xs
+        Assert.AreEqual([ 2; 4; 6; 8 ], xs |> Array.toList)
+
+    [<TestMethod>] [<Timeout(10000)>]
+    member this.``b) findLast Zufallstests`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Nat -> Nat) (xs: Array<Nat>) ->
+            let xs_expected = Array.map f xs
+            ArrayMap.inplaceMap f xs
+            Assert.AreEqual(xs_expected |> Array.toList, xs |> Array.toList)
+        )
+

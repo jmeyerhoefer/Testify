@@ -17,19 +17,138 @@
     </PropertyGroup>
 
     <ItemGroup Label="Code">
-        <Compile Include="Mini.fs"/>
-        <Compile Include="Types.fs"/>
-        <Compile Include="Reduktionssemantik.fs"/>
-        <Compile Include="RingBuffer.fs" />
+        <Compile Include="Mini.fs" />
         <Compile Include="Decorator.fs" />
+        <Content Include="AssertifyOld.txt" />
         <Compile Include="Assertify.fs" />
-        <Compile Include="AssertifyJSON.fs" />
-        <Compile Include="Tests.fs"/>
-        <Compile Include="PropertyTests.fs"/>
-        <Compile Include="Program.fs"/>
+    </ItemGroup>
+
+    <ItemGroup Label="Types">
+        <Compile Include="Types\ArrayMapTypes.fs" />
+        <Compile Include="Types\BSTTypes.fs" />
+        <Compile Include="Types\CalculusTypes.fs" />
+        <Compile Include="Types\FindTypes.fs" />
+        <Compile Include="Types\Lists3Types.fs" />
+        <Compile Include="Types\NatsTypes.fs" />
+        <Compile Include="Types\NimTypes.fs" />
+        <Compile Include="Types\ReduktionssemantikTypes.fs" />
+        <Compile Include="Types\RegExpTypes.fs" />
+        <Compile Include="Types\RingBufferTypes.fs" />
+        <Compile Include="Types\TernaryTypes.fs" />
+        <Compile Include="Types\TreeTypes.fs" />
+        <Compile Include="Types\TurtleTypes.fs" />
+        <Compile Include="Types\Draw.fs" />
+        <Compile Include="Types\WeihnachtsbaumTypes.fs" />
+    </ItemGroup>
+
+    <ItemGroup Label="Student">
+        <Compile Include="Student\ArrayMap.fs" />
+        <Compile Include="Student\BSTs.fs" />
+        <Compile Include="Student\Calculus.fs" />
+        <Compile Include="Student\Counters.fs" />
+        <Compile Include="Student\Entwurfsmuster.fs" />
+        <Compile Include="Student\Find.fs" />
+        <Compile Include="Student\Leibniz.fs" />
+        <Compile Include="Student\Lists1.fs" />
+        <Compile Include="Student\Lists2.fs" />
+        <Compile Include="Student\Lists3.fs" />
+        <Compile Include="Student\Nats.fs" />
+        <Compile Include="Student\Peano.fs" />
+        <Compile Include="Student\Program.fs" />
+        <Compile Include="Student\Reduktionssemantik.fs" />
+        <Compile Include="Student\RegExp.fs" />
+        <Compile Include="Student\RingBuffer.fs" />
+        <Compile Include="Student\Simplify.fs" />
+        <Compile Include="Student\Ternary.fs" />
+        <Compile Include="Student\Tree.fs" />
+        <Compile Include="Student\Turtle.fs" />
+        <Compile Include="Student\Weihnachtsbaum.fs" />
+        <Compile Include="Student\Zahlen.fs" />
+    </ItemGroup>
+
+    <ItemGroup Label="Solution">
+        <Compile Include="Solution\ArrayMap.fs" />
+        <Compile Include="Solution\BSTs.fs" />
+        <Compile Include="Solution\Calculus.fs" />
+        <Compile Include="Solution\Counters.fs" />
+        <Compile Include="Solution\Entwurfsmuster.fs" />
+        <Compile Include="Solution\Find.fs" />
+        <Compile Include="Solution\Leibniz.fs" />
+        <Compile Include="Solution\Lists1.fs" />
+        <Compile Include="Solution\Lists2.fs" />
+        <Compile Include="Solution\Lists3.fs" />
+        <Compile Include="Solution\Nats.fs" />
+        <Compile Include="Solution\Peano.fs" />
+        <Compile Include="Solution\Program.fs" />
+        <Compile Include="Solution\Reduktionssemantik.fs" />
+        <Compile Include="Solution\RegExp.fs" />
+        <Compile Include="Solution\RingBuffer.fs" />
+        <Compile Include="Solution\Simplify.fs" />
+        <Compile Include="Solution\Ternary.fs" />
+        <Compile Include="Solution\Tree.fs" />
+        <Compile Include="Solution\Turtle.fs" />
+        <Compile Include="Solution\Weihnachtsbaum.fs" />
+        <Compile Include="Solution\Zahlen.fs" />
+    </ItemGroup>
+
+    <ItemGroup Label="Tests">
+        <Compile Include="Tests\ArrayMapTests.fs" />
+        <Compile Include="Tests\BSTTests.fs" />
+        <Compile Include="Tests\CalculusTests.fs" />
+        <Compile Include="Tests\CountersTests.fs" />
+        <Compile Include="Tests\EntwurfsmusterTests.fs" />
+        <Compile Include="Tests\FindTests.fs" />
+        <Compile Include="Tests\LeibnizTests.fs" />
+        <Compile Include="Tests\Lists1Tests.fs" />
+        <Compile Include="Tests\Lists2Tests.fs" />
+        <Compile Include="Tests\Lists3Tests.fs" />
+        <Compile Include="Tests\NatsTests.fs" />
+        <Compile Include="Tests\PeanoTests.fs" />
+        <Compile Include="Tests\ReduktionssemantikTests.fs" />
+        <Compile Include="Tests\RegExpTests.fs" />
+        <Compile Include="Tests\RingBufferTests.fs" />
+        <Compile Include="Tests\SimplifyTests.fs" />
+        <Compile Include="Tests\TernaryTests.fs" />
+        <Compile Include="Tests\TreeTests.fs" />
+        <Compile Include="Tests\TurtleTests.fs" />
+        <Compile Include="Tests\WarmUpTestUtilsIO.fs" />
+        <Compile Include="Tests\WarmUpTests.fs" />
+        <Compile Include="Tests\WeihnachtsbaumTests.fs" />
+        <Compile Include="Tests\ZahlenTests.fs" />
+    </ItemGroup>
+
+    <ItemGroup Label="Original">
+        <Content Include="Original\Order.txt" />
+        <Content Include="Original\ArrayMapTests.txt" />
+        <Content Include="Original\BSTTests.txt" />
+        <Content Include="Original\CalculusTests.txt" />
+        <Content Include="Original\CountersTests.txt" />
+        <Content Include="Original\EntwurfsmusterTests.txt" />
+        <Content Include="Original\FindTests.txt" />
+        <Content Include="Original\LeibnizTests.txt" />
+        <Content Include="Original\Lists1Tests.txt" />
+        <Content Include="Original\Lists2Tests.txt" />
+        <Content Include="Original\Lists3Tests.txt" />
+        <Content Include="Original\NatsTests.txt" />
+        <Content Include="Original\PeanoTests.txt" />
+        <Content Include="Original\ReduktionssemantikTests.txt" />
+        <Content Include="Original\RegExpTests.txt" />
+        <Content Include="Original\RingBufferTests.txt" />
+        <Content Include="Original\SimplifyTests.txt" />
+        <Content Include="Original\TernaryTests.txt" />
+        <Content Include="Original\TreeTests.txt" />
+        <Content Include="Original\TurtleTests.txt" />
+        <Content Include="Original\WarmUpTests.txt" />
+        <Content Include="Original\WeihnachtsbaumTests.txt" />
+        <Content Include="Original\ZahlenTests.txt" />
+    </ItemGroup>
+
+    <ItemGroup Label="Main">
+        <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup Label="Other">
+        <Content Include="PropertyTests.txt" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
     </ItemGroup>

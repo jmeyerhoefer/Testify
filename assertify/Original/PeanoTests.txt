@@ -1,0 +1,54 @@
+namespace Tests
+
+open Microsoft.VisualStudio.TestTools.UnitTesting
+open FsCheck
+open Swensen.Unquote
+open Mini
+
+type ArbitraryModifiers =
+    static member Nat() =
+        Arb.from<bigint>
+        |> Arb.filter (fun i -> i >= 0I)
+        |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+
+[<TestClass>]
+type Tests() =
+    do Arb.register<ArbitraryModifiers>() |> ignore
+
+    // ------------------------------------------------------------------------
+    // a)
+
+    [<TestMethod>] [<Timeout(1000)>]
+    member this.``iterate Beispiele`` (): unit =
+        test <@ Peano.iterate (fun x -> 1N + x * x) 0N 0N = 0N @>
+        test <@ Peano.iterate (fun x -> 1N + x * x) 1N 0N = 1N @>
+        test <@ Peano.iterate (fun x -> 1N + x * x) 2N 0N = 2N @>
+        test <@ Peano.iterate (fun x -> 1N + x * x) 3N 0N = 5N @>
+        test <@ Peano.iterate (fun x -> 1N + x * x) 4N 0N = 26N @>
+        test <@ Peano.iterate (fun x -> 1N + x * x) 5N 0N = 677N @>
+
+    // [<TestMethod>] [<Timeout(5000)>]
+    // member this.``a) mult3 Zufallstest`` (): unit =
+    //     Check.One ({Config.QuickThrowOnFailure with EndSize = 100}, fun (n: Nat) ->
+    //         Assert.AreEqual(
+    //             n * 3N,
+    //             Peano.mult3 n
+    //         )
+    //     )
+
+    // ------------------------------------------------------------------------
+    // b)
+
+    [<TestMethod>] [<Timeout(1000)>]
+    member this.``b) lt Beispiele`` (): unit =
+        test <@ Peano.lt 0N 1N = true@>
+        test <@ Peano.lt 0N 0N = false@>
+        test <@ Peano.lt 5N 3N = false@>
+        test <@ Peano.lt 1N 6N = true@>
+
+    [<TestMethod>] [<Timeout(30000)>]
+    member this.``b) lt`` (): unit =
+        Check.One({Config.QuickThrowOnFailure with EndSize = 100}, fun (n : Nat) (m : Nat) ->
+            Assert.AreEqual<Bool>(n < m, Peano.lt n m)
+        )
+
