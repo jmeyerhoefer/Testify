@@ -124,29 +124,29 @@
     </ItemGroup>
 
     <ItemGroup Label="Original">
-        <Content Include="Original\Order.txt" />
-        <Content Include="Original\ArrayMapTests.txt" />
-        <Content Include="Original\BSTTests.txt" />
-        <Content Include="Original\CalculusTests.txt" />
-        <Content Include="Original\CountersTests.txt" />
-        <Content Include="Original\EntwurfsmusterTests.txt" />
-        <Content Include="Original\FindTests.txt" />
-        <Content Include="Original\LeibnizTests.txt" />
-        <Content Include="Original\Lists1Tests.txt" />
-        <Content Include="Original\Lists2Tests.txt" />
-        <Content Include="Original\Lists3Tests.txt" />
-        <Content Include="Original\NatsTests.txt" />
-        <Content Include="Original\PeanoTests.txt" />
-        <Content Include="Original\ReduktionssemantikTests.txt" />
-        <Content Include="Original\RegExpTests.txt" />
-        <Content Include="Original\RingBufferTests.txt" />
-        <Content Include="Original\SimplifyTests.txt" />
-        <Content Include="Original\TernaryTests.txt" />
-        <Content Include="Original\TreeTests.txt" />
-        <Content Include="Original\TurtleTests.txt" />
-        <Content Include="Original\WarmUpTests.txt" />
-        <Content Include="Original\WeihnachtsbaumTests.txt" />
-        <Content Include="Original\ZahlenTests.txt" />
+        <Content Include="OriginalTests\Order.txt" />
+        <Content Include="OriginalTests\ArrayMapTests.txt" />
+        <Content Include="OriginalTests\BSTTests.txt" />
+        <Content Include="OriginalTests\CalculusTests.txt" />
+        <Content Include="OriginalTests\CountersTests.txt" />
+        <Content Include="OriginalTests\EntwurfsmusterTests.txt" />
+        <Content Include="OriginalTests\FindTests.txt" />
+        <Content Include="OriginalTests\LeibnizTests.txt" />
+        <Content Include="OriginalTests\Lists1Tests.txt" />
+        <Content Include="OriginalTests\Lists2Tests.txt" />
+        <Content Include="OriginalTests\Lists3Tests.txt" />
+        <Content Include="OriginalTests\NatsTests.txt" />
+        <Content Include="OriginalTests\PeanoTests.txt" />
+        <Content Include="OriginalTests\ReduktionssemantikTests.txt" />
+        <Content Include="OriginalTests\RegExpTests.txt" />
+        <Content Include="OriginalTests\RingBufferTests.txt" />
+        <Content Include="OriginalTests\SimplifyTests.txt" />
+        <Content Include="OriginalTests\TernaryTests.txt" />
+        <Content Include="OriginalTests\TreeTests.txt" />
+        <Content Include="OriginalTests\TurtleTests.txt" />
+        <Content Include="OriginalTests\WarmUpTests.txt" />
+        <Content Include="OriginalTests\WeihnachtsbaumTests.txt" />
+        <Content Include="OriginalTests\ZahlenTests.txt" />
     </ItemGroup>
 
     <ItemGroup Label="Main">
@@ -156,7 +156,6 @@
     </ItemGroup>
 
     <ItemGroup Label="Other">
-        <Content Include="PropertyTests.txt" />
         <Content Include=".gitignore" />
         <Content Include="README.md" />
     </ItemGroup>
