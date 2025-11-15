@@ -20,23 +20,23 @@ type Tests() =
 
     // ------------------------------------------------------------------------
     // a)
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Beispiel 1`` (): unit =
         Assert.AreEqual<Bool>(true, Zahlen.inOrder 2N 2N 8N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Beispiel 2`` (): unit =
         Assert.AreEqual<Bool>(false, Zahlen.inOrder 5N 2N 3N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Beispiel 3`` (): unit =
         Assert.AreEqual<Bool>(true, Zahlen.inOrder 2N 5N 7N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Beispiel 4`` (): unit =
         Assert.AreEqual<Bool>(false, Zahlen.inOrder 6N 13N 0N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) `inOrder` Zufallstest`` (): unit =
         Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (x: Nat) (y: Nat) (z: Nat) ->
             let result = Zahlen.inOrder x y z
@@ -45,23 +45,23 @@ type Tests() =
         )
     // ------------------------------------------------------------------------
     // b)
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 1`` (): unit =
         Assert.AreEqual<Nat>(5N, Zahlen.median3 2N 5N 8N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 2`` (): unit =
         Assert.AreEqual<Nat>(3N, Zahlen.median3 5N 2N 3N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 3`` (): unit =
         Assert.AreEqual<Nat>(7N, Zahlen.median3 12N 7N 5N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 4`` (): unit =
         Assert.AreEqual<Nat>(6N, Zahlen.median3 13N 6N 6N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) `median3` Zufallstest`` (): unit =
         Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (x: Nat) (y: Nat) (z: Nat) ->
             let result = Zahlen.median3 x y z
@@ -71,10 +71,10 @@ type Tests() =
 
     // ------------------------------------------------------------------------
     // c)
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) Beispiel 1`` (): unit =
         Assert.AreEqual<Nat>(1N, (Zahlen.takeMeTo true) 1N 2N)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) Beispiel 2`` (): unit =
         Assert.AreEqual<Nat>(3N, (Zahlen.takeMeTo false) 4N 3N)

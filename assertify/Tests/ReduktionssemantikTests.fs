@@ -1,7 +1,9 @@
 module Tests.ReduktionssemantikTests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Types.ReduktionssemantikTypes
 
 
@@ -69,7 +71,7 @@ type ReduktionssemantikTests () =
     let config: Config =
         Config
             .QuickThrowOnFailure
-            .WithArbitrary([typeof<ArbitraryModifiers>])
+            .WithArbitrary [typeof<ArbitraryModifiers>]
 
     let ex1 = Cat (Lit 'a', Lit 'b')
     let ex2 = Cat (Lit 'a', Eps)
@@ -77,7 +79,7 @@ type ReduktionssemantikTests () =
     let ex4 = Or (Lit 'a', Lit 'b')
     let ex5 = Star (Lit 'a')
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``isWord Beispiele``() : Unit =
         (?) <@ Student.Reduktionssemantik.isWord Empty = None @>
         (?) <@ Student.Reduktionssemantik.isWord Eps = Some [] @>
@@ -87,14 +89,14 @@ type ReduktionssemantikTests () =
         (?) <@ Student.Reduktionssemantik.isWord ex5 = None @>
         (?) <@ Student.Reduktionssemantik.isWord ex4 = None @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``isWord Zufall``() : Unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (r: SimpleRegEx<char>) -> Student.Reduktionssemantik.isWord (toRegEx r) = isWord (toRegEx r) @>,
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``reduceStep Beispiele``() : Unit =
         (?) <@ Student.Reduktionssemantik.reduceStep Empty = [] @>
         (?) <@ Student.Reduktionssemantik.reduceStep Eps = [] @>
@@ -105,14 +107,14 @@ type ReduktionssemantikTests () =
         (?) <@ Set.ofList (Student.Reduktionssemantik.reduceStep ex4) = Set.ofList [Lit 'a'; Lit 'b'] @>
         (?) <@ Set.ofList (Student.Reduktionssemantik.reduceStep ex5) = Set.ofList [Cat (Lit 'a', ex5); Eps] @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``reduceStep Zufall``() : Unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (r: SimpleRegEx<char>) -> Set.ofList (Student.Reduktionssemantik.reduceStep (toRegEx r)) = Set.ofList (reduceStep (toRegEx r)) @>,
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``reduce Beispiele``() : Unit =
         (?) <@ Student.Reduktionssemantik.reduce Empty 0N = [Empty] @>
         (?) <@ Student.Reduktionssemantik.reduce Eps 0N = [Eps] @>
@@ -128,14 +130,14 @@ type ReduktionssemantikTests () =
         (?) <@ Set.ofList (Student.Reduktionssemantik.reduce ex5 2N) = Set.ofList [ex5; Eps; Cat (Lit 'a', ex5); Cat (Lit 'a', Cat (Lit 'a', ex5)); ex2] @>
         (?) <@ Set.ofList (Student.Reduktionssemantik.reduce (Cat (ex4, Lit 'c')) 2N) = Set.ofList [Cat (ex4, Lit 'c'); Cat (Lit 'a', Lit 'c'); Cat (Lit 'b', Lit 'c')] @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``reduce Zufall``() : Unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (r: SimpleRegEx<char>, SmallNat n: SmallNat) -> Set.ofList (Student.Reduktionssemantik.reduce (toRegEx r) n) = Set.ofList (reduce (toRegEx r) n) @>,
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``words Beispiele``() : Unit =
         (?) <@ Set.ofList (Student.Reduktionssemantik.words Empty 10N) = Set.ofList [] @>
         (?) <@ Set.ofList (Student.Reduktionssemantik.words Eps 0N) = Set.ofList [[]] @>
@@ -150,14 +152,14 @@ type ReduktionssemantikTests () =
         (?) <@ Set.ofList (Student.Reduktionssemantik.words (Star ex4) 3N) = Set.ofList [[]; ['a']; ['b']] @>
         (?) <@ Set.ofList (Student.Reduktionssemantik.words (Star ex4) 5N) = Set.ofList [[]; ['a']; ['b']; ['a'; 'a']; ['a'; 'b']; ['b'; 'a']; ['b'; 'b']] @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``words Zufall``() : Unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (r: SimpleRegEx<char>, SmallNat n: SmallNat) -> Set.ofList (Student.Reduktionssemantik.words (toRegEx r) n) = Set.ofList (words (toRegEx r) n) @>,
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``generates Beispiele``() : Unit =
         (?) <@ Student.Reduktionssemantik.generates Empty [] 0N |> not @>
         (?) <@ Student.Reduktionssemantik.generates Eps [] 0N @>
@@ -179,9 +181,9 @@ type ReduktionssemantikTests () =
         (?) <@ Student.Reduktionssemantik.generates (Star ex4) ['a'] 3N @>
         (?) <@ Student.Reduktionssemantik.generates (Star ex4) ['a'; 'b'] 5N @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``generates Zufall``() : Unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (r: SimpleRegEx<char>, word: List<char>, SmallNat n: SmallNat) -> Student.Reduktionssemantik.generates (toRegEx r) word n = generates (toRegEx r) word n @>,
             config.WithMaxTest 1000
         )

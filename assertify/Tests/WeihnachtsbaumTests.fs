@@ -1,7 +1,10 @@
 module Tests.WeihnachtsbaumTests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Types.Configurations
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Types.WeihnachtsbaumTypes
 
 
@@ -73,7 +76,7 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuckGewicht`` (): unit =
         (?) <@ Student.Weihnachtsbaum.schmuckGewicht Lametta = 1N @>
         (?) <@ Student.Weihnachtsbaum.schmuckGewicht Kugel = 2N @>
@@ -81,16 +84,16 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``baumGewicht Beispiel 2`` (): unit =
         (?) <@ Student.Weihnachtsbaum.baumGewicht ex1 = 2N @>
         (?) <@ Student.Weihnachtsbaum.baumGewicht ex2 = 4N @>
         (?) <@ Student.Weihnachtsbaum.baumGewicht inv1 = 3N @>
         (?) <@ Student.Weihnachtsbaum.baumGewicht inv2 = 1N @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``baumGewicht Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Student.Weihnachtsbaum.baumGewicht t = treeWeight t decorationWeight @>,
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
@@ -98,19 +101,19 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``istBalanciert Beispiel 1`` (): unit =
         (?) <@ Student.Weihnachtsbaum.istBalanciert ex1 @>
         (?) <@ Student.Weihnachtsbaum.istBalanciert ex2 @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``istBalanciert Beispiel 2`` (): unit =
         (?) <@ Student.Weihnachtsbaum.istBalanciert inv1 = false @>
         (?) <@ Student.Weihnachtsbaum.istBalanciert inv2 = false @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``istBalanciert Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Student.Weihnachtsbaum.istBalanciert t = istBalanciert t decorationWeight @>,
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
@@ -118,20 +121,20 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``moeglicheGewichte Beispiel 1`` (): unit =
         (?) <@ Student.Weihnachtsbaum.moeglicheGewichte eex1 |> Set.ofList = Set.ofList [1N; 2N] @>
         (?) <@ Student.Weihnachtsbaum.moeglicheGewichte eex2 |> Set.ofList = Set.ofList [3N; 4N; 5N; 6N] @>
         (?) <@ Student.Weihnachtsbaum.moeglicheGewichte eex3 |> Set.ofList = Set.ofList [2N; 4N] @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``moeglicheGewichte Beispiel 2`` (): unit =
         (?) <@ Student.Weihnachtsbaum.moeglicheGewichte einv1 = [] @>
         (?) <@ Student.Weihnachtsbaum.moeglicheGewichte einv2 = [] @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``moeglicheGewichte Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Set.ofList (Student.Weihnachtsbaum.moeglicheGewichte t) = Set.ofList (moeglicheGewichte t) @>,
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
@@ -139,7 +142,7 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Beispiel 1`` (): unit =
         (?) <@ Student.Weihnachtsbaum.schmuecken eex1 1N = Some (Node(Leaf, Lametta, Leaf)) @>
         (?) <@ Student.Weihnachtsbaum.schmuecken eex1 2N = Some (Node(Leaf, Kugel, Leaf)) @>
@@ -150,15 +153,15 @@ type WeihnachtsbaumTests () =
         (?) <@ Student.Weihnachtsbaum.schmuecken eex3 2N = Some (ENode(Node(Leaf, Lametta, Leaf), Node(Leaf, Lametta, Leaf))) @>
         (?) <@ Student.Weihnachtsbaum.schmuecken eex3 4N = Some (ENode(Node(Leaf, Kugel, Leaf), Node(Leaf, Kugel, Leaf))) @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Beispiel 2`` (): unit =
         (?) <@ Student.Weihnachtsbaum.schmuecken einv1 1N = None @>
         (?) <@ Student.Weihnachtsbaum.schmuecken einv1 2N = None @>
 
-    // TODO:
-    [<TestMethod; Timeout(1000)>]
+    // TODO: Find alternative solution
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Zufall Balanced`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Tree<Unit>) (w: Nat) ->
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> istBalanciert t' (fun _ -> 1N)
@@ -166,9 +169,9 @@ type WeihnachtsbaumTests () =
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Zufall Shape`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Tree<Unit>) (w: Nat) ->
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> sameShape t t'
@@ -176,9 +179,9 @@ type WeihnachtsbaumTests () =
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Zufall Weight`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Tree<Unit>) (w: Nat) ->
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> treeWeight t' decorationWeight = w
@@ -186,9 +189,9 @@ type WeihnachtsbaumTests () =
             DefaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmuecken Zufall moeglicheGewichte`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Tree<Unit>) (w: Nat) ->
                 if moeglicheGewichte t |> List.contains w then
                     match Student.Weihnachtsbaum.schmuecken t w with
@@ -204,7 +207,7 @@ type WeihnachtsbaumTests () =
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmueckungen Beispiel 1`` (): unit =
         (?) <@ Student.Weihnachtsbaum.schmueckungen eex1 |> Set.ofList = Set.ofList [Node(Leaf, Lametta, Leaf); Node(Leaf, Kugel, Leaf)] @>
         (?) <@ Student.Weihnachtsbaum.schmueckungen eex2 |> Set.ofList = Set.ofList [Node(Node(Leaf, Lametta, Leaf), Lametta, Node(Leaf, Lametta, Leaf));
@@ -214,14 +217,14 @@ type WeihnachtsbaumTests () =
         (?) <@ Student.Weihnachtsbaum.schmueckungen eex3 |> Set.ofList = Set.ofList [ENode(Node(Leaf, Lametta, Leaf), Node(Leaf, Lametta, Leaf));
                                                                                   ENode(Node(Leaf, Kugel, Leaf), Node(Leaf, Kugel, Leaf))] @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmueckungen Beispiel 2`` (): unit =
         (?) <@ Student.Weihnachtsbaum.schmueckungen einv1 = [] @>
         (?) <@ Student.Weihnachtsbaum.schmueckungen einv2 = [] @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``schmueckungen Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (t: Tree<Unit>) ->
                 Set.ofList (Student.Weihnachtsbaum.schmueckungen t) =
                     Set.ofList (Student.Weihnachtsbaum.moeglicheGewichte t |> List.choose (Student.Weihnachtsbaum.schmuecken t)) @>,

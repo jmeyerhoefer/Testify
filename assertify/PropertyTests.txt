@@ -45,13 +45,13 @@ type Tests () =
     do Assertify.ShowHistory <- true
     do Assertify.ShowReductions <- true
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``add Beispiele`` (): unit =
         // Swensen.Unquote.Assertions.test <@ Reduktionssemantik.isWord Eps = isWord Empty @>
         (?) <@ Reduktionssemantik.isWord Eps = isWord Empty @>
         (?) <@ Reduktionssemantik.isWord Empty = isWord Empty @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``add Zufall`` (): unit =
         Assertify.CheckProperty (
             fun (r: SimpleRegExp<char>, n: Nat) ->
@@ -60,35 +60,35 @@ type Tests () =
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``shrinking Example`` (): unit =
         Assertify.CheckProperty (
             fun (s: string) -> <@ s.Length = 5 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Check`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             fun (s: string) -> <@ s.Length = 5 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Sum property`` (): unit =
         Check.One (
             Config.Default
             , fun (a: int, b: int) -> a + b = 5
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``test1`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             fun (a: string, b: int) -> <@ a.Length < 2 && b < 10 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Dependent list example`` (): unit =
         let gen: Gen<int * int list> =
             gen {
@@ -98,20 +98,20 @@ type Tests () =
                 return (n, xs)
             }
 
-        Assertify.Check (
+        Checkify.Check (
             fun (n: int, xs: int list) -> <@ List.sum xs <= n @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
             , gen
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Dependent list example2`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             fun (n: int, xs: int list) -> <@ xs.Length = abs n % 11 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``test2`` (): unit =
         Assertify.CheckSimple (
             <@ "someString".Length > 5 @>
@@ -119,7 +119,7 @@ type Tests () =
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``test3`` (): unit =
         Assertify.CheckSimple (
             <@ fun (s: string list) -> s.Length > 5 @>
@@ -153,9 +153,9 @@ let property: FsCheck.Property =
 Tests like this:
 
 ```fsharp
-[<TestMethod; Timeout(10000)>]
+[<TestMethod; Timeout 10000>]
     member _.``test1`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             fun (a: string, b: int) -> <@ a.Length < 2 && b < 10 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
         )
@@ -166,7 +166,7 @@ work with output: `Original: ("<2", -1); Shrunk: ("aa", 0)`
 And tests like this work as well:
 
 ```fsharp
-[<TestMethod; Timeout(10000)>]
+[<TestMethod; Timeout 10000>]
     member _.``Dependent list example`` (): unit =
         let gen: Gen<int * int list> =
             gen {
@@ -176,7 +176,7 @@ And tests like this work as well:
                 return (n, xs)
             }
 
-        Assertify.Check (
+        Checkify.Check (
             fun (n: int, xs: int list) -> <@ xs.Length = abs n % 11 @>
             , Config.QuickThrowOnFailure.WithMaxTest 1000
             , gen
@@ -213,8 +213,7 @@ static member Check' (prop: 'a -> Expr<bool>, ?config: FsCheck.Config, ?gen: Gen
                 with _ ->
                     failedExpression <- Some expr
                     false
-            match arbOpt with
-            | Some arb -> FsCheck.FSharp.Prop.forAll arb test
+            match arbOpt with            | Some arb -> FsCheck.FSharp.Prop.forAll arb test
             | None ->  FsCheck.FSharp.Prop.ofTestable test
 
         try FsCheck.Check.One (configuration, property) with

@@ -31,7 +31,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) Beispiele ungültige natürliche Zahl`` (): unit =
         executeIOTest (
             (fun () -> let x = Program.queryNat "Eine Nachricht: " in Assert.AreEqual<Nat>(4711N, x) |> ignore),
@@ -56,7 +56,7 @@ type Tests() =
                 io.WriteLine("4711") // beenden
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) Zufall gültige natürliche Zahl`` (): unit =
         Check.QuickThrowOnFailure (fun (num: Nat) (msg: SafeString) ->
             let (SS msg) = msg
@@ -72,7 +72,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``c) Zufall main`` (): unit =
         Check.QuickThrowOnFailure (fun (n1: Nat) (n2: Nat) (n3: Nat) ->
             executeIOTest (

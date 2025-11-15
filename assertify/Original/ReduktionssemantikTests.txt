@@ -57,7 +57,7 @@ type SmallNat = SmallNat of Nat
 
 type ArbitraryModifiers =
     static member Nat() =
-        Arb.from<NonNegativeInt>        
+        Arb.from<NonNegativeInt>
         |> Arb.convert (fun i -> Nat.Make (int i)) (fun n -> NonNegativeInt (int n))
 
     static member SmallNat() =
@@ -75,7 +75,7 @@ type Tests() =
     let ex4 = Or (Lit 'a', Lit 'b')
     let ex5 = Star (Lit 'a')
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``isWord Beispiele``() : Unit =
         test <@ Reduktionssemantik.isWord Empty = None @>
         test <@ Reduktionssemantik.isWord Eps = Some [] @>
@@ -85,13 +85,13 @@ type Tests() =
         test <@ Reduktionssemantik.isWord ex5 = None @>
         test <@ Reduktionssemantik.isWord ex4 = None @>
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``isWord Zufall``() : Unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (r: SimpleRegEx<char>) ->
             let r = toRegEx r
             Assert.AreEqual(isWord r, Reduktionssemantik.isWord r))
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``reduceStep Beispiele``() : Unit =
         test <@ Reduktionssemantik.reduceStep Empty = [] @>
         test <@ Reduktionssemantik.reduceStep Eps = [] @>
@@ -102,14 +102,14 @@ type Tests() =
         test <@ Set.ofList (Reduktionssemantik.reduceStep ex4) = Set.ofList [Lit 'a'; Lit 'b'] @>
         test <@ Set.ofList (Reduktionssemantik.reduceStep ex5) = Set.ofList [Cat (Lit 'a', ex5); Eps] @>
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``reduceStep Zufall``() : Unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (r: SimpleRegEx<char>) ->
             let r = toRegEx r
             Assert.AreEqual(Set.ofList (reduceStep r), Set.ofList (Reduktionssemantik.reduceStep r)))
 
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``reduce Beispiele``() : Unit =
         test <@ Reduktionssemantik.reduce Empty 0N = [Empty] @>
         test <@ Reduktionssemantik.reduce Eps 0N = [Eps] @>
@@ -125,13 +125,13 @@ type Tests() =
         test <@ Set.ofList (Reduktionssemantik.reduce ex5 2N) = Set.ofList [ex5; Eps; Cat (Lit 'a', ex5); Cat (Lit 'a', Cat (Lit 'a', ex5)); ex2] @>
         test <@ Set.ofList (Reduktionssemantik.reduce (Cat (ex4, Lit 'c')) 2N) = Set.ofList [Cat (ex4, Lit 'c'); Cat (Lit 'a', Lit 'c'); Cat (Lit 'b', Lit 'c')] @>
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``reduce Zufall``() : Unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (r: SimpleRegEx<char>, SmallNat n: SmallNat) ->
             let r = toRegEx r
             Assert.AreEqual(Set.ofList (reduce r n), Set.ofList (Reduktionssemantik.reduce r n)))
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``words Beispiele``() : Unit =
         test <@ Set.ofList (Reduktionssemantik.words Empty 10N) = Set.ofList [] @>
         test <@ Set.ofList (Reduktionssemantik.words Eps 0N) = Set.ofList [[]] @>
@@ -146,13 +146,13 @@ type Tests() =
         test <@ Set.ofList (Reduktionssemantik.words (Star ex4) 3N) = Set.ofList [[]; ['a']; ['b']] @>
         test <@ Set.ofList (Reduktionssemantik.words (Star ex4) 5N) = Set.ofList [[]; ['a']; ['b']; ['a'; 'a']; ['a'; 'b']; ['b'; 'a']; ['b'; 'b']] @>
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``words Zufall``() : Unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (r: SimpleRegEx<char>, SmallNat n: SmallNat) ->
             let r = toRegEx r
             Assert.AreEqual(Set.ofList (words r n), Set.ofList (Reduktionssemantik.words r n)))
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``generates Beispiele``() : Unit =
         test <@ Reduktionssemantik.generates Empty [] 0N |> not @>
         test <@ Reduktionssemantik.generates Eps [] 0N @>
@@ -174,7 +174,7 @@ type Tests() =
         test <@ Reduktionssemantik.generates (Star ex4) ['a'] 3N @>
         test <@ Reduktionssemantik.generates (Star ex4) ['a'; 'b'] 5N @>
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member self.``generates Zufall``() : Unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (r: SimpleRegEx<char>, word: List<char>, SmallNat n: SmallNat) ->
             let r = toRegEx r

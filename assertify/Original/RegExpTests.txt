@@ -8,37 +8,37 @@ open Types
 
 [<TestClass>]
 type Tests() =
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Beispiel 1`` (): unit =
         Assert.IsTrue(RegExp.accept [B;A])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Beispiel 2`` (): unit =
         Assert.IsTrue(RegExp.accept [A])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Beispiel 3`` (): unit =
         Assert.IsTrue(RegExp.accept [B;B;B;B;B;B;B;B;B;A])
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Gegenbeispiel 1`` (): unit =
         Assert.IsFalse(RegExp.accept [])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Gegenbeispiel 2`` (): unit =
         Assert.IsFalse(RegExp.accept [A;A;A;A;A])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Gegenbeispiel 3`` (): unit =
         Assert.IsFalse(RegExp.accept [B;B;B;B;B;B;B;B;A;A])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``accept Gegenbeispiel 4`` (): unit =
         Assert.IsFalse(RegExp.accept [B;A;A;A;A;A;A])
 
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``accept Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with EndSize = 100}, fun (input: Alphabet list) ->
             let rec toString (acc: String) (xs: Alphabet list): String =

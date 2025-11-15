@@ -82,7 +82,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuckGewicht`` (): unit =
         test <@ Weihnachtsbaum.schmuckGewicht Lametta = 1N @>
         test <@ Weihnachtsbaum.schmuckGewicht Kugel = 2N @>
@@ -90,14 +90,14 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``baumGewicht Beispiel 2`` (): unit =
         test <@ Weihnachtsbaum.baumGewicht ex1 = 2N @>
         test <@ Weihnachtsbaum.baumGewicht ex2 = 4N @>
         test <@ Weihnachtsbaum.baumGewicht inv1 = 3N @>
         test <@ Weihnachtsbaum.baumGewicht inv2 = 1N @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``baumGewicht Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Weihnachtsbaum) ->
             Assert.AreEqual<Nat>(treeWeight t decorationWeight, Weihnachtsbaum.baumGewicht t))
@@ -105,17 +105,17 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``istBalanciert Beispiel 1`` (): unit =
         test <@ Weihnachtsbaum.istBalanciert ex1 @>
         test <@ Weihnachtsbaum.istBalanciert ex2 @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``istBalanciert Beispiel 2`` (): unit =
         test <@ not (Weihnachtsbaum.istBalanciert inv1) @>
         test <@ not (Weihnachtsbaum.istBalanciert inv2) @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``istBalanciert Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Weihnachtsbaum) ->
             Assert.AreEqual<Bool>(istBalanciert t decorationWeight, Weihnachtsbaum.istBalanciert t))
@@ -123,18 +123,18 @@ type Tests() =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``moeglicheGewichte Beispiel 1`` (): unit =
         test <@ Weihnachtsbaum.moeglicheGewichte eex1 |> Set.ofList = Set.ofList [1N; 2N] @>
         test <@ Weihnachtsbaum.moeglicheGewichte eex2 |> Set.ofList = Set.ofList [3N; 4N; 5N; 6N] @>
         test <@ Weihnachtsbaum.moeglicheGewichte eex3 |> Set.ofList = Set.ofList [2N; 4N] @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``moeglicheGewichte Beispiel 2`` (): unit =
         test <@ Weihnachtsbaum.moeglicheGewichte einv1 = [] @>
         test <@ Weihnachtsbaum.moeglicheGewichte einv2 = [] @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``moeglicheGewichte Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Weihnachtsbaum) ->
             Assert.AreEqual<Set<Nat>>(moeglicheGewichte t |> Set.ofList, Weihnachtsbaum.moeglicheGewichte t |> Set.ofList))
@@ -142,7 +142,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Beispiel 1`` (): unit =
         test <@ Weihnachtsbaum.schmuecken eex1 1N = Some (Node(Leaf, Lametta, Leaf)) @>
         test <@ Weihnachtsbaum.schmuecken eex1 2N = Some (Node(Leaf, Kugel, Leaf)) @>
@@ -153,33 +153,33 @@ type Tests() =
         test <@ Weihnachtsbaum.schmuecken eex3 2N = Some (ENode(Node(Leaf, Lametta, Leaf), Node(Leaf, Lametta, Leaf))) @>
         test <@ Weihnachtsbaum.schmuecken eex3 4N = Some (ENode(Node(Leaf, Kugel, Leaf), Node(Leaf, Kugel, Leaf))) @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Beispiel 2`` (): unit =
         test <@ Weihnachtsbaum.schmuecken einv1 1N = None @>
         test <@ Weihnachtsbaum.schmuecken einv1 2N = None @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Zufall Balanced`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Tree<Unit>) (w: Nat) ->
             match Weihnachtsbaum.schmuecken t w with
             | Some t' -> istBalanciert t' (fun _ -> 1N)
             | None -> true)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Zufall Shape`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Tree<Unit>) (w: Nat) ->
             match Weihnachtsbaum.schmuecken t w with
             | Some t' -> sameShape t t'
             | None -> true)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Zufall Weight`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Tree<Unit>) (w: Nat) ->
             match Weihnachtsbaum.schmuecken t w with
             | Some t' -> treeWeight t' decorationWeight = w
             | None -> true)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmuecken Zufall moeglicheGewichte`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Tree<Unit>) (w: Nat) ->
             if moeglicheGewichte t |> List.contains w then
@@ -194,7 +194,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmueckungen Beispiel 1`` (): unit =
         test <@ Weihnachtsbaum.schmueckungen eex1 |> Set.ofList = Set.ofList [Node(Leaf, Lametta, Leaf); Node(Leaf, Kugel, Leaf)] @>
         test <@ Weihnachtsbaum.schmueckungen eex2 |> Set.ofList = Set.ofList [Node(Node(Leaf, Lametta, Leaf), Lametta, Node(Leaf, Lametta, Leaf));
@@ -204,12 +204,12 @@ type Tests() =
         test <@ Weihnachtsbaum.schmueckungen eex3 |> Set.ofList = Set.ofList [ENode(Node(Leaf, Lametta, Leaf), Node(Leaf, Lametta, Leaf));
                                                                                   ENode(Node(Leaf, Kugel, Leaf), Node(Leaf, Kugel, Leaf))] @>
                                                                                   
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmueckungen Beispiel 2`` (): unit =
         test <@ Weihnachtsbaum.schmueckungen einv1 = [] @>
         test <@ Weihnachtsbaum.schmueckungen einv2 = [] @>
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``schmueckungen Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (t: Tree<Unit>) ->
             let t1 = Weihnachtsbaum.schmueckungen t |> Set.ofList

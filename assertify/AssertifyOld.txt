@@ -1,41 +1,106 @@
-module AssertifyOld
+module Assertify
 
 
-open Decorator
+open Microsoft.FSharp.Linq.RuntimeHelpers
+open Newtonsoft.Json
+open Newtonsoft.Json.FSharp
 open Microsoft.FSharp.Quotations
 open Microsoft.VisualStudio.TestTools
 open Swensen.Unquote
-open System
-open System.Text
-open System.Text.RegularExpressions
 
+
+// FsCheck Modules
+module Arb = FsCheck.FSharp.Arb
+module ArbMap = FsCheck.FSharp.ArbMap
+module Gen = FsCheck.FSharp.Gen
+module Prop = FsCheck.FSharp.Prop
+
+
+// FsCheck Types
+type Arbitrary<'a> = FsCheck.Arbitrary<'a>
+type Check = FsCheck.Check
+type Config = FsCheck.Config
+type Gen<'a> = FsCheck.Gen<'a>
+type GenBuilder = FsCheck.FSharp.GenBuilder.GenBuilder
+type IRunner = FsCheck.IRunner
+type TestResult = FsCheck.TestResult
+type Property = FsCheck.Property
+
+
+// FsCheck GenBuilder
+let gen: GenBuilder = FsCheck.FSharp.GenBuilder.gen
+
+
+
+type SmallNat = SmallNat of Nat
+
+
+/// <summary>
+/// Default Arbitrary Modifier for Nat
+/// </summary>
+type NatModifier =
+    /// <summary>
+    /// Returns Arbitrary for Nat
+    /// </summary>
+    static member Nat (): Arbitrary<Nat> =
+        ArbMap.defaults
+        |> ArbMap.arbitrary<bigint>
+        |> Arb.filter (fun i -> i >= 0I)
+        |> Arb.convert Nat.Make _.ToBigInteger()
+
+    static member NatList (): Arbitrary<Nat list> = NatModifier.Nat () |> Arb.list
+    static member NatListOfLength (n: Nat): Gen<Nat list> = NatModifier.Nat().Generator |> Gen.listOfLength (int n)
+    static member NatArray (): Arbitrary<Nat array> = NatModifier.Nat () |> Arb.array
+    static member NatSet (): Arbitrary<Set<Nat>> = NatModifier.Nat () |> Arb.set
+    static member NatOption (): Arbitrary<Nat option> = NatModifier.Nat () |> Arb.option
+
+    // static member Nat (): Arbitrary<Nat> =
+    //     ArbMap.defaults
+    //     |> ArbMap.arbitrary<FsCheck.NonNegativeInt>
+    //     |> Arb.convert (int >> Nat.Make) (int >> FsCheck.NonNegativeInt)
+
+    static member SmallNat (): Arbitrary<SmallNat> =
+        ArbMap.defaults
+        |> ArbMap.arbitrary<Nat>
+        |> Arb.filter (fun (n: Nat) -> n < 7N)
+        |> Arb.convert SmallNat (fun (SmallNat (n: Nat)) -> n)
+
+
+/// <summary>
+/// Default Configuration: <c>Config.QuickThrowOnFailure</c> with arbitrary modifier for <c>Nat</c>.
+/// </summary>
+let DefaultConfig: Config = Config.QuickThrowOnFailure.WithArbitrary [ typeof<NatModifier> ]
 
 
 /// <summary>TODO</summary>
-type CaptureRunner (inner: FsCheck.IRunner) =
+type CaptureRunner (inner: IRunner) =
     /// <summary>TODO</summary>
     let mutable original: obj list option = None
 
     /// <summary>TODO</summary>
     let mutable lastShrink: obj list option = None
 
-    interface FsCheck.IRunner with
+    interface IRunner with
         /// <summary>TODO</summary>
-        member _.OnStartFixture (t: Type): unit =
+        member _.OnStartFixture (t: System.Type): unit =
+            // printfn $"OnStartFixture(t=%A{t})"
             inner.OnStartFixture t
 
         /// <summary>TODO</summary>
         member _.OnArguments (n: int, args: obj list, shr: int -> obj list -> string): unit =
+            // printfn $"OnArguments(n=%d{n}, args:%A{args}, shr=%O{shr})"
             inner.OnArguments (n, args, shr)
 
         /// <summary>TODO</summary>
         member _.OnShrink (args: obj list, shr: obj list -> string): unit =
+            // printfn $"OnShrink(args=%A{args}, shr=%O{shr})"
             inner.OnShrink (args, shr)
 
         /// <summary>TODO</summary>
-        member _.OnFinished (name: string, result: FsCheck.TestResult): unit =
+        member _.OnFinished (name: string, result: TestResult): unit =
+            // printfn $"OnFinished(name=%s{name}, result=%A{result})"
             match result with
-            | FsCheck.TestResult.Failed (_, originalResults: obj list, shrinkResults: obj list, _, _, _, _) ->
+            | TestResult.Failed (_, originalResults: obj list, shrinkResults: obj list, _, _, _, _) ->
                 original <- Some originalResults
                 lastShrink <- Some shrinkResults
             | _ -> ()
@@ -59,46 +124,10 @@ type TestMethodAttribute () = inherit UnitTesting.TestMethodAttribute ()
 /// <summary>Initializes a new instance of the <c>Microsoft.VisualStudio.TestTools.UnitTesting.TimeoutAttribute</c> class.</summary>
 /// <param name="timeout">The timeout of a unit test.</param>
 type TimeoutAttribute (timeout: int) =
-    inherit Attribute ()
+    inherit System.Attribute ()
 
     /// <summary>The timeout of a unit test.</summary>
     member _.Timeout: int = timeout
-
-
-let beginMarker: string             = "\n=================== COMPACT TEST RESULT ===================\n\n"
-let infoMessage: string             = "💡 Comment from Harry Hacker:"
-let noInfoMessage: string           = "💤 No comment from Harry Hacker!"
-let historyMarker: string           = "\n------------------------- HISTORY -------------------------\n"
-let historyMessage: string          = "🕒 Successful expressions before failure:"
-let reductionsMarker: string        = "\n------------------ EXPRESSION REDUCTIONS ------------------\n"
-let expressionMessage: string       = "🧪 Tested/Failed expression:"
-let toStringMessage: string         = "📝 Expression ToString:"
-let simplifiedMessage: string       = "✅ Simplified expression:"
-let separatorMessage: string        = "\n------------------------------\n"
-let expectedActualMarker: string    = "\n------------------- EXPECTED AND ACTUAL -------------------\n"
-let expectedMessage: string         = "🎯 Expected result:"
-let actualMessage: string           = "❌ Actual result:"
-let endMarker: string               = "\n=========================== END ==========================="
-let beginStacktraceToken: string    = "========================== TRACE ==========================\n"
-
-
-
-/// <summary>Represents a custom exception used by Assertify for failed assertions.</summary>
-type AssertifyException (message: string) =
-    inherit Exception (message)
-
-
-    /// <summary>Gets the exception message, inheriting from the base Exception class.</summary>
-    override this.Message: string =
-        base.Message
-
-
-    /// <summary>Gets the stack trace of the exception, formatted with markers for clarity.</summary>
-    override _.StackTrace: string =
-        StringBuilder().AppendLine(beginStacktraceToken)
-            .AppendLine(base.StackTrace)
-            .Append(endMarker)
-            .ToString()
 
 
 /// <summary>Maintains a history of evaluated F# expressions.</summary>
@@ -145,6 +174,248 @@ type History () =
         | _ -> Assertify.Fail $"Failed to execute the following expression: %s{expr.Decompile ()}"
         self.EvaluatedExpressions <- self.EvaluatedExpressions @ [expr]
 
+and ExpressionHelper =
+    static member ApplyArgs (args: obj list) (expr: Expr): Expr =
+        let rec loop (remainingArgs: obj list) (e: Expr): Expr =
+            match remainingArgs, e with
+            | arg :: tail, Patterns.Lambda (var, body) ->
+                body.Substitute (fun (v: Var) -> if v = var then Some (Expr.Value (arg, var.Type)) else None)
+                |> loop tail
+            | [], _ -> e // remainingArgs empty -> final expression
+            | _, _ -> failwith "Too many arguments for the lambda function."
+        loop args expr
+
+
+    static member SimplifyExpression (expr: Expr) (args: obj list): string =
+        match expr |> ExpressionHelper.ApplyArgs args with
+        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+            let rightSide = "" // TODO: Fix <null> for option types that are 'None'
+            $"%s{left.Decompile ()} = %A{right.Eval ()}"
+        | _ -> expr.Decompile ()
+
+    static member EvaluateQuotation<'a> (expr: Expr): 'a =
+        expr |> LeafExpressionConverter.EvaluateQuotation :?> 'a
+
+    static member SimplifyInExpression (expr: Expr): Expr =
+        let rec simplify expr =
+            match expr with
+            | Patterns.Let (v, value, body) -> substituteVar v (simplify value) body |> simplify
+            | Patterns.TupleGet (Patterns.Value (tupleObj, tupleTy), idx) ->
+                let values: objnull array =
+                    Microsoft.FSharp.Reflection.FSharpValue.GetTupleFields tupleObj
+                let elemType: System.Type =
+                    (Microsoft.FSharp.Reflection.FSharpType.GetTupleElements tupleTy)[idx]
+                Expr.Value (values[idx], elemType)
+            | ExprShape.ShapeVar v -> Expr.Var v
+            | ExprShape.ShapeLambda (v, body) -> Expr.Lambda (v, simplify body)
+            | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map simplify)
+        and substituteVar (v: Var) (replacement: Expr) (body: Expr): Expr =
+            match body with
+            | ExprShape.ShapeVar x when x = v -> replacement
+            | ExprShape.ShapeLambda (var, b) -> Expr.Lambda (var, substituteVar v replacement b)
+            | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map (substituteVar v replacement))
+            | _ -> body
+        simplify expr
+and AssertifyResult =
+    {
+        TestName: string option
+        Message: string option
+        Expression: string option
+        SimplifiedExpression: string option
+        Expected: obj option
+        Actual: obj option
+        History: History option
+        Reductions: string list option
+        OriginalInputs: string list option
+        ShrunkInputs: string list option
+        ErrorMessage: string option
+        Stacktrace: string option
+        Timestamp: string
+    }
+
+    static member MakeResult (
+        testName: string,           ?message: string,           ?expression: string,
+        ?expected: obj,             ?actual: obj,               ?history: History,
+        ?reductions: string list,   ?originalInputs: obj list,  ?shrunkInputs: obj list,
+        ?errorMessage: string,      ?stacktrace: string
+    ): AssertifyResult =
+        let stringify (objs: obj list option): string list option =
+            objs |> Option.map (List.map (fun (o: obj) -> if isNull o then "NULL" else o.ToString()))
+        {
+            TestName = Some testName
+            Message = message
+            Expression = expression
+            SimplifiedExpression = expression
+            Expected = expected
+            Actual = actual
+            History = history
+            Reductions = reductions
+            OriginalInputs = originalInputs |> stringify
+            ShrunkInputs = shrunkInputs |> stringify
+            ErrorMessage = errorMessage
+            Stacktrace = stacktrace
+            Timestamp = System.DateTime.Now.ToString "Dyyyy-MM-dd Thh:mm:ss"
+        }
+
+and Json =
+    static member Serialize (result: AssertifyResult): string =
+        let jsonSettings: JsonSerializerSettings =
+            JsonSerializerSettings (Formatting=Formatting.Indented)
+            |> fun s ->
+                s.Converters.Add (ListConverter ())
+                s.Converters.Add (OptionConverter ())
+                s.Converters.Add (MapConverter ())
+                s.NullValueHandling <- NullValueHandling.Ignore // comment for showing null values
+                s
+        JsonConvert.SerializeObject (result, jsonSettings)
+and Checkify =
+    static member ArbFromGenPair (generator: Gen<'a * 'b>): Arbitrary<'a * 'b> =
+        FsCheck.FSharp.Arb.fromGenShrink (
+            generator,
+            fun (a: 'a, b: 'b) ->
+                seq {
+                    for a' in DefaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b
+                    for b' in DefaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b'
+                }
+        )
+
+    static member ArbFromGenTripple (generator: Gen<'a * 'b * 'c>): Arbitrary<'a * 'b * 'c> =
+        FsCheck.FSharp.Arb.fromGenShrink (
+            generator,
+            fun (a: 'a, b: 'b, c: 'c) ->
+                seq {
+                    for a' in DefaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b, c
+                    for b' in DefaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b', c
+                    for c' in DefaultConfig.ArbMap.ArbFor<'c>().Shrinker c -> a, b, c'
+                }
+        )
+
+    static member ForAll (expr: Expr<'a -> bool>, arb: Arbitrary<'a>): Property =
+        expr
+        |> ExpressionHelper.EvaluateQuotation<'a -> bool>
+        |> Prop.forAll arb
+
+    static member ForAllGen (expr: Expr<'a * 'b -> bool>, generator: Gen<'a * 'b>, ?shrinkA: 'a -> 'a seq, ?shrinkB: 'b -> 'b seq): Property =
+        let shrinkA: 'a -> 'a seq = defaultArg shrinkA (DefaultConfig.ArbMap.ArbFor<'a>().Shrinker)
+        let shrinkB: 'b -> 'b seq = defaultArg shrinkB (DefaultConfig.ArbMap.ArbFor<'b>().Shrinker)
+        let arb: FsCheck.Arbitrary<'a * 'b> =
+            FsCheck.FSharp.Arb.fromGenShrink (
+                generator,
+                fun (a: 'a, b: 'b) ->
+                    seq {
+                        for a' in shrinkA a -> a', b
+                        for b' in shrinkB b -> a, b'
+                    }
+            )
+
+        expr
+        |> ExpressionHelper.EvaluateQuotation<'a * 'b -> bool>
+        |> Prop.forAll arb
+
+
+    static member ForAllGenCombined (expr: Expr<'a * 'b -> bool>, generator: Gen<'a * 'b>, shrinker: 'a * 'b -> ('a * 'b) seq): Property =
+        let arb = FsCheck.FSharp.Arb.fromGenShrink (
+            generator,
+            fun (a: 'a, b: 'b) -> shrinker (a, b)
+        )
+        expr
+        |> ExpressionHelper.EvaluateQuotation<'a * 'b -> bool>
+        |> Prop.forAll arb
+
+
+    // TODO: Does this already do what it should?
+    static member CheckWithProperty (expr: Expr<'a -> bool>, test: Expr<'a -> bool> -> FsCheck.Property, ?config: Config): unit =
+        let config: Config = defaultArg config DefaultConfig
+        let captureRunner: CaptureRunner = CaptureRunner config.Runner
+        let config: Config = config.WithRunner captureRunner
+        try Check.One (config, test expr) with
+        | ex ->
+            let result: AssertifyResult =
+                let expected, actual: string option * string option = // TODO: change type of expected, actual???
+                    match captureRunner.LastShrink with
+                    | Some shrunk ->
+                        match ExpressionHelper.ApplyArgs shrunk expr |> ExpressionHelper.SimplifyInExpression with
+                        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                            let expected' = // TODO: Fix <null> for option types that are 'None'
+                                try left.Eval().ToString() with
+                                | _ -> "Cannot be evaluated. Possible reason: Method still implemented with 'failwith \"TODO\"'"
+                            let actual' = // TODO: Fix <null> for option types that are 'None'
+                                try right.Eval().ToString() with
+                                | _ -> "Cannot be evaluated"
+                            Some expected', Some actual'
+                        | _ -> None, None
+                    | _ -> None, None
+                    // TODO: here happens the 'expected: null' problem, maybe pass the function body instead of the lambda?
+                    // TODO: apply arguments!!! same as for "expression"
+                AssertifyResult.MakeResult (
+                    "CheckWithArbitrary",
+                    expression = (
+                        captureRunner.LastShrink
+                        |> Option.map (ExpressionHelper.SimplifyExpression expr)
+                        |> Option.defaultValue (expr.Decompile ())
+                    ),
+                    expected = expected,
+                    actual = actual,
+                    ?originalInputs = captureRunner.Original,
+                    ?shrunkInputs = captureRunner.LastShrink,
+                    errorMessage = ex.Message,
+                    stacktrace = ex.StackTrace
+                )
+
+            Json.Serialize result |> failwithf "%s"
+
+
+    /// <summary>
+    /// Example:
+    /// <code>
+    /// <![CDATA[[<TestMethod; Timeout 1000>]]]>
+    /// member this.``some test`` (): unit =
+    ///     let solution (x: Nat) (y: Nat) (z: Nat): Nat = ...
+    ///     Checkify.Check (
+    ///         <![CDATA[<@ fun (x: int) (y: int) (z: int) -> methodStudent x y z = solution x y z @>]]>
+    ///     , Config.QuickThrowOnFailure
+    /// )
+    /// </code>
+    /// </summary>
+    /// <param name="expr">An expression of a curried, anonymous function with comparison: <c>fun param1 param2 ... -> methodName params = soution params</c> See example for reference.</param>
+    /// <param name="config">The configuration to use for the tests.</param>
+    // TODO: Add inline function like (???) instead of Checkify.Check
+    // TODO: Add overrides like: CheckEquality, CheckGreaterThan, CheckBool, CheckProperty (takes FsCheck.Property as param)
+    static member Check (expr: Expr<'a>, ?config: Config): unit =
+        let config: Config = defaultArg config DefaultConfig
+        let captureRunner: CaptureRunner = CaptureRunner config.Runner
+        let config: Config = config.WithRunner captureRunner
+        try Check.One (config, LeafExpressionConverter.EvaluateQuotation expr :?> 'a) with
+        | ex ->
+            let result: AssertifyResult =
+                let expected, actual: string option * string option = // TODO: change type of expected, actual???
+                    match captureRunner.LastShrink with
+                    | Some shrunk ->
+                        match ExpressionHelper.ApplyArgs shrunk expr with
+                        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                            let expected' = // TODO: Fix <null> for option types that are 'None'
+                                try left.Eval().ToString() with
+                                | _ -> "Cannot be evaluated. Possible reason: Method still implemented with 'failwith \"TODO\"'"
+                            let actual' = // TODO: Fix <null> for option types that are 'None'
+                                try right.Eval().ToString() with
+                                | _ -> "Cannot be evaluated"
+                            Some expected', Some actual'
+                        | _ -> None, None
+                    | _ -> None, None
+                    // TODO: here happens the expected: null problem, maybe pass the function body instead of the lambda?
+                    // TODO: apply arguments!!! same as for "expression"
+                AssertifyResult.MakeResult (
+                    "Check",
+                    expression = (captureRunner.LastShrink |> Option.map (ExpressionHelper.SimplifyExpression expr) |> Option.defaultValue (expr.Decompile ())),
+                    expected = expected,
+                    actual = actual,
+                    ?originalInputs = captureRunner.Original,
+                    ?shrunkInputs = captureRunner.LastShrink,
+                    errorMessage = ex.Message,
+                    stacktrace = ex.StackTrace
+                )
+
+            Json.Serialize result |> failwithf "%s"
 
 /// <summary>Library to assert and (ver)ify.</summary>
 and Assertify =
@@ -156,105 +427,55 @@ and Assertify =
     static let mutable showReductions: bool = true
 
 
-    /// <summary>Simplifies a given expression by recursively reducing unwanted patterns.</summary>
-    /// <param name="expr">The expression to simplify.</param>
-    static let simplifyExpr (expr: Expr): Expr =
-        let unwantedExprPatterns: string list = [ "FieldGet"; "Tests+Tests"; "ValueWithName" ]
-        let unwantedRegexPattern: string = unwantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
-
-        let wantedExprPatterns: string list = [ "GetArray"; "PropertyGet" ]
-        let wantedRegexPattern: string = wantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
-
-        let rec simplifyHelper (expr: Expr): Expr =
-            match expr with
-            | Patterns.ValueWithName _ -> expr
-            | _ when Regex.IsMatch (expr.ToString (), wantedRegexPattern) -> expr
-            | _ when Regex.IsMatch (expr.ToString (), unwantedRegexPattern) -> simplifyHelper (expr.Reduce ())
-            | _ -> expr
-
-        simplifyHelper expr
-
-
-    /// <summary>Converts an expression into an easily readable string.</summary>
-    /// <param name="expr">The expression to convert.</param>
-    static let rec toReadable (expr: Expr): string =
-        let wantedExprPatterns: string list = [ "GetArray"; "op_Dereference" ]
-        let wantedNamespaces: string list = [ "Microsoft.FSharp.Collections"; "Microsoft.FSharp.Core" ]
-
-        match expr with
-        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; _ ]) -> left.Decompile ()
-        | Patterns.Call (None, methodInfo, args) when not (wantedExprPatterns |> List.contains methodInfo.Name) ->
-            let argumentString: string =
-                args
-                |> List.map (fun (argument: Expr) ->
-                    match argument with
-                    // | Patterns.ValueWithName (value, _, _) when (value :? list<_> && value = box []) -> $"%s{toReadable argument}"
-                    | Patterns.Value (x, _) when (x.GetType().IsPrimitive || x :? Nat) -> $"%s{toReadable argument}"
-                    | _ -> $"(%s{toReadable argument})"
-                )
-                |> String.concat " "
-            if wantedNamespaces |> List.contains methodInfo.DeclaringType.Namespace then
-                let declaringTypeName: string = methodInfo.DeclaringType.Name
-                let moduleString: string = "Module"
-                let declaringType: string =
-                    if declaringTypeName.EndsWith moduleString then
-                        declaringTypeName.Substring (0, declaringTypeName.Length - moduleString.Length)
-                    else
-                        declaringTypeName
-                $"%s{declaringType}.%s{methodInfo.Name} %s{argumentString}"
-            else
-                $"%s{methodInfo.Name} %s{argumentString}"
-        | _ -> expr.Decompile ()
-
-
-    /// <summary>Builds a detailed test output message for an assertion, showing reductions and evaluated values.</summary>
-    /// <param name="expr">The tested expression.</param>
-    /// <param name="stringBuilder">A StringBuilder instance to construct the output message with pre-constructed output.</param>
-    static let TestStdOutMessage (expr: Expr<bool>, stringBuilder: StringBuilder): string =
-        match expr with
-        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-            if showReductions then
-                stringBuilder.AppendLine reductionsMarker |> ignore
-
-                left.ReduceFully ()
-                |> List.iteri (fun (index: int) (reduction: Expr) ->
-                    let decompiledExpr: string = reduction.Decompile().Replace("\n", "").Replace("\r", "")
-                    let toStringExpr: string = reduction.ToString().Replace("\n", "").Replace("\r", "")
-
-                    if index = 0 then
-                        stringBuilder.AppendLine($"%-30s{toStringMessage} %s{toStringExpr}")
-                            .AppendLine($"%-30s{expressionMessage} {decompiledExpr}")
-                            .AppendLine($"%-29s{simplifiedMessage} %s{reduction |> simplifyExpr |> toReadable}")
-                            .AppendLine(separatorMessage) |> ignore
-                    else
-                        let ordinalIndicator: string = $"%s{Decorator.GetOrdinalIndicator index} reduction:"
-                        stringBuilder.AppendLine $"%-30s{ordinalIndicator} %s{decompiledExpr}" |> ignore
-                )
-            else
-                stringBuilder.AppendLine $"%-30s{expressionMessage} %s{left |> simplifyExpr |> toReadable}" |> ignore
-
-            stringBuilder.AppendLine($"%s{expectedActualMarker}")
-                .AppendLine($"%-30s{expectedMessage} %A{right.Eval ()}")
-                .AppendLine($"%-29s{actualMessage} %A{left.Eval ()}") |> ignore
-        | _ -> ()
-
-        stringBuilder.Append(endMarker).ToString()
-
-
-    static let HistoryStdOutMessage (history: History): string =
-        let stringBuilder: StringBuilder = StringBuilder ()
-        if showHistory && not (history.IsEmpty ()) then
-            stringBuilder.AppendLine($"%s{historyMarker}")
-                .AppendLine($"%s{historyMessage}") |> ignore
-
-            history.EvaluatedExpressions
-            |> List.iteri (fun (index: int) (evaluatedExpression: Expr<unit>) ->
-                let numString: string = $"%02d{index + 1}:"
-                // TODO: change to |> simplifyExpr |> toReadable
-                stringBuilder.AppendLine $"%-30s{numString} %s{evaluatedExpression.Decompile ()}" |> ignore
-            )
-
-        stringBuilder.ToString ()
+    // /// <summary>Simplifies a given expression by recursively reducing unwanted patterns.</summary>
+    // /// <param name="expr">The expression to simplify.</param>
+    // static let simplifyExpr' (expr: Expr): Expr =
+    //     let unwantedExprPatterns: string list = [ "FieldGet"; "Tests+Tests"; "ValueWithName" ]
+    //     let unwantedRegexPattern: string = unwantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
+    //
+    //     let wantedExprPatterns: string list = [ "GetArray"; "PropertyGet" ]
+    //     let wantedRegexPattern: string = wantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
+    //
+    //     let rec simplifyHelper (expr: Expr): Expr =
+    //         match expr with
+    //         | Patterns.ValueWithName _ -> expr
+    //         | _ when Regex.IsMatch (expr.ToString (), wantedRegexPattern) -> expr
+    //         | _ when Regex.IsMatch (expr.ToString (), unwantedRegexPattern) -> simplifyHelper (expr.Reduce ())
+    //         | _ -> expr
+    //
+    //     simplifyHelper expr
+    //
+    //
+    // /// <summary>Converts an expression into an easily readable string.</summary>
+    // /// <param name="expr">The expression to convert.</param>
+    // static let rec toReadable (expr: Expr): string =
+    //     let wantedExprPatterns: string list = [ "GetArray"; "op_Dereference" ]
+    //     let wantedNamespaces: string list = [ "Microsoft.FSharp.Collections"; "Microsoft.FSharp.Core" ]
+    //
+    //     match expr with
+    //     | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; _ ]) -> left.Decompile ()
+    //     | Patterns.Call (None, methodInfo, args) when not (wantedExprPatterns |> List.contains methodInfo.Name) ->
+    //         let argumentString: string =
+    //             args
+    //             |> List.map (fun (argument: Expr) ->
+    //                 match argument with
+    //                 // | Patterns.ValueWithName (value, _, _) when (value :? list<_> && value = box []) -> $"%s{toReadable argument}"
+    //                 | Patterns.Value (x, _) when (x.GetType().IsPrimitive || x :? Nat) -> $"%s{toReadable argument}"
+    //                 | _ -> $"(%s{toReadable argument})"
+    //             )
+    //             |> String.concat " "
+    //         if wantedNamespaces |> List.contains methodInfo.DeclaringType.Namespace then
+    //             let declaringTypeName: string = methodInfo.DeclaringType.Name
+    //             let moduleString: string = "Module"
+    //             let declaringType: string =
+    //                 if declaringTypeName.EndsWith moduleString then
+    //                     declaringTypeName.Substring (0, declaringTypeName.Length - moduleString.Length)
+    //                 else
+    //                     declaringTypeName
+    //             $"%s{declaringType}.%s{methodInfo.Name} %s{argumentString}"
+    //         else
+    //             $"%s{methodInfo.Name} %s{argumentString}"
+    //     | _ -> expr.Decompile ()
 
 
     /// <summary>Configures whether the history should be displayed in the output.</summary>
@@ -266,30 +487,36 @@ and Assertify =
     static member ShowReductions with set (value: bool): unit =
         showReductions <- value
 
-
     /// <summary>Tests an expression and outputs failure information if the test fails.</summary>
     /// <param name="expr">The expression to test.</param>
     /// <param name="message">An optional message to include in the output.</param>
     static member Test (expr: Expr<bool>, ?message: string): unit =
-        if not (expr.Eval ()) then
-            let stringBuilder: StringBuilder = StringBuilder beginMarker
+        try
+            if not (expr.Eval ()) then
+                let expected, actual: obj option * obj option =
+                    match expr with
+                    | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                        Some (right.Eval ()), Some (left.Eval ())
+                    | _ -> None, None
 
-            if message.IsSome then
-                stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}" |> ignore
-            else
-                stringBuilder.AppendLine noInfoMessage |> ignore
-
-            let originalErrorMessage: string =
-                try
-                    test expr
-                    ""
-                with
-                | ex -> ex.Message
-
-            // add optional parameter originalErrorMessage to TestStdOutMessage to append original error message
-            TestStdOutMessage (expr, stringBuilder) + "\nOriginal Error Message:\n" + originalErrorMessage
-            |> Decorator.ForegroundColor ConsoleColor.Green
-            |> failwith
+                let result: AssertifyResult =
+                    AssertifyResult.MakeResult (
+                        "Test",
+                        ?message = message,
+                        expression = expr.Decompile (),
+                        ?expected = expected, // TODO: why null?
+                        ?actual = actual // TODO: why null?
+                    )
+                Json.Serialize result |> failwith
+        with ex ->
+            let result: AssertifyResult =
+                AssertifyResult.MakeResult (
+                    "Test",
+                    ?message = message,
+                    expression = expr.Decompile (),
+                    stacktrace = ex.StackTrace
+                )
+            Json.Serialize result |> failwith
 
 
     /// <summary>Tests an expression with a history and outputs failure information if the test fails.</summary>
@@ -297,43 +524,57 @@ and Assertify =
     /// <param name="history">The history of evaluated expressions.</param>
     /// <param name="message">An optional message to include in the output.</param>
     static member Test (expr: Expr<bool>, history: History, ?message: string): unit =
-        if not (expr.Eval ()) then
-            let stringBuilder: StringBuilder = StringBuilder beginMarker
+        try
+            if not (expr.Eval ()) then
+                let expected, actual: obj option * obj option =
+                    match expr with
+                    | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                        Some (right.Eval ()), Some (left.Eval ())
+                    | _ -> None, None
 
-            if message.IsSome then
-                stringBuilder.AppendLine $"%-30s{infoMessage} %s{message.Value}" |> ignore
-            else
-                stringBuilder.AppendLine noInfoMessage |> ignore
-
-            stringBuilder.Append (HistoryStdOutMessage history) |> ignore
-
-            TestStdOutMessage (expr, stringBuilder)
-            |> Decorator.ForegroundColor ConsoleColor.Cyan
-            |> failwith
+                let result: AssertifyResult =
+                    AssertifyResult.MakeResult (
+                        "Test",
+                        ?message = message,
+                        expression = expr.Decompile (),
+                        history = history,
+                        ?expected = expected,
+                        ?actual = actual
+                    )
+                Json.Serialize result |> failwith
+        with ex ->
+            let result: AssertifyResult =
+                AssertifyResult.MakeResult (
+                    "Test",
+                    ?message = message,
+                    expression = expr.Decompile (),
+                    stacktrace = ex.StackTrace
+                )
+            Json.Serialize result |> failwith
 
 
     /// <summary>Fails the current assertion with a custom message.</summary>
     /// <param name="message">The failure message to display.</param>
     static member Fail (message: string): unit =
-        StringBuilder(beginMarker)
-            .AppendLine($"%-30s{infoMessage} %s{message}")
-            .Append(endMarker)
-            .ToString()
-        |> Decorator.ForegroundColor ConsoleColor.Magenta
-        |> failwith
+        let result: AssertifyResult =
+            AssertifyResult.MakeResult (
+                "Fail",
+                message = message
+            )
+        Json.Serialize result |> failwith
 
 
     /// <summary>Fails the current assertion with an expression and a custom message.</summary>
     /// <param name="expr">The expression to include in the failure output.</param>
     /// <param name="message">The failure message to display.</param>
     static member Fail (expr: Expr, message: string): unit =
-        StringBuilder(beginMarker)
-            .AppendLine($"%-30s{infoMessage} %s{message}")
-            .AppendLine($"%-30s{expressionMessage} %s{expr.Decompile ()}") // TODO: change to |> simplifyExpr |> toReadable
-            .Append(endMarker)
-            .ToString()
-        |> Decorator.ForegroundColor ConsoleColor.Yellow
-        |> failwith
+        let result: AssertifyResult =
+            AssertifyResult.MakeResult (
+                "Fail",
+                expression = expr.Decompile (),
+                message = message
+            )
+        Json.Serialize result |> failwith
 
 
     /// <summary>Fails the current assertion with an expression, a history and a custom message.</summary>
@@ -341,85 +582,14 @@ and Assertify =
     /// <param name="history">The history of evaluated expressions.</param>
     /// <param name="message">The failure message to display.</param>
     static member Fail (expr: Expr, history: History, message: string): unit =
-        let stringBuilder: StringBuilder = StringBuilder(beginMarker).AppendLine($"%-30s{infoMessage} %s{message}")
-
-        stringBuilder.Append(HistoryStdOutMessage history)
-            .AppendLine($"%-30s{expressionMessage} %s{expr.Decompile ()}") // TODO: change to |> simplifyExpr |> toReadable
-            .Append(endMarker)
-            .ToString()
-        |> Decorator.ForegroundColor ConsoleColor.Yellow
-        |> failwith
-
-
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="prop"></param>
-    /// <param name="config"></param>
-    static member CheckProperty (prop: 'a -> Expr<bool>, ?config: FsCheck.Config): unit =
-        let stringBuilder: StringBuilder = StringBuilder beginMarker
-
-        let config: FsCheck.Config = defaultArg config FsCheck.Config.Default
-        let captureRunner: CaptureRunner = CaptureRunner config.Runner
-        let configuration: FsCheck.Config = config.WithRunner captureRunner
-        let arbitrary = configuration.ArbMap.ArbFor<'a> ()
-
-        let mutable failedExpression: Expr<bool> option = None
-        let property: FsCheck.Property =
-            FsCheck.FSharp.Prop.forAll arbitrary (fun (x: 'a) ->
-                let expr: Expr<bool> = prop x
-                try
-                    if expr.Eval () then true
-                    else
-                        failedExpression <- Some expr
-                        false
-                    with
-                | ex -> false
+        let result =
+            AssertifyResult.MakeResult (
+                "Fail",
+                expression=expr.Decompile (),
+                history=history,
+                message=message
             )
-
-        try FsCheck.Check.One (configuration, property) with
-        | ex ->
-            match failedExpression with
-            | Some expr ->
-                match expr with
-                | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-                    // filter variable name to print "expression, variable: ..."
-                    // for example: "s.Length (variable name: s)"
-                    // could also change everything below to use this name: "simplest input for 's' so the expression still fails is: ..."
-                    stringBuilder.AppendLine($"{left.ToString()}") |> ignore
-
-                    stringBuilder.AppendLine($"%-30s{expressionMessage} %s{left |> simplifyExpr |> toReadable}")
-                        .AppendLine($"%s{expectedActualMarker}")
-                        .AppendLine($"%-30s{expectedMessage} %A{right.Eval ()}")
-                        .AppendLine($"%-29s{actualMessage} %A{left.Eval ()}") |> ignore
-                | _ -> stringBuilder.AppendLine "Unknown Expression" |> ignore
-            | None -> stringBuilder.AppendLine "No failed expression" |> ignore
-
-            stringBuilder.AppendLine("\n------------------- ORIGINAL AND SHRUNK -------------------\n") |> ignore
-            match captureRunner.Original, captureRunner.LastShrink with
-            | Some original, Some lastShrink ->
-                match original with
-                | [] -> stringBuilder.AppendLine "??" |> ignore
-                | [ o ] -> stringBuilder.AppendLine $"Expression failed for this input: %A{o}" |> ignore
-                | o -> stringBuilder.AppendLine $"Expression failed for these inputs: %A{o}" |> ignore
-
-                stringBuilder.AppendLine $"But it could be shrunk/simplified." |> ignore
-                match lastShrink with
-                | [] -> stringBuilder.AppendLine "??" |> ignore
-                | [ s ] -> stringBuilder.AppendLine $"Currently the simplest input for which the expression still fails is: %A{s}" |> ignore
-                | s -> stringBuilder.AppendLine $"Currently the simplest inputs for which the expression still fails is: %A{s}" |> ignore
-                // change original and lastShrink to obj list and change error message to either the singular or plural
-                // version: simplest input(s) are: ... original input(s) are: ...
-            | _ -> stringBuilder.AppendLine "Could not shrink result" |> ignore
-
-            stringBuilder.AppendLine("\n------------------ MESSAGE ----------------\n")
-                .AppendLine($"Stacktrace: %s{ex.Message}") |> ignore
-
-            stringBuilder.AppendLine(endMarker)
-            |> _.ToString()
-            |> Decorator.ForegroundColor ConsoleColor.Green
-            |> failwith
-
+        Json.Serialize result |> failwith
 
 
 /// <summary>Tests a boolean expression using Assertify.Test.</summary>

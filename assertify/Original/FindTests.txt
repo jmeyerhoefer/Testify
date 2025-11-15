@@ -35,13 +35,13 @@ let ex = [1..5]
 type Tests() =
     do Arb.register<ArbitraryModifiers>() |> ignore
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) tryFindLast Beispiele`` (): unit =
         Assert.AreEqual(Some 4, Find.tryFindLast (fun x -> x % 2 = 0) ex)
         Assert.AreEqual(None, Find.tryFindLast (fun x -> false) ex)
         Assert.AreEqual(None, Find.tryFindLast (fun x -> true) [])
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``a) tryFindLast Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (pred: Nat -> Bool) (xs: List<Nat>) ->
             let expected = List.tryFindBack pred xs
@@ -50,13 +50,13 @@ type Tests() =
         )
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) findLast Beispiele`` (): unit =
         Assert.AreEqual<int>(4, Find.findLast (fun x -> x % 2 = 0) ex)
         expectException "NotFound" (fun () -> Find.findLast (fun x -> false) ex |> ignore)
         expectException "NotFound" (fun () -> Find.findLast (fun x -> true) [] |> ignore)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) findLast Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (pred: Nat -> Bool) (xs: List<Nat>) ->
             let expected = List.tryFindBack pred xs
@@ -69,13 +69,13 @@ type Tests() =
         )
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) tryFindLast2 Beispiele`` (): unit =
         Assert.AreEqual(Some 4, Find.tryFindLast2 (fun x -> x % 2 = 0) ex)
         Assert.AreEqual(None, Find.tryFindLast2 (fun x -> false) ex)
         Assert.AreEqual(None, Find.tryFindLast2 (fun x -> true) [])
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``c) tryFindLast2 Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (pred: Nat -> Bool) (xs: List<Nat>) ->
             let expected = List.tryFindBack pred xs
@@ -84,13 +84,13 @@ type Tests() =
         )
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``d) findLast Beispiele`` (): unit =
         Assert.AreEqual<int>(4, Find.findLast2 (fun x -> x % 2 = 0) ex)
         expectException "NotFound" (fun () -> Find.findLast2 (fun x -> false) ex |> ignore)
         expectException "NotFound" (fun () -> Find.findLast2 (fun x -> true) [] |> ignore)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``d) findLast Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (pred: Nat -> Bool) (xs: List<Nat>) ->
             let expected = List.tryFindBack pred xs

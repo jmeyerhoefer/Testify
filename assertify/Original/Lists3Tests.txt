@@ -64,20 +64,20 @@ let ex3 () =
 type Tests() =
     do Arb.register<ArbitraryModifiers>() |> ignore
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``a) length Beispiele`` (): unit =
         Assert.AreEqual<Nat>(0N, Lists.length (ex1 ()) )
         Assert.AreEqual<Nat>(1N, Lists.length (ex2 ()) )
         Assert.AreEqual<Nat>(4N, Lists.length (ex3 ()) )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``a) length Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (xs: List<Nat>) ->
             let l = fromList xs
             Assert.AreEqual<Nat>(List.length xs |> Nat.Make, Lists.length l)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) insertFirst Beispiele`` (): unit =
         let actual1 = ex1 ()
         let actual2 = ex2 ()
@@ -95,7 +95,7 @@ type Tests() =
         let eq = System.Object.ReferenceEquals(actualList1.first, actualList1.last)
         Assert.IsTrue(eq, "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein")
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) insertFirst Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (xs: List<Nat>) ->
             let l = empty<Nat> ()
@@ -109,7 +109,7 @@ type Tests() =
                     Assert.IsTrue(eq, "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein")
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``c) insertLast Beispiele`` (): unit =
         let actual1 = ex1 ()
         let actual2 = ex2 ()
@@ -127,7 +127,7 @@ type Tests() =
         let eq = System.Object.ReferenceEquals(actualList1.first, actualList1.last)
         Assert.IsTrue(eq, "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein")
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``c) insertLast Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (xs: List<Nat>) ->
             let l = empty<Nat> ()
@@ -141,7 +141,7 @@ type Tests() =
                     Assert.IsTrue(eq, "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein")
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``e) get Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (xs: List<Nat>) ->
             let l = fromList xs
@@ -155,7 +155,7 @@ type Tests() =
                     | Some a -> Assert.AreEqual<Nat>(List.item i xs, a)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``f) update Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (v: Nat) (xs: List<Nat>) ->
             let l = fromList xs
@@ -167,7 +167,7 @@ type Tests() =
                 Assert.AreEqual(expected, actual)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``h) remove Zufallstests (freiwillige Zusatzaufgabe)`` (): unit =
         Check.QuickThrowOnFailure (fun (i: Nat) (xs: List<Nat>) ->
             let j = if List.length xs = 0 then 0N else 1N + i % (10 + List.length xs |> Nat.Make)

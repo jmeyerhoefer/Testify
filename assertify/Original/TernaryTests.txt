@@ -28,7 +28,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) bedeutung Beispiele`` (): unit =
         test <@ Ternary.bedeutung one   = 1 @>
         test <@ Ternary.bedeutung two   = 2 @>
@@ -37,7 +37,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) zCons Beispiele`` (): unit =
         test <@ Ternary.zCons [] = [] @>
         test <@ Ternary.zCons [P] = [Z;P] @>
@@ -46,7 +46,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) inc Beispiele`` (): unit =
         test <@ Ternary.inc [] = [P] @>
         test <@ Ternary.inc [M] = [] @>
@@ -57,7 +57,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``d) dec Beispiele`` (): unit =
         test <@ Ternary.dec [] = [M] @>
         test <@ Ternary.dec [M] = [P;M] @>
@@ -67,7 +67,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c) + d)
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``c) + d) dec (inc n) = n Zufall`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->
             let n = removeLeadingZs n
@@ -78,7 +78,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``e) fromInt Beispiele`` (): unit =
         test <@ Ternary.fromInt  1 = one   @>
         test <@ Ternary.fromInt  2 = two   @>
@@ -88,7 +88,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a) + e)
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``a) + e) bedeutung (fromInt n) = n Zufall`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Int) ->
             Assert.AreEqual<Int>(n, Ternary.bedeutung (Ternary.fromInt n))
@@ -97,20 +97,20 @@ type Tests() =
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``f) add Beispiele`` (): unit =
         test <@ Ternary.add one one = two @>
         test <@ Ternary.add minustwo two = [] @>
         test <@ Ternary.add minusthree two = minusone @>
         test <@ Ternary.add three minusone = two @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``f) add Zufall (setzt voraus, dass fromInt funktioniert)`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: Int) (n: Int) ->
             Assert.AreEqual(Ternary.fromInt (m+n), Ternary.add (Ternary.fromInt m) (Ternary.fromInt n))
         )
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``f) add kommutativ Zufall`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: List<Ternary>) (n: List<Ternary>) ->
             let m = removeLeadingZs m
@@ -118,7 +118,7 @@ type Tests() =
             Assert.IsTrue(Ternary.add m n = Ternary.add n m, sprintf "Sum of %A and %A does not commute" m n)
         )
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``f) add assoziativ Zufall`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: List<Ternary>) (n: List<Ternary>) (o: List<Ternary>) ->
             let m = removeLeadingZs m
@@ -130,14 +130,14 @@ type Tests() =
     // ------------------------------------------------------------------------
     // g)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``g) negative Beispiele`` (): unit =
         test <@ Ternary.negative [] = [] @>
         test <@ Ternary.negative one = minusone @>
         test <@ Ternary.negative two = minustwo @>
         test <@ Ternary.negative minusthree = three @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``g) negative (negative n) = n Zufall`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->
             let n = removeLeadingZs n
@@ -145,7 +145,7 @@ type Tests() =
             Assert.AreEqual(n, actual, sprintf "Double negation yielded %A instead of %A" actual n)
         )
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``g) add n (negative n) = [] Zufall (setzt voraus, dass add funktioniert)`` (): unit =
         let expected: List<Ternary> = []
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->

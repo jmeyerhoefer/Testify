@@ -1,16 +1,18 @@
 namespace Tests.CountersTests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 
 
 type Action = | I | R
 
 [<TestClass>]
 type CountersTests () =
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Teil a Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (actions: Action list) ->
                 let mutable value = 0N
                 Student.Counters.reset ()
@@ -22,11 +24,11 @@ type CountersTests () =
                     | R ->
                         value <- 0N
                         Student.Counters.reset ()
-                    (?) <@ Student.Counters.get() = value @> @>
+                    (?) <@ Student.Counters.get () = value @> @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``Teil b Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (actions: (Action * Nat) list) ->
                 if not <| List.isEmpty actions then
                     let maxCounter = actions |> List.map snd |> List.max |> int

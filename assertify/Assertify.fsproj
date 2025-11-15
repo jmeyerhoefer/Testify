@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Library</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net9.0</TargetFramework>
         <GenerateProgramFile>false</GenerateProgramFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin/Debug/net8.0/Assertify.xml</DocumentationFile>
@@ -18,9 +18,15 @@
 
     <ItemGroup Label="Code">
         <Compile Include="Mini.fs" />
+        <Compile Include="Types.fs" />
         <Compile Include="Decorator.fs" />
-        <Content Include="AssertifyOld.txt" />
+        <Compile Include="Serialization.fs" />
+        <Compile Include="Core.fs" />
+        <Compile Include="Expressions.fs" />
+        <Compile Include="History.fs" />
         <Compile Include="Assertify.fs" />
+        <Compile Include="Checkify.fs" />
+        <Content Include="AssertifyOld.txt" />
     </ItemGroup>
 
     <ItemGroup Label="Types">
@@ -144,6 +150,8 @@
     </ItemGroup>
 
     <ItemGroup Label="Main">
+        <Compile Include="Tests.fs" />
+        <Compile Include="PropertyTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 

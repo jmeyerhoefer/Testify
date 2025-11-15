@@ -17,7 +17,7 @@ type Action = | I | R
 type Tests() =
     do Arb.register<ArbitraryModifiers>() |> ignore
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Teil a Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (actions: Action list) ->
             let mutable value = 0N
@@ -36,7 +36,7 @@ type Tests() =
                 )
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Teil b Zufallstests`` (): unit =
         Check.QuickThrowOnFailure (fun (actions: (Action * Nat) list) ->
             if not <| List.isEmpty actions then

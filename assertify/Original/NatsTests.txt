@@ -37,7 +37,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``a) trace Beispiele`` (): unit =
         test <@ Nats.trace (fun x -> x - 1N) 2N = Cons (2N , Cons (1N, Nil)) @>
         test <@ Nats.trace (fun x -> x - 1N) 1N = Cons (1N, Nil) @>
@@ -48,7 +48,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``b) isSortedBy Beispiele`` (): unit =
         test <@ Nats.isSortedBy (fun (m, n) -> m > n) Nil = true @>
         test <@ Nats.isSortedBy (fun (m, n) -> m > n) (Cons (1N, Cons (2N, Nil))) = false @>
@@ -57,7 +57,7 @@ type Tests() =
         test <@ Nats.isSortedBy (fun (m, n) -> m > n) ex  = false @>
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``b) isSortedBy Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: Nats) ->
             Assert.AreEqual<Bool>(
@@ -69,7 +69,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``c) exists Beispiele`` (): unit =
         test <@ Nats.exists (fun _ -> true) Nil =  false @>
         test <@ Nats.exists (fun _ -> false) Nil =  false @>
@@ -78,7 +78,7 @@ type Tests() =
         test <@ Nats.exists (fun n -> n > 3N) ex = true @>
 
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``c) exists Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (p: Nat -> Bool) (xs: Nats) ->
             Assert.AreEqual<Bool>(

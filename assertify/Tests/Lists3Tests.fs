@@ -1,7 +1,9 @@
 module Tests.Lists3Tests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Types.Lists3Types
 #nowarn "25"
 
@@ -55,17 +57,17 @@ let ex3 () =
 [<TestClass>]
 type Lists3Tests () =
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``a) length Beispiele`` (): unit =
         (?) <@ Student.Lists3.length (ex1 ()) = 0N @>
         (?) <@ Student.Lists3.length (ex2 ()) = 1N @>
         (?) <@ Student.Lists3.length (ex3 ()) = 4N @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``a) length Zufallstests`` (): unit =
-        Assertify.Check <@ fun (xs: List<Nat>) -> Student.Lists3.length (fromList xs) = (List.length xs |> Nat.Make) @>
+        Checkify.Check <@ fun (xs: List<Nat>) -> Student.Lists3.length (fromList xs) = (List.length xs |> Nat.Make) @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) insertFirst Beispiele`` (): unit =
         let actual1 = ex1 ()
         let actual2 = ex2 ()
@@ -83,9 +85,10 @@ type Lists3Tests () =
         let eq = System.Object.ReferenceEquals(actualList1.first, actualList1.last)
         <@ eq = true @> -?> "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein"
 
-    [<TestMethod; Timeout(10000)>]
+    // TODO: ???
+    [<TestMethod; Timeout 10000>]
     member _.``b) insertFirst Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (xs: List<Nat>) ->
                 let l = empty<Nat> ()
                 List.map (fun x -> Student.Lists3.insertFirst x l) (List.rev xs) |> ignore
@@ -97,7 +100,7 @@ type Lists3Tests () =
                         let eq = System.Object.ReferenceEquals(lst.first, lst.last)
                         <@ eq = true @> -?> "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein" @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``c) insertLast Beispiele`` (): unit =
         let actual1 = ex1 ()
         let actual2 = ex2 ()
@@ -115,9 +118,9 @@ type Lists3Tests () =
         let eq = System.Object.ReferenceEquals(actualList1.first, actualList1.last)
         <@ eq = true @> -?> "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein"
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``c) insertLast Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (xs: List<Nat>) ->
                 let l = empty<Nat> ()
                 List.map (fun x -> Student.Lists3.insertLast x l) xs |> ignore
@@ -129,9 +132,9 @@ type Lists3Tests () =
                         let eq = System.Object.ReferenceEquals(lst.first, lst.last)
                         <@ eq = true @> -?> "Bei einer einelementigen Liste müssen first und last Referenzen auf dasselbe Objekt sein" @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``e) get Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (xs: List<Nat>) ->
                 let l = fromList xs
                 for i in 0..(10 + List.length xs) do
@@ -143,9 +146,9 @@ type Lists3Tests () =
                         | None -> (!!) "Wert erwartet, aber None erhalten"
                         | Some a -> (?) <@ a = List.item i xs @> @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``f) update Zufallstests`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (v: Nat) (xs: List<Nat>) ->
                 let l = fromList xs
                 let mutable expected = xs
@@ -155,9 +158,9 @@ type Lists3Tests () =
                     let actual = toList l
                     (?) <@ actual = expected @> @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``h) remove Zufallstests (freiwillige Zusatzaufgabe)`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (i: Nat) (xs: List<Nat>) ->
                 let j = if List.length xs = 0 then 0N else 1N + i % (10 + List.length xs |> Nat.Make)
                 let actual = fromList xs

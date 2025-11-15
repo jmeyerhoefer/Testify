@@ -26,12 +26,12 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) plusOne Beispiele`` (): unit =
         test <@ Lists.plusOne [] = [] @>
         test <@ Lists.plusOne ex = [3N; 5N; 4N; 5N; 3N; 2N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``a) plusOne Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>)->
             Assert.AreEqual(
@@ -43,13 +43,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) filter Beispiele`` (): unit =
         test <@ Lists.filter (fun x -> x % 2N = 0N) [] = [] @>
         test <@ Lists.filter (fun x -> x % 2N = 0N) ex = [2N; 4N; 4N; 2N] @>
         test <@ Lists.filter (fun x -> x % 2N = 1N) ex = [3N; 1N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``b) filter Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (p: Nat -> Bool) (xs: List<Nat>) ->
             Assert.AreEqual(
@@ -61,13 +61,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) concat Beispiele`` (): unit =
         test <@ Lists.concat [] ex = ex @>
         test <@ Lists.concat ex [] = ex @>
         test <@ Lists.concat [1N] [2N] = [1N; 2N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``c) concat Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) (ys: List<Nat>) ->
             Assert.AreEqual(
@@ -79,13 +79,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``d) mirror Beispiele`` (): unit =
         test <@ Lists.mirror [] = [] @>
         test <@ Lists.mirror ex  = [1N; 2N; 4N; 3N; 4N; 2N] @>
 
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``d) mirror Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
             Assert.AreEqual(
@@ -97,13 +97,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``e) sum Beispiele`` (): unit =
         test <@ Lists.sum [] =  0N @>
         test <@ Lists.sum ex  = 16N @>
 
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``e) sum Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
             Assert.AreEqual<Nat>(

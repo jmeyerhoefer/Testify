@@ -44,7 +44,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) minAndMax Beispiele`` (): unit =
         test <@ Lists.minAndMax [] = None @>
         test <@ Lists.minAndMax [1N;2N;3N;4N] = Some(1N, 4N) @>
@@ -52,7 +52,7 @@ type Tests() =
         test <@ Lists.minAndMax [4N;7N;1N;1N] = Some(1N, 7N) @>
         test <@ Lists.minAndMax ex = Some(1N, 4N) @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``a) minAndMax Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>)->
             Assert.AreEqual(
@@ -68,7 +68,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) map Beispiele`` (): unit =
         test <@ Lists.map (fun x -> x + 1N) [] = [] @>
         test <@ Lists.map (fun x -> x + 1N) [1N;2N;3N] = [2N;3N;4N] @>
@@ -76,7 +76,7 @@ type Tests() =
         test <@ Lists.map (fun x -> x * x) [4N;7N;1N;1N] = [16N;49N;1N;1N] @>
         test <@ Lists.map (fun x -> x + 1N) ex = [3N;5N;4N;5N;3N;2N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``b) map Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (p: Nat -> Bool) (xs: List<Nat>) ->
             Assert.AreEqual(
@@ -88,13 +88,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) duplicate Beispiele`` (): unit =
         test <@ Lists.duplicate [] = [] @>
         test <@ Lists.duplicate [1N;2N;3N] = [1N;1N;2N;2N;3N;3N] @>
         test <@ Lists.duplicate [4N;7N;1N;1N] = [4N;4N;7N;7N;1N;1N;1N;1N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member this.``c) duplicate Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
             Assert.AreEqual(
@@ -106,13 +106,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``d) collect Beispiele`` (): unit =
         test <@ Lists.collect (fun x -> [x + 1N; x + 2N]) [] = [] @>
         test <@ Lists.collect (fun x -> [x + 1N; x + 2N]) [1N; 2N; 3N] = [2N; 3N; 3N; 4N; 4N; 5N] @>
         test <@ Lists.collect (fun x -> [x * 2N; x * 3N]) [4N; 7N; 1N; 1N] = [8N; 12N; 14N; 21N; 2N; 3N; 2N; 3N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member _.``d) collect Zufallstest``() : unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
             let fG: Arbitrary<Nat -> List<Nat>> =
@@ -125,13 +125,13 @@ type Tests() =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``e) intersperse Beispiele`` (): unit =
         test <@ Lists.intersperse 0N [] = [] @>
         test <@ Lists.intersperse 0N [2N] = [2N] @>
         test <@ Lists.intersperse 0N [1N; 2N; 3N; 4N] = [1N; 0N; 2N; 0N; 3N; 0N; 4N] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member _.``e) intersperse Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
                                   fun (x : Nat) ->
@@ -140,14 +140,14 @@ type Tests() =
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``f) runs Beispiele`` (): unit =
         test <@ Lists.runs [] = []  @>
         test <@ Lists.runs [1N; 2N; 3N] = [[1N; 2N; 3N]] @>
         test <@ Lists.runs [3N; 2N; 1N] = [[3N]; [2N]; [1N]] @>
         test <@ Lists.runs [4N; 7N; 1N; 1N] = [[4N; 7N]; [1N; 1N]] @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member _.``f) runs Zufallstest`` (): unit =
         Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
                                   Assert.AreEqual(runs xs,  Lists.runs xs))

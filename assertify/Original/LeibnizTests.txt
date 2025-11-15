@@ -18,14 +18,14 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``a) log2 Beispiele`` (): unit =
         test <@ Leibniz.log2 0N = 0N@>
         test <@ Leibniz.log2 1N = 0N@>
         test <@ Leibniz.log2 2N = 1N@>
         test <@ Leibniz.log2 4711N = 12N@>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member _.``a) log2 Zufallstest`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n : Nat) ->
                    let n = n + 1N in // ensure > 0N so as not to try to take the log of 0
@@ -36,7 +36,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``b) sortedDigits Beispiele`` (): unit =
         test <@ Leibniz.sortedDigits 0N = true @>
         test <@ Leibniz.sortedDigits 5N = true @>
@@ -46,7 +46,7 @@ type Tests() =
         test <@ Leibniz.sortedDigits 543N = false @>
         test <@ Leibniz.sortedDigits 1101N = false @>
 
-    [<TestMethod>] [<Timeout(5000)>]
+    [<TestMethod>] [<Timeout 5000>]
     member _.``b) sortedDigits Zufallstest`` (): unit =
         Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
             let expected =

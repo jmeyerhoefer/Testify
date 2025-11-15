@@ -19,6 +19,7 @@ let rec duplicate<'a> (xs: List<'a>): List<'a> =
 // d)
 let rec collect<'a, 'b> (f: 'a -> List<'b>) (xs: List<'a>): List<'b> =
     failwith "TODO"
+    // List.collect f (xs @ xs)
 
 // e)
 let rec intersperse<'a> (sep: 'a) (xs: List<'a>): List<'a> =

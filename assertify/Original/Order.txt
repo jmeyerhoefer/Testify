@@ -6,18 +6,18 @@
 05-1: Lists1                ✅
 05-2: Lists2                ❓
 05-5: Simplify              ❓
-05-6: Ternary
-06-1: Tree
-06-2: BSTs
-06-5: Turtle
-07-3: Reduktionssemantik
-08-1: RegExp
-08-2: Weihnachtsbaum
-09-1: WarmUp
-09-2: Nim ???
-10-2: Counters
-10-4: Lists3
-11-1: Find
-11-2: ArrayMap
+05-6: Ternary               ❓
+06-1: Tree                  ✅
+06-2: BSTs                  ❓
+06-5: Turtle                ✅
+07-3: Reduktionssemantik    ✅
+08-1: RegExp                ❓
+08-2: Weihnachtsbaum        ❓
+09-1: WarmUp                ❓
+09-2: Nim ???               ❌
+10-2: Counters              ❓
+10-4: Lists3                ❓
+11-1: Find                  ❓
+11-2: ArrayMap              ❓
 11-4: RingBuffer
 12-2: Calculus

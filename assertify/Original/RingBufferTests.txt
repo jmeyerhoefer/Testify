@@ -112,7 +112,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Beispiel`` (): unit =
         let capacity = 10
         let rb = RingBuffer.create<Int> capacity
@@ -120,7 +120,7 @@ type Tests() =
         Assert.AreEqual<int64>(0, !rb.size, "size stimmt nicht")
         Assert.AreEqual<int64>(0, !rb.readPos, "readPos stimmt nicht")
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``a) Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (n: Nat) ->
             if n > 0N then
@@ -135,21 +135,21 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 1`` (): unit =
         let ex = ex1()
         try RingBuffer.get ex |> ignore; Assert.Fail("Keine RingEmpty Ausnahme geworfen.") with
         | RingEmpty -> ()
         Assert.AreEqual<RingBuffer<int>>(ex1(), ex)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 2`` (): unit =
         let ex = ex2()
         Assert.AreEqual<Int>(1, RingBuffer.get ex)
         Assert.AreEqual<int64>(1, !ex.readPos, "readPos stimmt nicht")
         Assert.AreEqual<int64>(0, !ex.size, "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden.")
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 3`` (): unit =
         let ex = ex3()
         let es = [4; 9; 12; 7; 3; 6]
@@ -164,7 +164,7 @@ type Tests() =
         try RingBuffer.get ex |> ignore; Assert.Fail("Ringpuffer sollte leer sein; keine Exception geworfen.") with
         | RingEmpty -> ()
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun (ar: Array<Int>) ->
             let rb = {buffer=ar; size=ref ar.Length; readPos=ref 0}
@@ -182,7 +182,7 @@ type Tests() =
             help 0
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) Zufall RingBuffer: ein get`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun ( TI (rb, _): TestInput<Int> ) ->
             // TestInput to Necklace
@@ -199,7 +199,7 @@ type Tests() =
             | BufferEmpty -> Assert.Fail("Exception geworfen, obwohl Buffer nicht leer.")
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``b) Zufall RingBuffer: size gets`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun ( TI (rb, _): TestInput<String> ) ->
             // TestInput to Necklace
@@ -221,7 +221,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) Beispiel 1`` (): unit =
         let ex = ex1()
         RingBuffer.put ex 30
@@ -229,7 +229,7 @@ type Tests() =
         Assert.AreEqual<int64>(1, !ex.size, "size wurde nicht erhöht.")
         Assert.AreEqual<int64>(0, !ex.readPos, "readPos wurde verändert")
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) Beispiel 2`` (): unit =
         let ex = ex2()
         RingBuffer.put ex 30
@@ -245,7 +245,7 @@ type Tests() =
         Assert.AreEqual<int64>(3, !ex.size, "size nicht korrekt (soll nicht Größer sein als die Kapazität des Ringpuffers).")
         Assert.AreEqual<int64>(0, !ex.readPos, "readPos wurde verändert")
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``c) Beispiel 3`` (): unit =
         let ex = ex3()
         RingBuffer.put ex 30
@@ -269,7 +269,7 @@ type Tests() =
         Assert.AreEqual<int64>(10, !ex.size, "size nicht korrekt (soll nicht größer sein als die Kapazität des Ringpuffers).")
         Assert.AreEqual<int64>(7, !ex.readPos, "readPos wurde verändert")        
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``c) Zufall: (setzt voraus, dass get funktioniert)`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000}, fun ( TI (rb, _): TestInput<Int>, elems: Int list ) ->
             // TestInput to Necklace

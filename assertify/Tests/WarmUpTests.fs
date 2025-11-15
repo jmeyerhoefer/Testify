@@ -1,7 +1,10 @@
 module Tests.WarmUpTests
 
 
-open Assertify
+open Assertify.Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Tests.WarmUpTestUtilsIO
 
 
@@ -26,14 +29,14 @@ type WarmUpTests () =
     let config: Config =
         Config
             .QuickThrowOnFailure
-            .WithArbitrary([typeof<ArbitraryModifiers>])
+            .WithArbitrary [typeof<ArbitraryModifiers>]
 
     let ioTimeout: int = 1000
 
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) Beispiele ungültige natürliche Zahl`` (): unit =
         executeIOTest (
             (fun () -> let x = Student.Program.queryNat "Eine Nachricht: " in (?) <@ x = 4711N @>),
@@ -58,9 +61,9 @@ type WarmUpTests () =
                 io.WriteLine("4711") // beenden
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) Zufall gültige natürliche Zahl`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (num: Nat) (msg: SafeString) ->
                 let (SS msg) = msg
                 executeIOTest (
@@ -74,9 +77,9 @@ type WarmUpTests () =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``c) Zufall main`` (): unit =
-        Assertify.Check
+        Checkify.Check
             <@ fun (n1: Nat) (n2: Nat) (n3: Nat) ->
                 executeIOTest (
                     (fun () -> Student.Program.main ()),

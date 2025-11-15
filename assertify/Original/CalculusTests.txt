@@ -75,7 +75,7 @@ let rec testDerive (f: Calculus.Function): Calculus.Function =
 type Tests() =
     do Arb.register<ArbitraryModifiers>() |> ignore
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: ToString Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for func, _, _, _, expected in ex do
@@ -85,7 +85,7 @@ type Tests() =
                 )
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: ToString Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             let fctOO = toOO fct
@@ -95,21 +95,21 @@ type Tests() =
             )
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: Apply Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for func, _, f, _, _ in ex do
                 Assert.AreEqual<Nat>(f n, func.Apply n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: Apply Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             let fctOO = toOO fct
             Assert.AreEqual<Nat>(testApply fct n, fctOO.Apply n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: Derive Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for func, _, _, f', _ in ex do
@@ -119,7 +119,7 @@ type Tests() =
                 Assert.IsTrue((expected = actual), sprintf "From f(x)=%s you derived f'(x)=%s which is not correct at %A" (func.ToString ()) (func_deriv.ToString ()) n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``OO: Derive Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             let fctOO = toOO fct
@@ -130,7 +130,7 @@ type Tests() =
             Assert.IsTrue((expected = actual), sprintf "From f(x)=%s you derived f'(x)=%s which is not correct at %A" (fctOO.ToString ()) (actualFct.ToString ()) n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: ToString Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for _, func, _, _, expected in ex do
@@ -140,7 +140,7 @@ type Tests() =
                 )
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: ToString Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             Assert.IsTrue(trim (testToString fct) = trim (Calculus.toString fct), sprintf "expected %A but got %A (whitespaces and braces are ignored in this test)" (testToString fct) (Calculus.toString fct)
@@ -149,20 +149,20 @@ type Tests() =
             )
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: Apply Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for _, func, f, _, _ in ex do
                 Assert.AreEqual<Nat>(f n, Calculus.apply func n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: Apply Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             Assert.AreEqual<Nat>(testApply fct n, Calculus.apply fct n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: Derive Beispiele`` (): unit =
         Check.QuickThrowOnFailure (fun (n: Nat) ->
             for _, func, _, f', _ in ex do
@@ -172,7 +172,7 @@ type Tests() =
                 Assert.IsTrue((expected = actual), sprintf "From f(x)=%s you derived f'(x)=%s which is not correct at %A" (Calculus.toString func) (Calculus.toString func_deriv) n)
         )
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member this.``Funktional: Derive Zufall`` (): unit =
         Check.QuickThrowOnFailure (fun (fct: Calculus.Function) (n: Nat) ->
             let expectedFct = testDerive fct

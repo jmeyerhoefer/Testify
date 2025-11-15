@@ -1,7 +1,9 @@
 module Tests.RingBufferTests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Types.RingBufferTypes
 #nowarn "49"
 
@@ -100,7 +102,7 @@ type RingBufferTests () =
     let config: Config =
         Config
             .QuickThrowOnFailure
-            .WithArbitrary([typeof<ArbitraryModifiers>])
+            .WithArbitrary [typeof<ArbitraryModifiers>]
 
     let ex1 = fun () -> { buffer = [|0; 0; 0|]; size = ref 0; readPos = ref 0 }
     let ex2 = fun () -> { buffer = [|1; 2; 3|]; size = ref 1; readPos = ref 0 }
@@ -110,7 +112,7 @@ type RingBufferTests () =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``a) Beispiel`` (): unit =
         let capacity = 10
         let rb = Student.RingBuffer.create<Int> capacity
@@ -118,9 +120,9 @@ type RingBufferTests () =
         <@ !rb.size = 0 @>                      -?> "size stimmt nicht"
         <@ !rb.readPos = 0 @>                   -?> "readPos stimmt nicht"
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``a) Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (n: Nat) ->
                 if n > 0N then
                     let capacity = int n
@@ -135,7 +137,7 @@ type RingBufferTests () =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``b) Beispiel 1`` (): unit =
         let ex = ex1 ()
         try
@@ -145,14 +147,14 @@ type RingBufferTests () =
         | RingEmpty -> ()
         (?) <@ ex = ex1 () @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``b) Beispiel 2`` (): unit =
         let ex = ex2 ()
         (?) <@ Student.RingBuffer.get ex = 1 @>
         <@ !ex.readPos = 1 @> -?> "readPos stimmt nicht"
         <@ !ex.size = 0 @> -?> "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden."
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``b) Beispiel 3`` (): unit =
         let ex = ex3()
         let es = [4; 9; 12; 7; 3; 6]
@@ -170,9 +172,9 @@ type RingBufferTests () =
         with
         | RingEmpty -> ()
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (ar: Array<Int>) ->
                 let rb = { buffer=ar; size=ref ar.Length; readPos=ref 0 }
                 let rec help (idx: Int) =
@@ -193,9 +195,9 @@ type RingBufferTests () =
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) Zufall RingBuffer: ein get`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun ( TI (rb, _): TestInput<Int> ) ->
                 let n = ref (r2nBuffer rb)
                 try
@@ -211,9 +213,9 @@ type RingBufferTests () =
             config.WithMaxTest 1000
         )
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``b) Zufall RingBuffer: size gets`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun ( TI (rb, _): TestInput<String> ) ->
                 let n = ref (r2nBuffer rb)
                 for i in 0..!rb.size do
@@ -234,7 +236,7 @@ type RingBufferTests () =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``c) Beispiel 1`` (): unit =
         let ex = ex1()
         Student.RingBuffer.put ex 30
@@ -242,7 +244,7 @@ type RingBufferTests () =
         <@ !ex.size = 1 @> -?> "size wurde nicht erhöht."
         <@ !ex.readPos = 0 @> -?> "readPos wurde verändert"
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``c) Beispiel 2`` (): unit =
         let ex = ex2()
         Student.RingBuffer.put ex 30
@@ -261,7 +263,7 @@ type RingBufferTests () =
         <@ !ex.size = 3 @> -?> "size nicht korrekt (soll nicht Größer sein als die Kapazität des Ringpuffers)."
         <@ !ex.readPos = 0 @> -?> "readPos wurde verändert"
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``c) Beispiel 3`` (): unit =
         let ex = ex3()
         Student.RingBuffer.put ex 30
@@ -288,9 +290,9 @@ type RingBufferTests () =
         <@ !ex.size = 10 @> -?> "size nicht korrekt (soll nicht größer sein als die Kapazität des Ringpuffers)."
         <@ !ex.readPos = 7 @> -?> "readPos wurde verändert"
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``c) Zufall: (setzt voraus, dass get funktioniert)`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun ( TI (rb, _): TestInput<Int>, elems: Int list ) ->
                 let sizeBegin = !rb.size 
                 let n = ref (r2nBuffer rb)

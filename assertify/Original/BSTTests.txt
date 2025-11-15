@@ -146,37 +146,37 @@ type Tests() =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``size Beispiel 1`` (): unit =
         Assert.AreEqual<Nat>(0N, BSTs.size Empty)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``size Beispiel 2`` (): unit =
         Assert.AreEqual<Nat>(3N, BSTs.size ex1)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``size Beispiel 3`` (): unit =
         Assert.AreEqual<Nat>(2N, BSTs.size ex3)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member _.``size Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (Valid (bst, list, _): ValidBST<Nat>) ->
             Assert.AreEqual<Nat>(Nat.Make(list.Length), BSTs.size bst)
         )
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``height Beispiel 1`` (): unit =
         Assert.AreEqual<Nat>(0N, BSTs.height Empty)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``height Beispiel 2`` (): unit =
         Assert.AreEqual<Nat>(2N, BSTs.height ex1)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``height Beispiel 3`` (): unit =
         Assert.AreEqual<Nat>(2N, BSTs.height ex3)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member _.``height Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 5}, fun (Valid (bst, _, h): ValidBST<Nat>) ->
             Assert.AreEqual<Nat>(h, BSTs.height bst)
@@ -186,31 +186,31 @@ type Tests() =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 1`` (): unit =
         Assert.IsTrue(BSTs.isBST<Nat> Empty)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 2`` (): unit =
         Assert.IsTrue(BSTs.isBST ex1)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 3`` (): unit =
         Assert.IsTrue(BSTs.isBST ex2)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 4`` (): unit =
         Assert.IsTrue(BSTs.isBST ex3)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 5`` (): unit =
         Assert.IsFalse(BSTs.isBST inv1)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``isBST Beispiel 6`` (): unit =
         Assert.IsFalse(BSTs.isBST inv2)
 
-    [<TestMethod>] [<Timeout(60000)>]
+    [<TestMethod>] [<Timeout 60000>]
     member _.``isBST Zufall Gültig`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000; EndSize = 5}, fun (Valid (bst, _, _): ValidBST<Nat>) ->
             Assert.IsTrue(
@@ -219,7 +219,7 @@ type Tests() =
             )
         )
 
-    [<TestMethod>] [<Timeout(60000)>]
+    [<TestMethod>] [<Timeout 60000>]
     member _.``isBST Zufall Ungültig`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 1000; EndSize = 5}, fun (Invalid bst: InvalidBST<Nat>) ->
             Assert.IsFalse(
@@ -232,11 +232,11 @@ type Tests() =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``deleteMin leer`` (): unit =
         Assert.AreEqual(None, BSTs.deleteMin Empty)
 
-    [<TestMethod>] [<Timeout(20000)>]
+    [<TestMethod>] [<Timeout 20000>]
     member _.``deleteMin Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with StartSize = 1; EndSize = 5; MaxTest = 30}, fun (Valid (bst, _, _): ValidBST<Nat>) ->
             match BSTs.deleteMin bst with
@@ -250,11 +250,11 @@ type Tests() =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``partition leer`` (): unit =
         Assert.AreEqual<BSTreeish<Nat,List<Nat>>>(empty<Nat,List<Nat>>, BSTs.partition<Nat> [])
 
-    [<TestMethod>][<Timeout(20000)>]
+    [<TestMethod>][<Timeout 20000>]
     member this.``partition Zufall``() : unit =
         Check.One(
             { Config.QuickThrowOnFailure with
@@ -276,7 +276,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member _.``letIt Beispiele`` (): unit =
         let fibTree = fun n -> if n = 0N then Emptyish else Nodeish(n - 1N, n, n - 2N) in
         test <@ BSTs.letIt fibTree 3N = Node(Node (Node (Empty, 1N, Empty), 2N, Empty), 3N, Node (Empty, 1N, Empty)) @>
@@ -285,7 +285,7 @@ type Tests() =
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod>] [<Timeout(20000)>]
+    [<TestMethod>] [<Timeout 20000>]
     member _.``toList Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with EndSize = 5; MaxTest = 30}, fun (Valid (bst, list, _): ValidBST<Nat>) ->
             Assert.AreEqual(list, BSTs.toList bst)
@@ -295,16 +295,16 @@ type Tests() =
     // ------------------------------------------------------------------------
     // g)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``quickSort Beispiel 1`` (): unit =
         let expected: Nat list = []
         Assert.AreEqual(expected, BSTs.quickSort<Nat> [])
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member _.``quickSort Beispiel 2`` (): unit =
         Assert.AreEqual([1N; 2N; 2N; 3N], BSTs.quickSort [2N; 3N; 1N; 2N])
 
-    [<TestMethod>] [<Timeout(10000)>]
+    [<TestMethod>] [<Timeout 10000>]
     member _.``quickSort Zufall`` (): unit =
         Check.One({Config.QuickThrowOnFailure with MaxTest = 100; EndSize = 50}, fun (xs: Nat list) ->
             Assert.AreEqual(List.sort xs, BSTs.quickSort xs)

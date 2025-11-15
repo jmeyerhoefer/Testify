@@ -1,7 +1,9 @@
 module Tests.NatsTests
 
 
-open Assertify
+open Assertify.Types
+open Assertify.Checkify
+open Assertify.Assertify.Operators
 open Types.NatsTypes
 
 
@@ -24,7 +26,7 @@ let ex: Nats = Cons (2N, Cons (4N, Cons (3N, Cons(4N, Cons(2N, Cons (1N, Nil))))
 type NatsTests () =
     // a)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``a) trace Beispiele`` (): unit =
         (?) <@ Student.Nats.trace (fun x -> x - 1N) 2N = Cons (2N , Cons (1N, Nil)) @>
         (?) <@ Student.Nats.trace (fun x -> x - 1N) 1N = Cons (1N, Nil) @>
@@ -35,7 +37,7 @@ type NatsTests () =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``b) isSortedBy Beispiele`` (): unit =
         (?) <@ Student.Nats.isSortedBy (fun (m, n) -> m > n) Nil = true @>
         (?) <@ Student.Nats.isSortedBy (fun (m, n) -> m > n) (Cons (1N, Cons (2N, Nil))) = false @>
@@ -44,18 +46,18 @@ type NatsTests () =
         (?) <@ Student.Nats.isSortedBy (fun (m, n) -> m > n) ex  = false @>
 
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``b) isSortedBy Zufallstest`` (): unit =
         let solution (xs: Nats): bool =
             toList xs
             |> Seq.pairwise
             |> Seq.forall (fun (x, y) -> x <= y)
-        Assertify.Check <@ fun (xs: Nats) -> Student.Nats.isSortedBy (fun (m, n) -> m <= n) xs = solution xs @>
+        Checkify.Check <@ fun (xs: Nats) -> Student.Nats.isSortedBy (fun (m, n) -> m <= n) xs = solution xs @>
 
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``c) exists Beispiele`` (): unit =
         (?) <@ Student.Nats.exists (fun _ -> true) Nil =  false @>
         (?) <@ Student.Nats.exists (fun _ -> false) Nil =  false @>
@@ -64,6 +66,6 @@ type NatsTests () =
         (?) <@ Student.Nats.exists (fun n -> n > 3N) ex = true @>
 
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``c) exists Zufallstest`` (): unit =
-        Assertify.Check <@ fun (p: Nat -> Bool) (xs: Nats) -> Student.Nats.exists p xs = List.exists p (toList xs) @>
+        Checkify.Check <@ fun (p: Nat -> Bool) (xs: Nats) -> Student.Nats.exists p xs = List.exists p (toList xs) @>

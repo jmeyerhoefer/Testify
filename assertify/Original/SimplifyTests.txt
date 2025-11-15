@@ -28,19 +28,19 @@ type ArbitraryModifiers =
 type Tests() =
     do Arb.register<ArbitraryModifiers>() |> ignore
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``Beispiel`` (): unit =
         Check.QuickThrowOnFailure (check1 expression0 Simplify.simplified0)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``Aufgabenteil a)`` (): unit =
         Check.QuickThrowOnFailure (check2 expressionA Simplify.simplifiedA)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``Aufgabenteil b)`` (): unit =
         Check.QuickThrowOnFailure (check1 expressionB Simplify.simplifiedB)
 
-    [<TestMethod>] [<Timeout(1000)>]
+    [<TestMethod>] [<Timeout 1000>]
     member this.``Aufgabenteil c)`` (): unit =
         Check.QuickThrowOnFailure (check1 expressionC Simplify.simplifiedC)
 

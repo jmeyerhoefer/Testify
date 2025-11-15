@@ -1,7 +1,10 @@
 module Tests.BSTTests
 
 
-open Assertify
+open Assertify.Assertify.Operators
+open Assertify.Checkify
+open Assertify.Types
+open Assertify.Types.GenBuilder
 open System
 open Types.BSTTypes
 
@@ -99,17 +102,19 @@ type ArbitraryModifiers =
     inherit NatModifier
 
     static member ValidBST (): Arbitrary<ValidBST<Nat>> =
-        FsCheck.FSharp.Arb.fromGen << FsCheck.FSharp.Gen.sized <| fun size ->
+        fun size ->
             gen {
                 let! result = generateValidBST size (NegInfty, PosInfty)
                 return Valid result
             }
+        |> FsCheck.FSharp.Gen.sized
+        |> FsCheck.FSharp.Arb.fromGen
 
     static member InvalidBST (): Arbitrary<InvalidBST<Nat>> =
-        FsCheck.FSharp.Arb.fromGen <<
-        FsCheck.FSharp.Gen.map Invalid <<
-        FsCheck.FSharp.Gen.filter (fun p -> not (isBST p)) <<
-        FsCheck.FSharp.Gen.sized <| genAnyTree
+        FsCheck.FSharp.Gen.sized genAnyTree
+        |> FsCheck.FSharp.Gen.filter (fun p -> not (isBST p))
+        |> FsCheck.FSharp.Gen.map Invalid
+        |> FsCheck.FSharp.Arb.fromGen
 
 
 let mutable counter: int = 0
@@ -143,7 +148,7 @@ type BSTTests () =
     let config: Config =
         Config
             .QuickThrowOnFailure
-            .WithArbitrary([typeof<ArbitraryModifiers>])
+            .WithArbitrary [typeof<ArbitraryModifiers>]
 
     let ex1 = Node(Node(Empty,1N,Empty), 2N, Node(Empty,4N,Empty))
     let ex2 = Node(Node(Empty,2N,Empty), 3N, Node(Empty,5N,Empty))
@@ -154,40 +159,40 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // a)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``size Beispiel 1`` (): unit =
         (?) <@ Student.BSTs.size Empty = 0N @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``size Beispiel 2`` (): unit =
         (?) <@ Student.BSTs.size ex1 = 3N @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``size Beispiel 3`` (): unit =
         (?) <@ Student.BSTs.size ex3 = 2N @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``size Zufall`` (): unit =
-        Assertify.Check (
-            <@ fun (Valid (bst, list, _): ValidBST<Nat>) -> Student.BSTs.size bst = Nat.Make(list.Length) @>,
+        Checkify.Check (
+            <@ fun (Valid (bst, list, _): ValidBST<Nat>) -> Student.BSTs.size bst = Nat.Make list.Length @>,
             config.WithMaxTest(100).WithEndSize(5)
         )
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``height Beispiel 1`` (): unit =
         (?) <@ Student.BSTs.height Empty = 0N @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``height Beispiel 2`` (): unit =
         (?) <@ Student.BSTs.height ex1 = 2N @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``height Beispiel 3`` (): unit =
         (?) <@ Student.BSTs.height ex3 = 2N @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``height Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (Valid (bst, _, h): ValidBST<Nat>) -> Student.BSTs.height bst = h @>,
             config.WithMaxTest(100).WithEndSize(5)
         )
@@ -196,40 +201,40 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // b)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 1`` (): unit =
         (?) <@ Student.BSTs.isBST<Nat> Empty = true @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 2`` (): unit =
         (?) <@ Student.BSTs.isBST ex1 = true @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 3`` (): unit =
         (?) <@ Student.BSTs.isBST ex2 = true @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 4`` (): unit =
         (?) <@ Student.BSTs.isBST ex3 = true @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 5`` (): unit =
         (?) <@ Student.BSTs.isBST inv1 = false @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``isBST Beispiel 6`` (): unit =
         (?) <@ Student.BSTs.isBST inv2 = false @>
 
-    [<TestMethod; Timeout(60000)>]
+    [<TestMethod; Timeout 60000>]
     member _.``isBST Zufall Gültig`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (Valid (bst, _, _): ValidBST<Nat>) -> Student.BSTs.isBST bst = true @>,
             config.WithMaxTest(1000).WithEndSize(5)
         )
 
-    [<TestMethod; Timeout(60000)>]
+    [<TestMethod; Timeout 60000>]
     member _.``isBST Zufall Ungültig`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (Invalid bst: InvalidBST<Nat>) -> Student.BSTs.isBST bst = false @>,
             config.WithMaxTest(1000).WithEndSize(5)
         )
@@ -238,14 +243,14 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // c)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``deleteMin leer`` (): unit =
         (?) <@ Student.BSTs.deleteMin Empty = None @>
 
     // TODO: Figure out a way to make this work as well!
-    [<TestMethod; Timeout(20000)>]
+    [<TestMethod; Timeout 20000>]
     member _.``deleteMin Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (Valid (bst, _, _): ValidBST<Nat>) ->
                 match Student.BSTs.deleteMin bst with
                 | None -> failwith "Aus nicht-leerem Baum konnte nicht gelöscht werden"
@@ -260,18 +265,18 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // d)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``partition leer`` (): unit =
         (?) <@ Student.BSTs.partition<Nat> [] = empty<Nat,List<Nat>> @>
 
-    [<TestMethod>][<Timeout(20000)>]
+    [<TestMethod>][<Timeout 20000>]
     member this.``partition Zufall``() : unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (FsCheck.NonEmptyArray ar) ->
                 let (list : List<Nat>) = List.ofArray ar
                 match Student.BSTs.partition list with
                 | Emptyish -> failwith "Nicht-leere Liste konnte nicht zweigeteilt werden"
-                | Nodeish(l, p, r) ->
+                | Nodeish (l, p, r) ->
                     (?) <@ p = List.last list @>
                     (?) <@ List.sort (l @ [ p ] @ r) = List.sort list @>
                     (?) <@ List.forall (fun x -> x <= p) l = true @>
@@ -283,18 +288,18 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // e)
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``letIt Beispiele`` (): unit =
         let fibTree = fun n -> if n = 0N then Emptyish else Nodeish(n - 1N, n, n - 2N) in
         (?) <@ Student.BSTs.letIt fibTree 3N = Node(Node (Node (Empty, 1N, Empty), 2N, Empty), 3N, Node (Empty, 1N, Empty)) @>
-        (?) <@ Student.BSTs.letIt fibTree 4N = Node (Node        (Node (Node (Empty, 1N, Empty), 2N, Empty), 3N, Node (Empty, 1N, Empty)),      4N, Node (Node (Empty, 1N, Empty), 2N, Empty)) @>
+        (?) <@ Student.BSTs.letIt fibTree 4N = Node (Node (Node (Node (Empty, 1N, Empty), 2N, Empty), 3N, Node (Empty, 1N, Empty)), 4N, Node (Node (Empty, 1N, Empty), 2N, Empty)) @>
 
     // ------------------------------------------------------------------------
     // f)
 
-    [<TestMethod; Timeout(20000)>]
+    [<TestMethod; Timeout 20000>]
     member _.``toList Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (Valid (bst, list, _): ValidBST<Nat>) -> Student.BSTs.toList bst = list @>,
             config.WithEndSize(5).WithMaxTest(30)
         )
@@ -303,17 +308,17 @@ type BSTTests () =
     // ------------------------------------------------------------------------
     // g)
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``quickSort Beispiel 1`` (): unit =
         (?) <@ Student.BSTs.quickSort<Nat> [] = [] @>
 
-    [<TestMethod; Timeout(1000)>]
+    [<TestMethod; Timeout 1000>]
     member _.``quickSort Beispiel 2`` (): unit =
         (?) <@ Student.BSTs.quickSort [2N; 3N; 1N; 2N] = [1N; 2N; 2N; 3N] @>
 
-    [<TestMethod; Timeout(10000)>]
+    [<TestMethod; Timeout 10000>]
     member _.``quickSort Zufall`` (): unit =
-        Assertify.Check (
+        Checkify.Check (
             <@ fun (xs: Nat list) -> Student.BSTs.quickSort xs = List.sort xs @>,
             config.WithMaxTest(100).WithEndSize(50)
         )
