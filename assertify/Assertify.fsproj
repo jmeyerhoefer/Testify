@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Library</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <GenerateProgramFile>false</GenerateProgramFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <DocumentationFile>bin/Debug/net8.0/Assertify.xml</DocumentationFile>
@@ -16,7 +16,7 @@
         <PackageProjectUrl>https://fsprojects.github.io/FSharp.AWS.DynamoDB</PackageProjectUrl>
     </PropertyGroup>
 
-    <ItemGroup Label="Code">
+    <ItemGroup>
         <Compile Include="Mini.fs" />
         <Compile Include="Types.fs" />
         <Compile Include="Decorator.fs" />
@@ -29,7 +29,7 @@
         <Content Include="AssertifyOld.txt" />
     </ItemGroup>
 
-    <ItemGroup Label="Types">
+    <ItemGroup>
         <Compile Include="Types\ArrayMapTypes.fs" />
         <Compile Include="Types\BSTTypes.fs" />
         <Compile Include="Types\CalculusTypes.fs" />
@@ -47,7 +47,7 @@
         <Compile Include="Types\WeihnachtsbaumTypes.fs" />
     </ItemGroup>
 
-    <ItemGroup Label="Student">
+    <ItemGroup>
         <Compile Include="Student\ArrayMap.fs" />
         <Compile Include="Student\BSTs.fs" />
         <Compile Include="Student\Calculus.fs" />
@@ -72,7 +72,7 @@
         <Compile Include="Student\Zahlen.fs" />
     </ItemGroup>
 
-    <ItemGroup Label="Solution">
+    <ItemGroup>
         <Compile Include="Solution\ArrayMap.fs" />
         <Compile Include="Solution\BSTs.fs" />
         <Compile Include="Solution\Calculus.fs" />
@@ -97,7 +97,7 @@
         <Compile Include="Solution\Zahlen.fs" />
     </ItemGroup>
 
-    <ItemGroup Label="Tests">
+    <ItemGroup>
         <Compile Include="Tests\ArrayMapTests.fs" />
         <Compile Include="Tests\BSTTests.fs" />
         <Compile Include="Tests\CalculusTests.fs" />
@@ -123,7 +123,7 @@
         <Compile Include="Tests\ZahlenTests.fs" />
     </ItemGroup>
 
-    <ItemGroup Label="Original">
+    <ItemGroup>
         <Content Include="OriginalTests\Order.txt" />
         <Content Include="OriginalTests\ArrayMapTests.txt" />
         <Content Include="OriginalTests\BSTTests.txt" />
@@ -149,24 +149,25 @@
         <Content Include="OriginalTests\ZahlenTests.txt" />
     </ItemGroup>
 
-    <ItemGroup Label="Main">
+    <ItemGroup>
         <Compile Include="Tests.fs" />
         <Compile Include="PropertyTests.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
-    <ItemGroup Label="Other">
+    <ItemGroup>
         <Content Include=".gitignore" />
         <Content Include="README.md" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-        <PackageReference Include="MSTest.TestAdapter" Version="3.6.2" />
-        <PackageReference Include="MSTest.TestFramework" Version="3.6.2" />
-        <PackageReference Include="FsCheck" Version="3.3.1" />
+        <PackageReference Include="FSharp.Quotations.Evaluator" Version="2.1.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.0.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.0.2" />
+        <PackageReference Include="FsCheck" Version="3.3.2" />
         <PackageReference Include="Newtonsoft.Json.FSharp" Version="3.2.2" />
-        <PackageReference Include="Unquote" Version="7.0.0" />
+        <PackageReference Include="Unquote" Version="7.0.1" />
     </ItemGroup>
 
 </Project>

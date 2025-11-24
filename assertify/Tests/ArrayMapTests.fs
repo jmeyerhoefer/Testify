@@ -24,6 +24,14 @@ type ArrayMapTests () =
             Array.toList (Student.ArrayMap.map f xs) = Array.toList (Array.map f xs) &&
             Array.toList xs = Array.toList (Array.copy xs) @>
 
+    [<TestMethod; Timeout 10000>]
+    member _.``a) map Zufallstests (neu)`` (): unit =
+        Checkify.Check <@ fun (f: Nat -> Bool, xs: Array<Nat>) ->
+            [
+                Array.toList (Student.ArrayMap.map f xs) = Array.toList (Array.map f xs)
+                Array.toList xs = Array.toList (Array.copy xs)
+            ] @>
+
     [<TestMethod; Timeout 1000>]
     member _.``b) inplaceMap Beispiele`` (): unit =
         let xs = [| 1; 2; 3; 4 |]
@@ -38,3 +46,10 @@ type ArrayMapTests () =
                 let xs_expected = Array.map f xs
                 Student.ArrayMap.inplaceMap f xs
                 (?) <@ xs |> Array.toList = (xs_expected |> Array.toList) @> @>
+
+    // [<TestMethod; Timeout 10000>]
+    // member _.``b) findLast Zufallstests2`` (): unit =
+    //     <@ fun f xs -> Array.toList xs = (Array.map f xs |> Array.toList) @>
+    //     |?> fun expr xs ->
+    //         Student.ArrayMap.inplaceMap f xs
+    //         expr |> Expressions.applyArgs [ xs ]

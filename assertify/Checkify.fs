@@ -6,6 +6,7 @@
 namespace Assertify.Checkify
 
 
+open System
 open Assertify.Types
 open Assertify.Types.Configurations
 open Assertify.Core
@@ -129,33 +130,68 @@ type Checkify =
         |> FsCheck.FSharp.Prop.forAll arb
 
 
+    static member CheckTest (expr: Expr, test: Expr -> 'Testable, ?config: Config): unit =
+        let config: Config = defaultArg config DefaultConfig
+        let captureRunner: CaptureRunner = CaptureRunner config.Runner
+        let config: Config = config.WithRunner captureRunner
+
+        try Check.One (config, test expr) with ex ->
+            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+
+            Core.failNow
+            <| AssertifyResult.MakeResult (
+                "CheckTest",
+                expression = (
+                    captureRunner.Shrunk
+                    |> Option.map (List.rev >> Expressions.simplifyExpression expr)
+                    |> Option.defaultValue (expr.Decompile ())
+                ),
+                expected = expectedOption,
+                actual = actualOption,
+                ?originalInputs = captureRunner.Original,
+                ?shrunkInputs = captureRunner.Shrunk,
+                errorMessage = ex.Message,
+                stacktrace = ex.StackTrace
+            )
+
     /// <summary>
     /// TODO
     /// </summary>
     /// <param name="expr">TODO</param>
     /// <param name="test">TODO</param>
     /// <param name="config">TODO</param>
-    // TODO: Does this already do what it should?
+    static member CheckAdvanced<'a, 'b> (expr: Expr<'a -> 'b -> bool>, test: Expr<'a -> 'b -> bool> -> 'b -> FsCheck.Property, ?config: Config): unit =
+        let config: Config = defaultArg config DefaultConfig
+        let captureRunner: CaptureRunner = CaptureRunner config.Runner
+        let config: Config = config.WithRunner captureRunner
+
+        try Check.One (config, test expr) with ex ->
+            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+
+            Core.failNow
+            <| AssertifyResult.MakeResult (
+                "CheckAdvanced",
+                expression = (
+                    captureRunner.Shrunk
+                    |> Option.map (List.rev >> Expressions.simplifyExpression expr)
+                    |> Option.defaultValue (expr.Decompile ())
+                ),
+                expected = expectedOption,
+                actual = actualOption,
+                ?originalInputs = captureRunner.Original,
+                ?shrunkInputs = captureRunner.Shrunk,
+                errorMessage = ex.Message,
+                stacktrace = ex.StackTrace
+            )
+
+
     static member CheckWithProperty (expr: Expr<'a -> bool>, test: Expr<'a -> bool> -> FsCheck.Property, ?config: Config): unit =
         let config: Config = defaultArg config DefaultConfig
         let captureRunner: CaptureRunner = CaptureRunner config.Runner
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, test expr) with ex ->
-            let expected, actual: string option * string option = // TODO: change type of expected, actual???
-                match captureRunner.Shrunk with
-                | Some shrunk ->
-                    match Expressions.applyArgs shrunk expr |> Expressions.simplifyInExpression with
-                    | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-                        let expected' = // TODO: Fix <null> for option types that are 'None'
-                            try left.Eval().ToString() with
-                            | _ -> "Cannot be evaluated. Possible reason: Method still implemented with 'failwith \"TODO\"'"
-                        let actual' = // TODO: Fix <null> for option types that are 'None'
-                            try right.Eval().ToString() with
-                            | _ -> "Cannot be evaluated"
-                        Some expected', Some actual'
-                    | _ -> None, None
-                | _ -> None, None
+            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
             // TODO: here happens the 'expected: null' problem, maybe pass the function body instead of the lambda?
             // TODO: apply arguments!!! same as for "expression"
             Core.failNow
@@ -166,8 +202,8 @@ type Checkify =
                     |> Option.map (Expressions.simplifyExpression expr)
                     |> Option.defaultValue (expr.Decompile ())
                 ),
-                expected = expected,
-                actual = actual,
+                expected = expectedOption,
+                actual = actualOption,
                 ?originalInputs = captureRunner.Original,
                 ?shrunkInputs = captureRunner.Shrunk,
                 errorMessage = ex.Message,
@@ -197,22 +233,7 @@ type Checkify =
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, Expressions.eval<'a> expr) with ex ->
-            let expected, actual: string option * string option = // TODO: change type of expected, actual???
-                match captureRunner.Shrunk with
-                | Some shrunk ->
-                    match Expressions.applyArgs shrunk expr with
-                    | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-                        let expected' = // TODO: Fix <null> for option types that are 'None'
-                            try left.Eval().ToString() with
-                            | _ -> "Cannot be evaluated. Possible reason: Method still implemented with 'failwith \"TODO\"'"
-                        let actual' = // TODO: Fix <null> for option types that are 'None'
-                            try right.Eval().ToString() with
-                            | _ -> "Cannot be evaluated"
-                        Some expected', Some actual'
-                    | _ -> None, None
-                | _ -> None, None
-            // TODO: here happens the expected: null problem, maybe pass the function body instead of the lambda?
-            // TODO: apply arguments!!! same as for "expression"
+            let expectedOption, actualOption  = Expressions.extractActualAndExpected expr captureRunner.Shrunk
             Core.failNow
             <| AssertifyResult.MakeResult (
                 "Check",
@@ -221,8 +242,8 @@ type Checkify =
                     |> Option.map (Expressions.simplifyExpression expr)
                     |> Option.defaultValue (expr.Decompile ())
                 ),
-                expected = expected,
-                actual = actual,
+                expected = expectedOption,
+                actual = actualOption,
                 ?originalInputs = captureRunner.Original,
                 ?shrunkInputs = captureRunner.Shrunk,
                 errorMessage = ex.Message,
@@ -235,9 +256,9 @@ type Checkify =
 
 /// <summary>TODO</summary>
 module Operators =
-    // <summary>TODO</summary>
-    let inline (|?>) (expr: Expr<'a -> bool>) (test: Expr<'a -> bool> -> FsCheck.Property): unit =
-        Checkify.CheckWithProperty (expr, test)
+    /// <summary>TODO</summary>
+    let inline (|?>) (expr: Expr) (test: Expr -> 'Testable): unit =
+        Checkify.CheckTest (expr, test)
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -13,6 +13,12 @@ open Assertify.Assertify.Operators
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+module Student =
+    module Zahlen =
+        let inOrder (a: Nat) (b: Nat) (c: Nat): bool =
+            a > b && b > c
+
+
 [<TestClass>]
 type Tests () =
     [<TestMethod; Timeout 1000>]
