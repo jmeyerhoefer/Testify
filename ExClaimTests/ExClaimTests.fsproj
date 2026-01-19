@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<GenerateProgramFile>false</GenerateProgramFile>
+	</PropertyGroup>
+
+	<ItemGroup Label="Assertify">
+		<Compile Include="Mini.fs" />
+		<Compile Include="Types.fs" />
+		<Compile Include="Decorator.fs" />
+		<Compile Include="Serialization.fs" />
+		<Compile Include="Core.fs" />
+		<Compile Include="Expressions.fs" />
+		<Compile Include="History.fs" />
+		<Compile Include="Assertify.fs" />
+		<Compile Include="Checkify.fs" />
+	</ItemGroup>
+
+	<ItemGroup Label="4">
+		<Compile Include="4\Types.fs" />
+		<Compile Include="4\Calculus.fs" />
+		<Compile Include="4\Tests.fs" />
+	</ItemGroup>
+
+	<ItemGroup Label="Main">
+		<Compile Include="Program.fs" />
+	</ItemGroup>
+
+	<ItemGroup Label="Packages">
+		<PackageReference Include="FSharp.Quotations.Evaluator" Version="2.1.0" />
+		<PackageReference Include="Newtonsoft.Json.FSharp" Version="3.2.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.10.4" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.10.4" />
+		<PackageReference Include="FsCheck" Version="3.3.1" />
+		<PackageReference Include="Unquote" Version="7.0.1" />
+	</ItemGroup>
+</Project>
