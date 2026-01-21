@@ -1,6 +1,7 @@
 module Calculus.Tests
 
 
+open System
 open Assertify.Types
 open Assertify.Types.Configurations
 open Assertify.Checkify
@@ -530,7 +531,9 @@ type Tests () =
         ]
 
 
-    let exampleValues: Nat list = [ 4N; 8N; 15N; 16N; 32N; 42N ]
+    let exampleValues: Nat list =
+        let rnd: Random = Random 42069 // added a seed to produce the same random values every time
+        [ for _ in 0 .. 20 -> rnd.Next 100 |> Nat.Make ]
 
 
     //================================================================================================================================================
@@ -569,8 +572,7 @@ type Tests () =
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).ToString (), // expected
                 toString f // actual
-            ),
-            defaultConfig
+            ), defaultConfig
         )
 
 
@@ -614,8 +616,7 @@ type Tests () =
             Assert.AreEqual<Nat> (
                 (FunctionExpr.FromFunction f).Apply x, // expected
                 apply f x // actual
-            ),
-            defaultConfig
+            ), defaultConfig
         )
 
 
@@ -659,8 +660,7 @@ type Tests () =
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).Derive().ToString (), // expected
                 toString (derive f) // actual
-            )
-            defaultConfig
+            ), defaultConfig
         )
 
 
@@ -706,8 +706,7 @@ type Tests () =
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).ToString (), // expected
                 (toIFunction f).ToString () // actual
-            ),
-            defaultConfig
+            ), defaultConfig
         )
 
 
@@ -751,8 +750,7 @@ type Tests () =
             Assert.AreEqual<Nat> (
                 (FunctionExpr.FromFunction f).Apply x, // expected
                 (toIFunction f).Apply x // actual
-            ),
-            defaultConfig
+            ), defaultConfig
         )
 
 
@@ -792,12 +790,12 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: derive Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) ->
-            Assert.AreEqual<string> (
-                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
-                (toIFunction f).Derive().ToString () // actual
-            ),
-            defaultConfig
+        Check.One (defaultConfig, // reihenfolge von property und config :)
+            fun (f: Function) ->
+                Assert.AreEqual<string> (
+                    (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                    (toIFunction f).Derive().ToString () // actual
+                )
         )
 
 

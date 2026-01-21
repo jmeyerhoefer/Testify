@@ -28,7 +28,7 @@ let rec apply (f: Function) (x: Nat): Nat =
     | Id            -> x
     | Add (f1, f2)  -> apply f1 x + apply f2 x
     | Mul (f1, f2)  -> apply f1 x * apply f2 x
-    | Pow (f1, n)   -> (apply f1 x) ** n
+    | Pow (f1, n)   -> Nat.Pow (apply f1 x, n)
     | Comp (f1, f2) -> apply f1 (apply f2 x)
 ////endFunApply)
 
