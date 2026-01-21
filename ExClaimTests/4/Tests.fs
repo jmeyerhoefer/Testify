@@ -1,6 +1,7 @@
 module Calculus.Tests
 
 
+open Assertify.Types
 open Assertify.Types.Configurations
 open Assertify.Checkify
 open Assertify.Assertify.Operators
@@ -12,6 +13,11 @@ open FsCheck
 
 open Calculus.Types
 open Calculus.Calculus
+
+
+//=============================================================================================================================================================================
+// PARSER
+//=============================================================================================================================================================================
 
 
 /// <summary>Sample <c>Function</c> type.</summary>
@@ -331,9 +337,9 @@ module Normalizer =
         normalizeExpr f
 
 
-//==================================================================================================
+//=============================================================================================================================================================================
 // ParserTests
-//==================================================================================================
+//=============================================================================================================================================================================
 
 
 module ParserTests =
@@ -489,16 +495,13 @@ module ParserTests =
             Assert.AreNotEqual<FunctionExpr> (ast1 |> normalize, ast2 |> normalize)
 
 
-//==================================================================================================
+//=============================================================================================================================================================================
 // CalculusTests
-//==================================================================================================
+//=============================================================================================================================================================================
 
 
 [<TestClass>]
 type Tests () =
-
-    let config: Config = defaultConfig.WithEndSize 1000
-
     let exampleFunctions: (Function * IFunction) list =
         [
             Const 5N,                                                               constant 5N
@@ -530,67 +533,280 @@ type Tests () =
     let exampleValues: Nat list = [ 4N; 8N; 15N; 16N; 32N; 42N ]
 
 
-    //=========================================================================
+    //================================================================================================================================================
     // FUNCTIONAL
-    //=========================================================================
+    //================================================================================================================================================
+    // Functional: toString Beispiele
+    //----------------------------------------------------------------------------------------------
 
 
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: toString Beispiele`` (): unit =
         for f, _  in exampleFunctions do
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).ToString (), // expected
+                toString f // actual
+            )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Functional: toString Beispiele`` (): unit =
+        for f, _  in exampleFunctions do
             (?) <@ toString f = (FunctionExpr.FromFunction f).ToString () @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Functional: toString Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
-    member _.``Functional: toString ZufallsTest`` (): unit =
+    member _.``Functional: toString Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) ->
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).ToString (), // expected
+                toString f // actual
+            ),
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Functional: toString Zufallstest`` (): unit =
         Checkify.Check <@ fun (f: Function) -> toString f = (FunctionExpr.FromFunction f).ToString () @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Functional: apply Beispiele
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: apply Beispiele`` (): unit =
         for (f, _), x in List.allPairs exampleFunctions exampleValues do
+            Assert.AreEqual<Nat> (
+                (FunctionExpr.FromFunction f).Apply x, // expected
+                apply f x // actual
+            )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Functional: apply Beispiele`` (): unit =
+        for (f, _), x in List.allPairs exampleFunctions exampleValues do
             (?) <@ apply f x = (FunctionExpr.FromFunction f).Apply x @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Functional: apply Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
-    member _.``Functional: apply ZufallsTest`` (): unit =
+    member _.``Functional: apply Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) (x: Nat) ->
+            Assert.AreEqual<Nat> (
+                (FunctionExpr.FromFunction f).Apply x, // expected
+                apply f x // actual
+            ),
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Functional: apply Zufallstest`` (): unit =
         Checkify.Check <@ fun (f: Function) (x: Nat) -> apply f x = (FunctionExpr.FromFunction f).Apply x @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Functional: derive Beispiele
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: derive Beispiele`` (): unit =
         for f, _ in exampleFunctions do
-            (?) <@ toString (derive f) = (FunctionExpr.FromFunction f).Derive().ToString() @>
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                toString (derive f) // actual
+            )
 
+
+    // Assertify Test
     [<TestMethod; Timeout 1000>]
-    member _.``Functional: derive ZufallsTest`` (): unit =
-        Checkify.Check (<@ fun (f: Function) -> toString (derive f) = (FunctionExpr.FromFunction f).Derive().ToString() @>, config)
+    member _.``#assertify Functional: derive Beispiele`` (): unit =
+        for f, _ in exampleFunctions do
+            (?) <@ toString (derive f) = (FunctionExpr.FromFunction f).Derive().ToString () @>
 
 
-    //=========================================================================
+    //----------------------------------------------------------------------------------------------
+    // Functional: derive Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
+    [<TestMethod; Timeout 1000>]
+    member _.``Functional: derive Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) ->
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                toString (derive f) // actual
+            )
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Functional: derive Zufallstest`` (): unit =
+        Checkify.Check <@ fun (f: Function) -> toString (derive f) = (FunctionExpr.FromFunction f).Derive().ToString () @>
+
+
+    //================================================================================================================================================
     // OBJECT ORIENTED
-    //=========================================================================
+    //================================================================================================================================================
+    // Object Oriented: toString Beispiele
+    //----------------------------------------------------------------------------------------------
 
 
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Beispiele`` (): unit =
         for f, f'  in exampleFunctions do
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).ToString (), // expected
+                f'.ToString () // actual
+            )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Object Oriented: toString Beispiele`` (): unit =
+        for f, f'  in exampleFunctions do
             (?) <@ f'.ToString () = (FunctionExpr.FromFunction f).ToString () @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Object Oriented: toString Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
-    member _.``Object Oriented: toString ZufallsTest`` (): unit =
+    member _.``Object Oriented: toString Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) ->
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).ToString (), // expected
+                (toIFunction f).ToString () // actual
+            ),
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Object Oriented: toString Zufallstest`` (): unit =
         Checkify.Check <@ fun (f: Function) -> (toIFunction f).ToString () = (FunctionExpr.FromFunction f).ToString () @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Object Oriented: apply Beispiele
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: apply Beispiele`` (): unit =
         for (f, f'), x in List.allPairs exampleFunctions exampleValues do
+            Assert.AreEqual<Nat> (
+                (FunctionExpr.FromFunction f).Apply x, // expected
+                f'.Apply x // actual
+            )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Object Oriented: apply Beispiele`` (): unit =
+        for (f, f'), x in List.allPairs exampleFunctions exampleValues do
             (?) <@ f'.Apply x = (FunctionExpr.FromFunction f).Apply x @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Object Oriented: apply Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
-    member _.``Object Oriented: apply ZufallsTest`` (): unit =
+    member _.``Object Oriented: apply Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) (x: Nat) ->
+            Assert.AreEqual<Nat> (
+                (FunctionExpr.FromFunction f).Apply x, // expected
+                (toIFunction f).Apply x // actual
+            ),
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Object Oriented: apply Zufallstest`` (): unit =
         Checkify.Check <@ fun (f: Function) (x: Nat) -> (toIFunction f).Apply x = (FunctionExpr.FromFunction f).Apply x @>
 
+
+    //----------------------------------------------------------------------------------------------
+    // Object Oriented: derive Beispiele
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: derive Beispiele`` (): unit =
         for f, f' in exampleFunctions do
-            (?) <@ f'.Derive().ToString() = (FunctionExpr.FromFunction f).Derive().ToString() @>
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                f'.Derive().ToString () // actual
+            )
 
+
+    // Assertify Test
     [<TestMethod; Timeout 1000>]
-    member _.``Object Oriented: derive ZufallsTest`` (): unit =
-        Checkify.Check (<@ fun (f: Function) -> (toIFunction f).Derive().ToString() = (FunctionExpr.FromFunction f).Derive().ToString() @>, config)
+    member _.``#assertify Object Oriented: derive Beispiele`` (): unit =
+        for f, f' in exampleFunctions do
+            (?) <@ f'.Derive().ToString () = (FunctionExpr.FromFunction f).Derive().ToString () @>
+
+
+    //----------------------------------------------------------------------------------------------
+    // Object Oriented: derive Zufallstest
+    //----------------------------------------------------------------------------------------------
+
+
+    // Original Test
+    [<TestMethod; Timeout 1000>]
+    member _.``Object Oriented: derive Zufallstest`` (): unit =
+        Check.QuickThrowOnFailure (fun (f: Function) ->
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                (toIFunction f).Derive().ToString () // actual
+            ),
+            defaultConfig
+        )
+
+
+    // Assertify Test
+    [<TestMethod; Timeout 1000>]
+    member _.``#assertify Object Oriented: derive Zufallstest`` (): unit =
+        Checkify.Check <@ fun (f: Function) -> (toIFunction f).Derive().ToString () = (FunctionExpr.FromFunction f).Derive().ToString () @>
+
+
+//=============================================================================================================================================================================
+// EOF ========================================================================================================================================================================
+//=============================================================================================================================================================================

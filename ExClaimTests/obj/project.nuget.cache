@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3ZvAgzOdmgE=",
+  "dgSpecHash": "ovudm3t8YkI=",
   "success": true,
-  "projectFilePath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+  "projectFilePath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
   "expectedPackageFiles": [
     "C:\\Users\\jakob\\.nuget\\packages\\fscheck\\3.3.1\\fscheck.3.3.1.nupkg.sha512",
     "C:\\Users\\jakob\\.nuget\\packages\\fsharp.core\\8.0.403\\fsharp.core.8.0.403.nupkg.sha512",
@@ -34,9 +34,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'Newtonsoft.Json.FSharp 3.2.2' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
-      "projectPath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "projectPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "warningLevel": 1,
-      "filePath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "filePath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "libraryId": "Newtonsoft.Json.FSharp",
       "targetGraphs": [
         "net8.0"
@@ -46,9 +46,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Package 'NodaTime 1.3.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net8.0'. This package may not be fully compatible with your project.",
-      "projectPath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "projectPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "warningLevel": 1,
-      "filePath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "filePath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "libraryId": "NodaTime",
       "targetGraphs": [
         "net8.0"

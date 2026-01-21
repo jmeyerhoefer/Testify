@@ -2275,11 +2275,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "projectUniqueName": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "projectName": "ExClaimTests",
-      "projectPath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\ExClaimTests.fsproj",
+      "projectPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\ExClaimTests.fsproj",
       "packagesPath": "C:\\Users\\jakob\\.nuget\\packages\\",
-      "outputPath": "D:\\Bachelorarbeit\\code\\ExClaimTests\\obj\\",
+      "outputPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\ExClaimTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jakob\\AppData\\Roaming\\NuGet\\NuGet.Config"
