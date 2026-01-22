@@ -532,7 +532,7 @@ type Tests () =
 
 
     let exampleValues: Nat list =
-        let rnd: Random = Random 42069 // added a seed to produce the same random values every time
+        let rnd: Random = Random 42069 // produce the same random values every time
         [ for _ in 0 .. 20 -> rnd.Next 100 |> Nat.Make ]
 
 
@@ -568,11 +568,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: toString Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) ->
+        Check.One (defaultConfig, fun (f: Function) ->
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).ToString (), // expected
                 toString f // actual
-            ), defaultConfig
+            )
         )
 
 
@@ -612,11 +612,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: apply Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) (x: Nat) ->
+        Check.One (defaultConfig, fun (f: Function) (x: Nat) ->
             Assert.AreEqual<Nat> (
                 (FunctionExpr.FromFunction f).Apply x, // expected
                 apply f x // actual
-            ), defaultConfig
+            )
         )
 
 
@@ -656,11 +656,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Functional: derive Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) ->
+        Check.One (defaultConfig, fun (f: Function) ->
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).Derive().ToString (), // expected
                 toString (derive f) // actual
-            ), defaultConfig
+            )
         )
 
 
@@ -702,11 +702,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) ->
+        Check.One (defaultConfig, fun (f: Function) ->
             Assert.AreEqual<string> (
                 (FunctionExpr.FromFunction f).ToString (), // expected
                 (toIFunction f).ToString () // actual
-            ), defaultConfig
+            )
         )
 
 
@@ -746,11 +746,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: apply Zufallstest`` (): unit =
-        Check.QuickThrowOnFailure (fun (f: Function) (x: Nat) ->
+        Check.One (defaultConfig, fun (f: Function) (x: Nat) ->
             Assert.AreEqual<Nat> (
                 (FunctionExpr.FromFunction f).Apply x, // expected
                 (toIFunction f).Apply x // actual
-            ), defaultConfig
+            )
         )
 
 
@@ -790,12 +790,11 @@ type Tests () =
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: derive Zufallstest`` (): unit =
-        Check.One (defaultConfig, // reihenfolge von property und config :)
-            fun (f: Function) ->
-                Assert.AreEqual<string> (
-                    (FunctionExpr.FromFunction f).Derive().ToString (), // expected
-                    (toIFunction f).Derive().ToString () // actual
-                )
+        Check.One (defaultConfig, fun (f: Function) ->
+            Assert.AreEqual<string> (
+                (FunctionExpr.FromFunction f).Derive().ToString (), // expected
+                (toIFunction f).Derive().ToString () // actual
+            )
         )
 
 
