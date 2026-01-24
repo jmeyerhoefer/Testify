@@ -21,6 +21,8 @@
 	<ItemGroup Label="4">
 		<Compile Include="4\Types.fs" />
 		<Compile Include="4\Calculus.fs" />
+		<Compile Include="4\TestUtils.fs" />
+		<Compile Include="4\TestUtilsTests.fs" />
 		<Compile Include="4\Tests.fs" />
 	</ItemGroup>
 

@@ -18,11 +18,16 @@ open Swensen.Unquote
 module Expressions =
     /// <summary>TODO</summary>
     let rec apply (args: obj list) (expr: Expr): Expr =
+        let args =
+            if args.Length = 2 then
+                args |> List.rev
+            else
+                args
         match args, expr with
         | [], _ -> expr
         | h :: t, Patterns.Lambda (var, body) ->
             body.Substitute (fun (x: Var) -> if x = var then Some (Expr.Value (h, var.Type)) else None)
-            |> apply t 
+            |> apply t
         | _ -> failwith $"Too many arguments applied. Number of remaining arguments: %d{args.Length}, Expr: %s{expr.Decompile ()}"
 
 
@@ -39,8 +44,12 @@ module Expressions =
     /// <summary>TODO</summary>
     let simplifyExpression (expr: Expr) (args: obj list): string =
         match expr |> apply args with
-        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-            let rightSide: string = try right.Eval().ToString() with _ -> try right.Decompile () with _ -> "<non-evaluatable>"
+        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) as x ->
+            printfn $"{x.Decompile()}"
+            let rightSide: string =
+                try right.Eval () with _ ->
+                    try right.Eval().ToString () with _ ->
+                        try right.Decompile () with _ -> "<non-evaluatable>"
             $"%s{left.Decompile ()} = %s{rightSide}"
         | _ -> expr.Decompile ()
 
@@ -101,15 +110,16 @@ module Expressions =
 
     let evalActual (expr: Expr): string =
         // TODO: <null> when option type 'None'
-        try expr.Eval().ToString() with _ ->
-            // try expr.Decompile () with _ ->
-                "<non-evaluatable> (Is the method still implemented with 'failwith \"TODO\"'?)"
+        try expr.Eval () with _ ->
+            try expr.Eval().ToString () with _ ->
+                try expr.Reduce().Decompile () with _ ->
+                    "<non-evaluatable> (Is the method still implemented with 'failwith \"TODO\"'?)"
 
 
     let evalExpected (expr: Expr): string =
         // TODO: <null> when option type 'None'
         try expr.Eval().ToString() with _ ->
-            // try expr.Decompile () with _ ->
+            try expr.Reduce().Decompile () with _ ->
                 "<non-evaluatable> (Try to contact: Me)"
 
 
@@ -118,6 +128,8 @@ module Expressions =
             | Some shrunk ->
                 match expr |> apply shrunk with
                 | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                    printfn $"left: {left.Eval()}"
+                    printfn $"right: {right.Decompile()}"
                     Some (evalActual left), Some (evalExpected right)
                 | _ -> None, None
             | _ -> None, None

@@ -1,4 +1,5 @@
-﻿module Calculus.Types
+﻿[<AutoOpen>]
+module Calculus.Types
 
 
 ////beginTypeFun)

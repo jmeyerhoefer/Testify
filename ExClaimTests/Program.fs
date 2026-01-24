@@ -1,14 +1,10 @@
 ﻿module Calculus.Program
 
 open Calculus
-open Calculus.Tests
-open Calculus.Types
+open Calculus.TestUtils.Parser
 
 
 [<EntryPoint>]
 let main (_args: string array): int =
-    let f = Comp (Id, Id)
-    let actual = apply f 0N
-    let expected = (FunctionExpr.FromFunction f).Apply 0N
-    printfn $"actual: %A{actual}\nexpected: %A{expected}"
+    // printfn $"%A{Calculus.apply 0N (Add (Id, Id))}"
     0

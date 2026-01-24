@@ -21,7 +21,7 @@ type History () =
 
 
     /// <summary>TODO</summary>
-    new (expr: Expr<unit>) as self =
+    new (expr: Expr<unit>) as this =
         History () then
             try expr.Eval () with _ ->
                 Core.failNow
@@ -30,11 +30,11 @@ type History () =
                     expression = expr.Decompile (),
                     message = "Failed to execute expression"
                 )
-            self.Evaluated <- [expr]
+            this.Evaluated <- [expr]
 
 
     /// <summary>TODO</summary>
-    new (exprs: Expr<unit> list) as self =
+    new (exprs: Expr<unit> list) as this =
         History () then
             exprs |> List.iter (fun (e: Expr<unit>) ->
                 try e.Eval () with _ ->
@@ -44,7 +44,7 @@ type History () =
                         expression = e.Decompile (),
                         message = "Failed to execute expression")
                     )
-            self.Evaluated <- exprs
+            this.Evaluated <- exprs
 
 
     /// <summary>TODO</summary>

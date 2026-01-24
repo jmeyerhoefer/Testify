@@ -118,13 +118,13 @@ type Nat =
     static member nat(s : string) : Nat = Nat.nat (System.Numerics.BigInteger.Parse s)
 
     /// converts to bigint
-    member self.ToBigInteger() : bigint =
-        let (Nat n) = self in n
+    member this.ToBigInteger() : bigint =
+        let (Nat n) = this in n
     //// converts this number to a string
-    override self.ToString() : string =
-        let (Nat n) = self in n.ToString()
+    override this.ToString() : string =
+        let (Nat n) = this in n.ToString()
     // backwards compatibility, remove for WS19/20
-    member self.ToString' = self.ToString
+    member this.ToString' = this.ToString
 
     /// cast to int
     static member op_Explicit(x: Nat) : int =

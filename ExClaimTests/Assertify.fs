@@ -114,9 +114,9 @@ type Assertify =
                 <| AssertifyResult.MakeResult (
                     "Test Y",
                     ?message = message,
-                    expression = expr.Decompile (),
+                    expression = expr.Reduce().Decompile (),
                     actual = Expressions.evalActual left,
-                    expected = right.Eval (),
+                    expected = Expressions.evalExpected right,
                     stacktrace = ex.StackTrace
                 )
             | _ -> Core.failNow <| AssertifyResult.MakeResult (
