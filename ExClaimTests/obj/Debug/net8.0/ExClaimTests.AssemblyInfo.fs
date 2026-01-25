@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("ExClaimTests")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3ab7b8616870c121c3e0b749dbaa179f76e563c6")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0182f57f61030373a7c3abd443e0c03278448bc7")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("ExClaimTests")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("ExClaimTests")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]

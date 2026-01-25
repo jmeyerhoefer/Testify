@@ -241,6 +241,14 @@ type Checkify =
             )
 
 
+    static member CheckFallbackChain (exprs: Expr<'a> list, ?config: Config): unit =
+        match exprs with
+        | [] -> Core.failNow <| AssertifyResult.MakeResult ("Test", message = "Some error")
+        | h :: t ->
+            try Checkify.Check h with
+            | _ -> Checkify.CheckFallbackChain t
+
+
     static member CheckBoolean (expr: Expr<'a -> bool list>, ?config: Config): unit =
         let config: Config = defaultArg config defaultConfig
         let captureRunner: CaptureRunner = CaptureRunner config.Runner
@@ -268,8 +276,8 @@ type Checkify =
 /// <summary>TODO</summary>
 module Operators =
     /// <summary>TODO</summary>
-    let inline (|?>) (expr: Expr) (test: Expr -> 'Testable): unit =
-        Checkify.CheckTest (expr, test)
+    let inline (!?) (expr: Expr<'a>): unit =
+        Checkify.Check expr
 
 
 

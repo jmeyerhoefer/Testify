@@ -5,6 +5,7 @@ open System
 open Assertify.Types.Configurations
 open Assertify.Checkify
 open Assertify.Assertify.Operators
+open Assertify.Checkify.Operators
 
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
@@ -71,7 +72,7 @@ type Tests () =
         for f, _  in exampleFunctions do
             Assert.AreEqual<Function> (
                 parse (toString f), // expected
-                f     // actual
+                f                   // actual
             )
 
 
@@ -79,8 +80,8 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: toString Beispiele`` (): unit =
         for f, _  in exampleFunctions do
-            try (?) <@ parse (Calculus.toString f) = f @> with
-            | _ -> (?) <@ Calculus.toString f = toString f @>
+            try (?) <@ parse (Calculus.toString f) = f @> with  // test     `actualAST = expectedAST`
+            | _ -> (?) <@ Calculus.toString f = toString f @>   // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -102,8 +103,8 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: toString Zufallstest`` (): unit =
-        try Checkify.Check <@ fun (f: Function) -> parse (Calculus.toString f) = f @> with
-        | _ -> Checkify.Check <@ fun (f: Function) -> Calculus.toString f = toString f @>
+        try (!?) <@ fun (f: Function) -> parse (Calculus.toString f) = f @> with  // test     `actualAST = expectedAST`
+        | _ -> (!?) <@ fun (f: Function) -> Calculus.toString f = toString f @>   // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -147,7 +148,7 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: apply Zufallstest`` (): unit =
-        Checkify.Check <@ fun (f: Function) (x: Nat) -> Calculus.apply f x = apply f x @>
+        (!?) <@ fun (f: Function) (x: Nat) -> Calculus.apply f x = apply f x @>
 
 
     //----------------------------------------------------------------------------------------------
@@ -191,7 +192,7 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: derive Zufallstest`` (): unit =
-        Checkify.Check <@ fun (f: Function) -> simplify (Calculus.derive f) = simplify (derive f) @>
+        (!?) <@ fun (f: Function) -> simplify (Calculus.derive f) = simplify (derive f) @>
 
 
     //================================================================================================================================================
@@ -200,12 +201,12 @@ type Tests () =
     // Object Oriented: toString Beispiele
     //----------------------------------------------------------------------------------------------
 
-(*
+
     // Original Test
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Beispiele`` (): unit =
         for f, f' in exampleFunctions do
-            Assert.AreEqual<ParserResult> (
+            Assert.AreEqual<Function> (
                 parse (toString f),     // expected
                 parse (f'.ToString ())  // actual
             )
@@ -215,7 +216,8 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Beispiele`` (): unit =
         for f, f'  in exampleFunctions do
-            (?) <@ parse (f'.ToString ()) = ParserSuccess f @>
+            try (?) <@ parse (f'.ToString ()) = f @> with   // test     `actualAST = expectedAST`
+            | _ -> (?) <@ f'.ToString () = toString f @>    // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -227,8 +229,8 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) ->
-            Assert.AreEqual<ParserResult> (
-                ParserSuccess f,                    // expected
+            Assert.AreEqual<Function> (
+                f,                                  // expected
                 parse ((toIFunction f).ToString ()) // actual
             )
         )
@@ -237,7 +239,8 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Zufallstest`` (): unit =
-        Checkify.Check <@ fun (f: Function) -> parse ((toIFunction f).ToString ()) = ParserSuccess f @>
+        try (!?) <@ fun (f: Function) -> parse ((toIFunction f).ToString ()) = f @> with  // test     `actualAST = expectedAST`
+        | _ -> (!?) <@ fun (f: Function) -> (toIFunction f).ToString () = toString f @>   // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -281,7 +284,7 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: apply Zufallstest`` (): unit =
-        Checkify.Check <@ fun (f: Function) (x: Nat) -> (toIFunction f).Apply x = apply f x @>
+        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Apply x = apply f x @>
 
 
     //----------------------------------------------------------------------------------------------
@@ -325,9 +328,9 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: derive Zufallstest`` (): unit =
-        Checkify.Check <@ fun (f: Function) (x: Nat) -> (toIFunction f).Derive().Apply x = apply (derive f) x @>
+        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Derive().Apply x = apply (derive f) x @>
 
-*)
+
 //=============================================================================================================================================================================
 // EOF ========================================================================================================================================================================
 //=============================================================================================================================================================================

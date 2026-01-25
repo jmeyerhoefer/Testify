@@ -53,7 +53,7 @@ let rec constant (c: Nat): IFunction =
         new IFunction with
             member this.ToString (): string = show c
             member this.Apply (x: Nat): Nat = c
-            member this.Derive (): IFunction = constant 0N
+            member this.Derive (): IFunction = constant 1N
     }
 ////endObjConst)
 
@@ -72,7 +72,7 @@ let id (): IFunction =
 let rec add (g: IFunction, h: IFunction): IFunction =
     { new IFunction with
         member this.ToString (): string = $"(%s{g.ToString ()} + %s{h.ToString ()}))"
-        member this.Apply (x: Nat): Nat = g.Apply x + h.Apply x
+        member this.Apply (x: Nat): Nat = g.Apply x + h.Apply x + 1N
         member this.Derive (): IFunction = add (g.Derive (), h.Derive ())
     }
 ////endObjAdd)
