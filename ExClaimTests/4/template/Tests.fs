@@ -99,8 +99,8 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: toString Zufallstest`` (): unit =
-        try (!?) <@ fun (f: Function) -> parse (Calculus.toString f) = f @> with  // test     `actualAST = expectedAST`
-        | _ -> (!?) <@ fun (f: Function) -> Calculus.toString f = toString f @>   // fallback `actualToString = expectedToString`
+        try (!?) <@ fun (f: Function) -> parse (Calculus.toString f) = f @> with _ ->   // test     `actualAST = expectedAST`
+            (!?) <@ fun (f: Function) -> Calculus.toString f = toString f @>            // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -198,8 +198,8 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Beispiele`` (): unit =
         for f, f'  in exampleFunctions do
-            try (?) <@ parse (f'.ToString()) = f @> with   // test     `actualAST = expectedAST`
-            | _ -> (?) <@ f'.ToString() = toString f @>    // fallback `actualToString = expectedToString`
+            try (?) <@ parse (f'.ToString()) = f @> with _ ->   // test     `actualAST = expectedAST`
+                (?) <@ f'.ToString() = toString f @>            // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -219,8 +219,8 @@ type Tests () =
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Zufallstest`` (): unit =
-        try (!?) <@ fun (f: Function) -> parse ((toIFunction f).ToString()) = f @> with  // test     `actualAST = expectedAST`
-        | _ -> (!?) <@ fun (f: Function) -> (toIFunction f).ToString() = toString f @>   // fallback `actualToString = expectedToString`
+        try (!?) <@ fun (f: Function) -> parse ((toIFunction f).ToString()) = f @> with _ ->    // test     `actualAST = expectedAST`
+            (!?) <@ fun (f: Function) -> (toIFunction f).ToString() = toString f @>             // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
