@@ -70,18 +70,16 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: toString Beispiele`` (): unit =
         for f, _  in exampleFunctions do
-            Assert.AreEqual<Function> (
-                parse (toString f), // expected
-                f                   // actual
-            )
+            try Assert.AreEqual<Function> (f, parse (Calculus.toString f)) with _ ->
+                Assert.AreEqual<string> (toString f, Calculus.toString f)
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Functional: toString Beispiele`` (): unit =
         for f, _  in exampleFunctions do
-            try (?) <@ parse (Calculus.toString f) = f @> with  // test     `actualAST = expectedAST`
-            | _ -> (?) <@ Calculus.toString f = toString f @>   // fallback `actualToString = expectedToString`
+            try (?) <@ parse (Calculus.toString f) = f @> with _ -> // test     `actualAST = expectedAST`
+                (?) <@ Calculus.toString f = toString f @>          // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -93,10 +91,8 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: toString Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) ->
-            Assert.AreEqual<Function> (
-                parse (toString f),         // expected
-                parse (Calculus.toString f) // actual
-            )
+            try Assert.AreEqual<Function> (f, parse (Calculus.toString f)) with _ ->
+                Assert.AreEqual<string> (toString f, Calculus.toString f)
         )
 
 
@@ -116,10 +112,7 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: apply Beispiele`` (): unit =
         for (f, _), x in List.allPairs exampleFunctions exampleValues do
-            Assert.AreEqual<Nat> (
-                apply f x,          // expected
-                Calculus.apply f x  // actual
-            )
+            Assert.AreEqual<Nat> (apply f x, Calculus.apply f x)
 
 
     // Assertify Test
@@ -138,10 +131,7 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: apply Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) (x: Nat) ->
-            Assert.AreEqual<Nat> (
-                apply f x,          // expected
-                Calculus.apply f x  // actual
-            )
+            Assert.AreEqual<Nat> (apply f x, Calculus.apply f x)
         )
 
 
@@ -160,10 +150,7 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: derive Beispiele`` (): unit =
         for f, _ in exampleFunctions do
-            Assert.AreEqual<Function> (
-                simplify (derive f),            // expected
-                simplify (Calculus.derive f)    // actual
-            )
+            Assert.AreEqual<Function> (simplify (derive f), simplify (Calculus.derive f))
 
 
     // Assertify Test
@@ -182,10 +169,7 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Functional: derive Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) ->
-            Assert.AreEqual<Function> (
-                simplify (derive f),            // expected
-                simplify (Calculus.derive f)    // actual
-            )
+            Assert.AreEqual<Function> (simplify (derive f), simplify (Calculus.derive f))
         )
 
 
@@ -206,18 +190,16 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Beispiele`` (): unit =
         for f, f' in exampleFunctions do
-            Assert.AreEqual<Function> (
-                parse (toString f),     // expected
-                parse (f'.ToString ())  // actual
-            )
+            try Assert.AreEqual<Function> (f, parse (f'.ToString())) with _ ->
+                Assert.AreEqual<string> (toString f, f'.ToString())
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Beispiele`` (): unit =
         for f, f'  in exampleFunctions do
-            try (?) <@ parse (f'.ToString ()) = f @> with   // test     `actualAST = expectedAST`
-            | _ -> (?) <@ f'.ToString () = toString f @>    // fallback `actualToString = expectedToString`
+            try (?) <@ parse (f'.ToString()) = f @> with   // test     `actualAST = expectedAST`
+            | _ -> (?) <@ f'.ToString() = toString f @>    // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -229,18 +211,16 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: toString Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) ->
-            Assert.AreEqual<Function> (
-                f,                                  // expected
-                parse ((toIFunction f).ToString ()) // actual
-            )
+            try Assert.AreEqual<Function> (f, parse ((toIFunction f).ToString())) with _ ->
+                Assert.AreEqual<string> (toString f, (toIFunction f).ToString())
         )
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: toString Zufallstest`` (): unit =
-        try (!?) <@ fun (f: Function) -> parse ((toIFunction f).ToString ()) = f @> with  // test     `actualAST = expectedAST`
-        | _ -> (!?) <@ fun (f: Function) -> (toIFunction f).ToString () = toString f @>   // fallback `actualToString = expectedToString`
+        try (!?) <@ fun (f: Function) -> parse ((toIFunction f).ToString()) = f @> with  // test     `actualAST = expectedAST`
+        | _ -> (!?) <@ fun (f: Function) -> (toIFunction f).ToString() = toString f @>   // fallback `actualToString = expectedToString`
 
 
     //----------------------------------------------------------------------------------------------
@@ -252,17 +232,14 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: apply Beispiele`` (): unit =
         for (f, f'), x in List.allPairs exampleFunctions exampleValues do
-            Assert.AreEqual<Nat> (
-                apply f x, // expected
-                f'.Apply x // actual
-            )
+            Assert.AreEqual<Nat> (apply f x, f'.Apply(x))
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: apply Beispiele`` (): unit =
         for (f, f'), x in List.allPairs exampleFunctions exampleValues do
-            (?) <@ apply f x = f'.Apply x @>
+            (?) <@ apply f x = f'.Apply(x) @>
 
 
     //----------------------------------------------------------------------------------------------
@@ -274,17 +251,14 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: apply Zufallstest`` (): unit =
         Check.One (defaultConfig, fun (f: Function) (x: Nat) ->
-            Assert.AreEqual<Nat> (
-                apply f x,              // expected
-                (toIFunction f).Apply x // actual
-            )
+            Assert.AreEqual<Nat> (apply f x, (toIFunction f).Apply(x))
         )
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: apply Zufallstest`` (): unit =
-        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Apply x = apply f x @>
+        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Apply(x) = apply f x @>
 
 
     //----------------------------------------------------------------------------------------------
@@ -296,17 +270,14 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: derive Beispiele`` (): unit =
         for (f, f'), x in List.allPairs exampleFunctions exampleValues do
-            Assert.AreEqual<Nat> (
-                apply (derive f) x, // expected
-                f'.Derive().Apply x // actual
-            )
+            Assert.AreEqual<Nat> (apply (derive f) x, f'.Derive().Apply(x))
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: derive Beispiele`` (): unit =
         for (f, f'), x in List.allPairs exampleFunctions exampleValues do
-            (?) <@ f'.Derive().Apply x = apply (derive f) x @>
+            (?) <@ f'.Derive().Apply(x) = apply (derive f) x @>
 
 
     //----------------------------------------------------------------------------------------------
@@ -318,17 +289,14 @@ type Tests () =
     [<TestMethod; Timeout 1000>]
     member _.``Object Oriented: derive Zufallstest`` (): unit =
         Check.One (defaultConfig.WithEndSize 100, fun (f: Function) (x: Nat) ->
-            Assert.AreEqual<Nat> (
-                apply (derive f) x,                 // expected
-                (toIFunction f).Derive().Apply x    // actual
-            )
+            Assert.AreEqual<Nat> (apply (derive f) x, (toIFunction f).Derive().Apply(x))
         )
 
 
     // Assertify Test
     [<TestMethod; Timeout 1000>]
     member _.``#assertify Object Oriented: derive Zufallstest`` (): unit =
-        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Derive().Apply x = apply (derive f) x @>
+        (!?) <@ fun (f: Function) (x: Nat) -> (toIFunction f).Derive().Apply(x) = apply (derive f) x @>
 
 
 //=============================================================================================================================================================================
