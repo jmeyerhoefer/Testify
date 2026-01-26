@@ -1,0 +1,5 @@
+{
+	"Compiler": "FsharpCompiler",
+	"TestType": "xUnitTest",
+	"Timeout": 30
+}
