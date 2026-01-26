@@ -26,57 +26,6 @@ type Assertify =
     static let mutable showReductions: bool = true
 
 
-    // /// <summary>Simplifies a given expression by recursively reducing unwanted patterns.</summary>
-    // /// <param name="expr">The expression to simplify.</param>
-    // static let simplifyExpr' (expr: Expr): Expr =
-    //     let unwantedExprPatterns: string list = [ "FieldGet"; "Tests+Tests"; "ValueWithName" ]
-    //     let unwantedRegexPattern: string = unwantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
-    //
-    //     let wantedExprPatterns: string list = [ "GetArray"; "PropertyGet" ]
-    //     let wantedRegexPattern: string = wantedExprPatterns |> List.map Regex.Escape |> String.concat "|"
-    //
-    //     let rec simplifyHelper (expr: Expr): Expr =
-    //         match expr with
-    //         | Patterns.ValueWithName _ -> expr
-    //         | _ when Regex.IsMatch (expr.ToString (), wantedRegexPattern) -> expr
-    //         | _ when Regex.IsMatch (expr.ToString (), unwantedRegexPattern) -> simplifyHelper (expr.Reduce ())
-    //         | _ -> expr
-    //
-    //     simplifyHelper expr
-    //
-    //
-    // /// <summary>Converts an expression into an easily readable string.</summary>
-    // /// <param name="expr">The expression to convert.</param>
-    // static let rec toReadable (expr: Expr): string =
-    //     let wantedExprPatterns: string list = [ "GetArray"; "op_Dereference" ]
-    //     let wantedNamespaces: string list = [ "Microsoft.FSharp.Collections"; "Microsoft.FSharp.Core" ]
-    //
-    //     match expr with
-    //     | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; _ ]) -> left.Decompile ()
-    //     | Patterns.Call (None, methodInfo, args) when not (wantedExprPatterns |> List.contains methodInfo.Name) ->
-    //         let argumentString: string =
-    //             args
-    //             |> List.map (fun (argument: Expr) ->
-    //                 match argument with
-    //                 // | Patterns.ValueWithName (value, _, _) when (value :? list<_> && value = box []) -> $"%s{toReadable argument}"
-    //                 | Patterns.Value (x, _) when (x.GetType().IsPrimitive || x :? Nat) -> $"%s{toReadable argument}"
-    //                 | _ -> $"(%s{toReadable argument})"
-    //             )
-    //             |> String.concat " "
-    //         if wantedNamespaces |> List.contains methodInfo.DeclaringType.Namespace then
-    //             let declaringTypeName: string = methodInfo.DeclaringType.Name
-    //             let moduleString: string = "Module"
-    //             let declaringType: string =
-    //                 if declaringTypeName.EndsWith moduleString then
-    //                     declaringTypeName.Substring (0, declaringTypeName.Length - moduleString.Length)
-    //                 else
-    //                     declaringTypeName
-    //             $"%s{declaringType}.%s{methodInfo.Name} %s{argumentString}"
-    //         else
-    //             $"%s{methodInfo.Name} %s{argumentString}"
-    //     | _ -> expr.Decompile ()
-
-
     /// <summary>Configures whether the history should be displayed in the output.</summary>
     static member ShowHistory with set (value: bool): unit =
         showHistory <- value
@@ -103,7 +52,7 @@ type Assertify =
                 <| AssertifyResult.MakeResult (
                     "Test X",
                     ?message = message,
-                    expression = expr.Decompile (),
+                    expression = Expressions.formatExpression expr,
                     expected = expected, // TODO: why null?
                     actual = actual // TODO: why null?
                 )
@@ -114,7 +63,7 @@ type Assertify =
                 <| AssertifyResult.MakeResult (
                     "Test Y",
                     ?message = message,
-                    expression = expr.Reduce().Decompile (),
+                    expression = Expressions.formatExpression expr,
                     actual = Expressions.evalActual left,
                     expected = Expressions.evalExpected right,
                     stacktrace = ex.StackTrace

@@ -151,39 +151,6 @@ type Checkify =
                 stacktrace = ex.StackTrace
             )
 
-    /// <summary>
-    /// TODO
-    /// </summary>
-    /// <param name="expr">TODO</param>
-    /// <param name="test">TODO</param>
-    /// <param name="config">TODO</param>
-    // static member CheckAdvanced<'a, 'b> (expr: Expr<'a -> 'b -> bool>, test: Expr<'a -> 'b -> bool> -> 'b -> FsCheck.Property, ?config: Config): unit =
-    //     let config: Config = defaultArg config defaultConfig
-    //     let captureRunner: CaptureRunner = CaptureRunner config.Runner
-    //     let config: Config = config.WithRunner captureRunner
-    //
-    //     try Check.One (config, test expr) with ex ->
-    //         let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
-    //
-    //         Core.failNow
-    //         <| AssertifyResult.MakeResult (
-    //             "CheckAdvanced",
-    //             expression = (
-    //                 captureRunner.Shrunk
-    //                 |> fun s ->
-    //                     if s.IsSome then printfn $"{s.Value}"
-    //                     s
-    //                 |> Option.map (Expressions.simplifyExpression expr)
-    //                 |> Option.defaultValue (expr.Decompile ())
-    //             ),
-    //             expected = expectedOption,
-    //             actual = actualOption,
-    //             ?originalInputs = captureRunner.Original,
-    //             ?shrunkInputs = captureRunner.Shrunk,
-    //             errorMessage = ex.Message,
-    //             stacktrace = ex.StackTrace
-    //         )
-
 
     static member CheckWithProperty (expr: Expr<'a -> bool>, test: Expr<'a -> bool> -> FsCheck.Property, ?config: Config): unit =
         let config: Config = defaultArg config defaultConfig
@@ -227,11 +194,14 @@ type Checkify =
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, Expressions.eval<'a> expr) with ex ->
-            let actualOption, expectedOption  = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+            let (actualOption: string option), (expectedOption: string option) = Expressions.extractActualAndExpected expr captureRunner.Shrunk
             Core.failNow
             <| AssertifyResult.MakeResult (
                 "Check",
-                expression = Expressions.toReadableExpression captureRunner.Shrunk expr,
+                expression = (
+                    Expressions.apply captureRunner.Shrunk.Value expr
+                    |> Expressions.formatExpression
+                ),
                 expected = expectedOption,
                 actual = actualOption,
                 ?originalInputs = captureRunner.Original,
@@ -239,14 +209,6 @@ type Checkify =
                 errorMessage = ex.Message,
                 stacktrace = ex.StackTrace
             )
-
-
-    static member CheckFallbackChain (exprs: Expr<'a> list, ?config: Config): unit =
-        match exprs with
-        | [] -> Core.failNow <| AssertifyResult.MakeResult ("Test", message = "Some error")
-        | h :: t ->
-            try Checkify.Check h with
-            | _ -> Checkify.CheckFallbackChain t
 
 
     static member CheckBoolean (expr: Expr<'a -> bool list>, ?config: Config): unit =

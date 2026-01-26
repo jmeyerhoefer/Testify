@@ -6,6 +6,7 @@
 namespace Assertify.Expressions
 
 
+open System.Reflection
 open Microsoft.FSharp.Quotations
 open Microsoft.FSharp.Linq.RuntimeHelpers
 open Swensen.Unquote
@@ -74,6 +75,31 @@ module Expressions =
             | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map (substituteVar var replacement))
             | _ -> body
         simplify expr
+
+
+    let rec formatMethodCall (expr: Expr): string =
+        printfn $"{expr.ToString ()}"
+        match expr with
+        | Patterns.Call (methodOp: Expr option, methodInfo: MethodInfo, exprList: Expr list) ->
+            let parameters: string =
+                exprList
+                |> List.map formatMethodCall
+                |> String.concat ") ("
+            match methodOp with
+            | Some method ->
+                $"{method.Decompile ()}.{methodInfo.Name}({parameters})"
+            | _ ->
+                $"{methodInfo.Name} ({parameters})"
+        | _ ->
+            try expr.Reduce().Decompile () with _ ->
+                try expr.Decompile () with _ ->
+                    expr.ToString ()
+
+
+    let formatExpression (expr: Expr): string =
+        match expr with
+        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; _right ]) -> formatMethodCall left
+        | _ -> failwith $"Expected `Expr<bool>` (actual = expected), but got `%s{expr.Type.ToString ()}`"
 
 
     let toReadableExpression (shrunkOptions: obj list option) (expr: Expr): string =
