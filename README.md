@@ -5,29 +5,20 @@
 
 
 <div align="center">
-    <p align="center">
-        <a href="assertify"><img src="https://img.shields.io/badge/assertify_for_F%23-a8e8f9?style=for-the-badge"/></a>
-        <a href="error-pattern"><img src="https://img.shields.io/badge/build%2Ftest_analysis-00537a?style=for-the-badge"/></a>
-        <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-013c58?style=for-the-badge"/></a>
-        <br>
-        <a href="latex/thesis.pdf"><img src="https://img.shields.io/badge/read_thesis-f5a201?logo=latex&labelColor=white&style=for-the-badge&logoColor=black"></a>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md">
-            <img src="https://img.shields.io/badge/report_bug-ffba42?style=for-the-badge"/>
-        </a>
-        <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md">
-            <img src="https://img.shields.io/badge/request_feature-ffd35b?style=for-the-badge"/>
-        </a>
-        <br>
-    </p>
+    <a href="https://rptu.de">
+        <img src="images/rptu/minimal/rptu-logo-minimal11.png" height=40>
+    </a>
+    <br/>
+    <h3 align="center">Bachelor Thesis</h3>
+    <h4 align="center">by Jakob Meyerhöfer</h4>
     <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
-        <!-- <a href="https://rptu.de"><img src="images/rptu/minimal/rptu-logo-minimal11.png" height=30></a> -->
-        <a href=""><img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/></a>
-        <!-- <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=30></a> -->
+        <a href="https://t.me/jacobtwotwo">
+            <img src="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/telegram/default.svg" width="40" height="30" alt="telegram" />
+        </a>
+        <a href="mailto:meyerhoe@rptu.de">
+            <img src ="https://raw.githubusercontent.com/maurodesouza/profile-readme-generator/master/src/assets/icons/social/microsoft-outlook/default.svg" width="40" height="30" alt="mail" />
+        </a>
     </div>
-    <h3 align="center">Bachelor Thesis · Jakob Meyerhöfer</h3>
-    <p align="center">
-        GitLab repository for my bachelor thesis!
-    </p>
 </div>
 
 
@@ -35,6 +26,20 @@
 
 
 <details>
+    <summary>Test</summary>
+    <ol>
+        <li>
+            <a href="#getting-started">Getting Started</a>
+            <ul>
+                <li><a href="#prerequisites">Prerequisites</li>
+                <li><a href="#installation">Installation</li>
+            </ul>
+        </li>
+    </ol>
+</details>
+
+
+<!-- <details>
     <summary>Table Of Contents</summary>
     <ol>
         <li>
@@ -55,95 +60,28 @@
         <li><a href="#license">License</a></li>
         <li><a href="#contact">Contact</a></li>
     </ol>
-</details>
+</details> -->
 
 
 <!-- #################################################################################################### -->
 
 
-## About the project
-
-This bachelor thesis focuses on the analysis of student submissions to identify the most common errors in their code, with the ultimate goal of improving the readability of error messages. The project uses various techniques and tools to detect recurring issues in the submitted code, categorize them, and then provides improved error messages that are easier for novices to understand. By improving the clarity of the error messages, this project aims to enhance the overall learning experience for students, especially those just starting with programming.
-
-### Problem Statement
-
-Many novice programmers struggle with cryptic error messages when writing code, which can lead to frustration and slower learning. By analyzing common student mistakes and improving how errors are communicated, we can make programming more accessible and encourage faster progress.
-
-### Key Features
-
-- Library for unit testing (assertion and verification) with better formatting of the crucial aspects of failed tests.
-- Error pattern analysis to identify common issues in student code submissions.
-
-### Built With
-
-* [![.NET][dotnet-shield]][dotnet-url]
-* [![F#][fsharp-shield]][fsharp-url]
-* [![Plotly][plotly-shield]][plotly-url]
-* [![Docker][docker-shield]][docker-url]
-* [![JavaScript][javascript-shield]][javascript-url]
-* [![TypeScript][typescript-shield]][typescript-url]
-* [![Node.js][nodejs-shield]][nodejs-url]
-
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
-
-
-<!-- #################################################################################################### -->
-
-
-## Getting Started
-
-To get started with the project, follow these instructions. You’ll need to have the prerequisites installed and configured on your machine.
-
-### Prerequisites
-
-- [.NET SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
-- [Docker](https://www.docker.com)
-- TODO
-
-
-### Installation
-
-Clone the repository and install the dependencies using the following steps:
-
-```bash
-git clone https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer.git
-cd your-project-directory
-```
-
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
-
-
-<!-- #################################################################################################### -->
-
-
-## Usage
-
-### Assertify for F#
-
-See [documentation](assertify/Assertify.xml)
-
-### Build/Test Analysis
+## About
 
 TODO
 
+
 <p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
 
 
 <!-- #################################################################################################### -->
 
 
-## Contributing
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement". Don't forget to give the project a star! Thanks again!
-
-1. Fork the project
-2. Clone it open the repository in command line
-3. Create your feature branch (`git checkout -b feature/amazing-feature`)
-4. Commit your changes (`git commit -m "Add some amazing feature"`)
-5. Push to the branch (`git push origin feature/amazing-feature`)
-6. Open a pull request from your feature branch from your repository into this repository main branch, and provide a description of your changes.
-
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jmeyerhoefer/jmeyerhoefer/output/github-contribution-grid-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jmeyerhoefer/jmeyerhoefer/output/github-contribution-grid-snake.svg">
+  <img alt="github contribution grid snake animation" src="https://raw.githubusercontent.com/jmeyerhoefer/jmeyerhoefer/output/github-contribution-grid-snake.svg">
+</picture>
 
 
 <!-- #################################################################################################### -->
@@ -159,16 +97,13 @@ GNU General Public License v3.0
 <!-- #################################################################################################### -->
 
 
-## Contact
-
-Jakob Meyerhöfer - meyerhoe@rhrk.uni-kl.de
-
-
-<p align="right"><a href="#readme-top"><img src="https://img.shields.io/badge/⬆️_back_to_top-white?style=for-the-badge"/></a></p>
-
-
-<!-- #################################################################################################### -->
-
+<!-- * [![.NET][dotnet-shield]][dotnet-url] -->
+<!-- * [![F#][fsharp-shield]][fsharp-url] -->
+<!-- * [![Plotly][plotly-shield]][plotly-url] -->
+<!-- * [![Docker][docker-shield]][docker-url] -->
+<!-- * [![JavaScript][javascript-shield]][javascript-url] -->
+<!-- * [![TypeScript][typescript-shield]][typescript-url] -->
+<!-- * [![Node.js][nodejs-shield]][nodejs-url] -->
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [dotnet-shield]: https://img.shields.io/badge/.net-512bd4?style=for-the-badge&logo=dotnet&logoColor=white
@@ -201,3 +136,23 @@ Jakob Meyerhöfer - meyerhoe@rhrk.uni-kl.de
 
 [typescript-shield]: https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [typescript-url]: https://typescriptlang.org
+
+
+<!-- <a href="assertify"><img src="https://img.shields.io/badge/assertify_for_F%23-a8e8f9?style=for-the-badge"/></a> -->
+<!-- <a href="error-pattern"><img src="https://img.shields.io/badge/build%2Ftest_analysis-00537a?style=for-the-badge"/></a> -->
+<!-- <a href="fsharp-beautify"><img src="https://img.shields.io/badge/vs_code_extension-013c58?style=for-the-badge"/></a> -->
+<!-- <a href="latex/thesis.pdf"><img src="https://img.shields.io/badge/read_thesis-f5a201?logo=latex&labelColor=white&style=for-the-badge&logoColor=black"></a> -->
+<!-- <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=bug&template=bug-report---.md"><img src="https://img.shields.io/badge/report_bug-ffba42?style=for-the-badge"/></a> -->
+<!-- <a href="https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/issues/new?labels=enhancement&template=feature-request---.md"><img src="https://img.shields.io/badge/request_feature-ffd35b?style=for-the-badge"/></a> -->
+<!-- <img src="images/readme/graduation-hat.png" alt="graduation-hat" width="80" height="80"/> -->
+<!-- <a href="https://exclaim.cs.rptu.de"><img src="images/exclaim/exclaim_logo.svg" height=30></a> -->
+<!-- <div align="center"> -->
+<!-- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fsharp/fsharp-original.svg" height="60" alt="fsharp logo" /> -->
+<!-- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dotnetcore/dotnetcore-original.svg" height="60" alt="dotnetcore logo" /> -->
+<!-- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" height="60" alt="docker logo" /> -->
+<!-- </div> -->
+
+
+[CuteGIF]: <img height="150" src="https://i.imgflip.com/65efzo.gif" />
+[FSharpLogo]: ![FSharp](https://img.shields.io/badge/FSharp-378bba?style=flat&logo=fsharp&logoColor=white)
+[DotNetLogo]: ![.NET](https://img.shields.io/badge/.NET-512BD4?style=flat&logo=.net&logoColor=white)
