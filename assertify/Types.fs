@@ -36,6 +36,7 @@ module GenBuilder =
 
 /// <summary>TODO</summary>
 type SmallNat = SmallNat of Nat
+type PosNat = PosNat of Nat
 
 
 /// <summary>TODO</summary>
@@ -78,6 +79,11 @@ type NatModifier =
     /// </summary>
     static member NatOption (): Arbitrary<Nat option> = NatModifier.Nat () |> Arb.option
 
+    static member PosNat (): Arbitrary<PosNat> =
+        ArbMap.defaults
+        |> ArbMap.arbitrary<Nat>
+        |> Arb.mapFilter ((+) 1N) (fun _ -> true)
+        |> Arb.convert PosNat (fun (PosNat (n: Nat)) -> n)
 
     /// <summary>
     /// Returns Arbitrary for <c>SmallNat</c>
@@ -85,14 +91,20 @@ type NatModifier =
     static member SmallNat (): Arbitrary<SmallNat> =
         ArbMap.defaults
         |> ArbMap.arbitrary<Nat>
-        |> Arb.filter (fun (n: Nat) -> n < 7N)
+        |> Arb.filter ((<) 7N)
         |> Arb.convert SmallNat (fun (SmallNat (n: Nat)) -> n)
+
 
 
 /// <summary>TODO</summary>
 module Configurations =
     /// <summary>TODO</summary>
-    let DefaultConfig: Config = Config.QuickThrowOnFailure.WithArbitrary [ typeof<NatModifier> ]
+    let defaultConfig: Config = Config.QuickThrowOnFailure.WithArbitrary [ typeof<NatModifier> ]
+
+
+    /// <summary>TODO</summary>
+    let arbFor<'a> (): Arbitrary<'a> =
+        defaultConfig.ArbMap.ArbFor<'a> ()
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

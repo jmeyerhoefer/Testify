@@ -23,7 +23,7 @@ type PeanoTests () =
     member _.``a) iterate Zufallstest`` (): unit =
         Checkify.Check (
             <@ fun (f: Nat -> Nat) (n: Nat) (x: Nat) -> Student.Peano.iterate f n x = Solution.Peano.iterate f n x @>,
-            DefaultConfig.WithEndSize 100
+            defaultConfig.WithEndSize 100
         )
 
     // ------------------------------------------------------------------------
@@ -40,6 +40,6 @@ type PeanoTests () =
     member _.``b) lt`` (): unit =
         Checkify.Check (
             <@ fun (n: Nat) (m: Nat) -> Student.Peano.lt n m = (n < m) @>,
-            DefaultConfig.WithEndSize 100
+            defaultConfig.WithEndSize 100
         )
 

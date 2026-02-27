@@ -58,21 +58,22 @@ let rec testDerive (f: Function): Function =
     | Pow (f1, n)   -> Mul (Mul (Constant n, Pow (f1, n - 1N)), testDerive f1)
     | Comp (f1, f2) -> Mul (Comp (testDerive f1, f2), testDerive f2)
 
+let rec simplify (f: Function): Function =
+    failwith "TODO"
+
 [<TestClass>]
 type CalculusTests () =
     // TODO: Test this and replace inner "<@@>; <@@>" with "... && ..."
     [<TestMethod; Timeout 10000>]
     member _.``OO: ToString Beispiele`` (): unit =
-        Checkify.Check
-            <@ fun (n: Nat) ->
-                for func, _, _, _, expected in ex do
-                    <@ trim (func.ToString ()) = trim expected @> -?> $"expected %A{expected} but got %A{func.ToString ()} (whitespaces and braces are ignored in _ test)"
-                    <@ charnum ')' (func.ToString ()) = charnum '(' (func.ToString ()) @> -?> $"number of opening and closing braces does not match in %A{func.ToString ()}." @>
+        for func, _, _, _, expected in ex do
+            <@ trim (func.ToString ()) = trim expected @> -?> $"expected %A{expected} but got %A{func.ToString ()} (whitespaces and braces are ignored in _ test)"
+            <@ charnum ')' (func.ToString ()) = charnum '(' (func.ToString ()) @> -?> $"number of opening and closing braces does not match in %A{func.ToString ()}."
 
     [<TestMethod; Timeout 10000>]
     member _.``OO: ToString Zufall`` (): unit =
         Checkify.Check
-            <@ fun (fct: Function) (n: Nat) ->
+            <@ fun (fct: Function) ->
                 let fctOO = toOO fct
                 <@ trim (testToString fct) = trim (fctOO.ToString ()) @> -?> $"expected %A{testToString fct} but got %A{fctOO.ToString ()} (whitespaces and braces are ignored in _ test)"
                 <@ charnum '(' (fctOO.ToString ()) = charnum ')' (fctOO.ToString ()) @> -?> $"number of opening and closing braces does not match in %A{fctOO.ToString ()}." @>
@@ -94,23 +95,18 @@ type CalculusTests () =
 
     [<TestMethod; Timeout 10000>]
     member _.``OO: Derive Zufall`` (): unit =
-        Checkify.Check
-            <@ fun (fct: Function) (n: Nat) ->
-                <@ (toOO fct).Derive().Apply n = testApply (testDerive fct) n @> -?> $"From f(x)=%s{(toOO fct).ToString ()} you derived f'(x)=%s{(testDerive fct).ToString ()} which is not correct at %A{n}" @>
+        Checkify.Check <@ fun (fct: Function) (n: Nat) -> (toOO fct).Derive().Apply n = testApply (testDerive fct) n @>
 
     [<TestMethod; Timeout 10000>]
     member _.``Funktional: ToString Beispiele`` (): unit =
-        Checkify.Check
-            <@ fun (n: Nat) ->
-                for _, func, _, _, expected in ex do
-                    <@ trim (Student.Calculus.toString func) = trim expected @> -?> $"expected %A{expected} but got %A{func.ToString ()} (whitespaces and braces are ignored in _ test)"
-                    <@ charnum '(' (Student.Calculus.toString func) = charnum ')' (Student.Calculus.toString func) @> -?> $"number of opening and closing braces does not match in %A{func.ToString ()}."
-                @>
+        for _, func, _, _, expected in ex do
+            <@ trim (Student.Calculus.toString func) = trim expected @> -?> $"expected %A{expected} but got %A{func.ToString ()} (whitespaces and braces are ignored in _ test)"
+            <@ charnum '(' (Student.Calculus.toString func) = charnum ')' (Student.Calculus.toString func) @> -?> $"number of opening and closing braces does not match in %A{func.ToString ()}."
 
     [<TestMethod; Timeout 10000>]
     member _.``Funktional: ToString Zufall`` (): unit =
         Checkify.Check
-            <@ fun (fct: Function) (n: Nat) ->
+            <@ fun (fct: Function) ->
                 <@ trim (Student.Calculus.toString fct) = trim (testToString fct) @> -?> $"expected %A{testToString fct} but got %A{Student.Calculus.toString fct} (whitespaces and braces are ignored in _ test)"
                 <@ charnum '(' (Student.Calculus.toString fct) = charnum ')' (Student.Calculus.toString fct) @> -?> $"number of opening and closing braces does not match in %A{testToString fct}."
                 @>
@@ -130,10 +126,11 @@ type CalculusTests () =
         Checkify.Check
             <@ fun (n: Nat) ->
                 for _, func, _, f', _ in ex do
-                    let expected = f' n
+                    // let expected = f' n
                     let func_deriv = Student.Calculus.derive func
-                    let actual = Student.Calculus.apply func_deriv  n
-                    <@ actual = expected @> -?> $"From f(x)=%s{Student.Calculus.toString func} you derived f'(x)=%s{Student.Calculus.toString func_deriv} which is not correct at %A{n}" @>
+                    // let actual = Student.Calculus.apply func_deriv  n
+                    <@ func_deriv = testDerive func @> -?> $"From f(x)=%s{Student.Calculus.toString func} you derived f'(x)=%s{Student.Calculus.toString func_deriv} which is not correct at %A{n}" @>
+
 
     [<TestMethod; Timeout 10000>]
     member _.``Funktional: Derive Zufall`` (): unit =

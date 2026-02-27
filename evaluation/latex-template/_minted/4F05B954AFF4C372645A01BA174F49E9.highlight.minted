@@ -1,0 +1,4 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{rec}\PYG{+w}{ }\PYG{n}{exists}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{f}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{+w}{ }\PYG{o}{\PYGZhy{}\PYGZgt{}}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{lower}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{upper}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{o}{)}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{bool}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{    }\PYG{n}{lower}\PYG{+w}{ }\PYG{o}{\PYGZlt{}}\PYG{+w}{ }\PYG{n}{upper}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{f}\PYG{+w}{ }\PYG{n}{lower}\PYG{+w}{ }\PYG{o}{|}\PYG{o}{|}\PYG{+w}{ }\PYG{n}{exists}\PYG{+w}{ }\PYG{n}{f}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{lower}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1N}\PYG{o}{)}\PYG{+w}{ }\PYG{n}{upper}\PYG{o}{)}
+\end{MintedVerbatim}

@@ -10,10 +10,6 @@
         <NoWarn>1591</NoWarn>
         <Authors>Jakob Meyerhöfer</Authors>
         <RootNamespace>Assertify</RootNamespace>
-        <RepositoryUrl>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify</RepositoryUrl>
-        <FsDocsLicenseLink>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify/LICENSE</FsDocsLicenseLink>
-        <FsDocsReleaseNotesLink>https://pl-git.informatik.uni-kl.de/students/24-ba-jakob-meyerhoefer/blob/master/Assertify/RELEASE_NOTES.md</FsDocsReleaseNotesLink>
-        <PackageProjectUrl>https://fsprojects.github.io/FSharp.AWS.DynamoDB</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>

@@ -29,18 +29,17 @@
         {\rmfamily\scshape\LARGE \@title \par} \vspace*{\fill} % {\scshape\LARGE \@title \par} \vspace*{\fill}
         {\bfseries \thesisType's Thesis \par} \vspace{1cm}
         {by \par} \vspace{1cm}
-        {\Large\itshape \@author \par} \vspace{1cm}
+        {\Large\itshape \@author \par} \vspace{0.5cm}
+        {\large\itshape (Mail: \href{mailto:\mail}{\mail}) \par} \vspace{1cm}
         {\@date \par} \vspace*{\fill}
         {University of Kaiserslautern-Landau\\
         Department of Computer Science\\
         67663 Kaiserslautern\\
         Germany \par} \vspace*{\fill}
-        {
-        \begin{tabular}{rl}
-        Examiner: & \examinerA\\
-        		  & \examinerB
-        \end{tabular}
-        }
+        {\begin{tabular}{rl}
+            Examiner: & \examinerA\\
+        		      & \examinerB
+        \end{tabular}}
     \makeatother
 \end{titlepage}
 \restoregeometry
@@ -82,36 +81,40 @@
 \mainmatter
 
 
+\input{chapters/introduction/structure.tex}
+\pagebreak
+
+
 %%%%% Introduction %%%%%
-\input{chapters/introduction/introduction.tex}
+% \input{chapters/introduction/introduction.tex}
 
 
 %%%%% Related Work %%%%%
-\input{chapters/related-work/related-work.tex}
+% \input{chapters/related-work/related-work.tex}
 
 
 %%%%% Previous Semester Analysis %%%%%
-\input{chapters/previous-semester-analysis/previous-semester-analysis.tex}
+% \input{chapters/previous-semester-analysis/previous-semester-analysis.tex}
 
 
 %%%%% Error Messages %%%%%
-\input{chapters/error-messages/error-messages.tex}
+% \input{chapters/error-messages/error-messages.tex}
 
 
 %%%%% Assertify %%%%%
-\input{chapters/assertify/assertify.tex}
+% \input{chapters/assertify/assertify.tex}
 
 
 %%%%% Methodology %%%%%
-\input{chapters/methodology/methodology.tex}
+% \input{chapters/methodology/methodology.tex}
 
 
 %%%%% Results %%%%%
-\input{chapters/results/results.tex}
+% \input{chapters/results/results.tex}
 
 
 %%%%% Conclusion %%%%%
-\input{chapters/conclusion/conclusion.tex}
+% \input{chapters/conclusion/conclusion.tex}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

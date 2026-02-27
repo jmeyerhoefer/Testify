@@ -1871,6 +1871,7 @@
       "packagesPath": "C:\\Users\\jakob\\.nuget\\packages\\",
       "outputPath": "D:\\Bachelorarbeit\\24-ba-jakob-meyerhoefer\\evaluation\\template\\obj\\",
       "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
         "C:\\Users\\jakob\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
@@ -1878,7 +1879,7 @@
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files\\dotnet\\sdk\\9.0.104\\FSharp\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\9.0.105\\FSharp\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1891,8 +1892,7 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.100"
+      }
     },
     "frameworks": {
       "net8.0": {
@@ -1946,7 +1946,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.104/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.105/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

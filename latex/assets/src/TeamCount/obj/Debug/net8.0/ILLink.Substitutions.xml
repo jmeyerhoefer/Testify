@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="TeamCount">
+    <resource name="FSharpSignatureData.TeamCount" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedData.TeamCount" action="remove"></resource>
+    <resource name="FSharpSignatureDataB.TeamCount" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedDataB.TeamCount" action="remove"></resource>
+    <resource name="FSharpOptimizationData.TeamCount" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedData.TeamCount" action="remove"></resource>
+    <resource name="FSharpOptimizationDataB.TeamCount" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedDataB.TeamCount" action="remove"></resource>
+    <resource name="FSharpOptimizationInfo.TeamCount" action="remove"></resource>
+    <resource name="FSharpSignatureInfo.TeamCount" action="remove"></resource>
+  </assembly>
+</linker>

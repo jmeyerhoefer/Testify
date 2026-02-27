@@ -85,7 +85,7 @@ type TernaryTests () =
     member _.``c) + d) dec (inc n) = n Zufall`` (): unit =
         Checkify.Check (
             <@ fun (n: List<Ternary>) -> Student.Ternary.dec (Student.Ternary.inc n) = removeLeadingZs n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -105,7 +105,7 @@ type TernaryTests () =
     member _.``a) + e) bedeutung (fromInt n) = n Zufall`` (): unit =
         Checkify.Check (
             <@ fun (n: Int) -> Student.Ternary.bedeutung (Student.Ternary.fromInt n) = n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -122,7 +122,7 @@ type TernaryTests () =
     member _.``f) add Zufall (setzt voraus, dass fromInt funktioniert)`` (): unit =
         Checkify.Check (
             <@ fun (m: Int) (n: Int) -> Student.Ternary.add (Student.Ternary.fromInt m) (Student.Ternary.fromInt n) = Solution.Ternary.fromInt (m+n) @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     [<TestMethod; Timeout 5000>]
@@ -130,7 +130,7 @@ type TernaryTests () =
         Checkify.Check (
             <@ fun (m: List<Ternary>) (n: List<Ternary>) ->
                 Student.Ternary.add (removeLeadingZs m) (removeLeadingZs n) = Solution.Ternary.add (removeLeadingZs n) (removeLeadingZs m) @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     [<TestMethod; Timeout 5000>]
@@ -140,7 +140,7 @@ type TernaryTests () =
             <@ fun (m: List<Ternary>) (n: List<Ternary>) (o: List<Ternary>) ->
                 Student.Ternary.add (removeLeadingZs m) (Student.Ternary.add (removeLeadingZs n) (removeLeadingZs o)) =
                     Solution.Ternary.add (Solution.Ternary.add (removeLeadingZs m) (removeLeadingZs n)) (removeLeadingZs o) @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -157,12 +157,12 @@ type TernaryTests () =
     member _.``g) negative (negative n) = n Zufall`` (): unit =
         Checkify.Check (
             <@ fun (n: List<Ternary>) -> Student.Ternary.negative (Student.Ternary.negative n) = removeLeadingZs n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     [<TestMethod; Timeout 5000>]
     member _.``g) add n (negative n) = [] Zufall (setzt voraus, dass add funktioniert)`` (): unit =
         Checkify.Check (
             <@ fun (n: List<Ternary>) -> Student.Ternary.add (removeLeadingZs n) (Student.Ternary.negative (removeLeadingZs n)) = [] @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )

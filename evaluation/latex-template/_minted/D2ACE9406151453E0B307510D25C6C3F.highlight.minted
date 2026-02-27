@@ -1,0 +1,8 @@
+\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
+\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{rec}\PYG{+w}{ }\PYG{n}{mod7}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{n}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{o}{)}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0N}\PYG{+w}{ }\PYG{k}{then}\PYG{+w}{ }\PYG{l+m+mi}{0N}
+\PYG{+w}{    }\PYG{k}{else}
+\PYG{+w}{        }\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{m}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mod7}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{+w}{ }\PYG{l+m+mi}{1N}\PYG{o}{)}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{n}{m}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{6N}\PYG{+w}{ }\PYG{k}{then}\PYG{+w}{ }\PYG{l+m+mi}{0N}
+\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n}{m}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+m+mi}{1N}
+\end{MintedVerbatim}

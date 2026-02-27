@@ -95,7 +95,7 @@ type WeihnachtsbaumTests () =
     member _.``baumGewicht Zufall`` (): unit =
         Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Student.Weihnachtsbaum.baumGewicht t = treeWeight t decorationWeight @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     // ------------------------------------------------------------------------
@@ -115,7 +115,7 @@ type WeihnachtsbaumTests () =
     member _.``istBalanciert Zufall`` (): unit =
         Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Student.Weihnachtsbaum.istBalanciert t = istBalanciert t decorationWeight @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     // ------------------------------------------------------------------------
@@ -136,7 +136,7 @@ type WeihnachtsbaumTests () =
     member _.``moeglicheGewichte Zufall`` (): unit =
         Checkify.Check (
             <@ fun (t: Weihnachtsbaum) -> Set.ofList (Student.Weihnachtsbaum.moeglicheGewichte t) = Set.ofList (moeglicheGewichte t) @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     // ------------------------------------------------------------------------
@@ -166,7 +166,7 @@ type WeihnachtsbaumTests () =
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> istBalanciert t' (fun _ -> 1N)
                 | None -> true @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     [<TestMethod; Timeout 1000>]
@@ -176,7 +176,7 @@ type WeihnachtsbaumTests () =
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> sameShape t t'
                 | None -> true @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     [<TestMethod; Timeout 1000>]
@@ -186,7 +186,7 @@ type WeihnachtsbaumTests () =
                 match Student.Weihnachtsbaum.schmuecken t w with
                 | Some t' -> treeWeight t' decorationWeight = w
                 | None -> true @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     [<TestMethod; Timeout 1000>]
@@ -201,7 +201,7 @@ type WeihnachtsbaumTests () =
                     match Student.Weihnachtsbaum.schmuecken t w with
                     | Some t' -> false
                     | None -> true @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )
 
     // ------------------------------------------------------------------------
@@ -228,5 +228,5 @@ type WeihnachtsbaumTests () =
             <@ fun (t: Tree<Unit>) ->
                 Set.ofList (Student.Weihnachtsbaum.schmueckungen t) =
                     Set.ofList (Student.Weihnachtsbaum.moeglicheGewichte t |> List.choose (Student.Weihnachtsbaum.schmuecken t)) @>,
-            DefaultConfig.WithMaxTest(100).WithEndSize(5)
+            defaultConfig.WithMaxTest(100).WithEndSize(5)
         )

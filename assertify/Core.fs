@@ -52,7 +52,7 @@ type AssertifyResult =
             ShrunkInputs = stringifyObjs shrunkInputs
             ErrorMessage = errorMessage
             Stacktrace = stacktrace
-            Timestamp = System.DateTime.Now.ToString "Dyyyy-MM-ddTHH:mm:ss"
+            Timestamp = System.DateTime.Now.ToString "yyyy-MM-ddTHH:mm:ss"
         }
 
 

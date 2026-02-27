@@ -6,11 +6,11 @@
 namespace Assertify.Checkify
 
 
-open System
 open Assertify.Types
 open Assertify.Types.Configurations
 open Assertify.Core
 open Assertify.Expressions
+open Assertify.Expressions.Operators
 
 open Microsoft.FSharp.Quotations
 open Swensen.Unquote
@@ -47,10 +47,11 @@ type CaptureRunner (inner: IRunner) =
 
         /// <summary>TODO</summary>
         member _.OnFinished (name: string, result: FsCheck.TestResult): unit =
+            let correctOrder (xs: obj list): obj list = xs |> List.permute (fun x -> (x + 1) % xs.Length)
             match result with
             | TestResult.Failed (_, o, s, _, _, _, _) ->
-                original <- Some o
-                shrunk   <- Some s
+                original <- Some (correctOrder o)
+                shrunk   <- Some (correctOrder s)
             | _ -> ()
             inner.OnFinished (name, result)
 
@@ -74,8 +75,8 @@ type Checkify =
             generator,
             fun (a: 'a, b: 'b) ->
                 seq {
-                    for a' in DefaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b
-                    for b' in DefaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b'
+                    for a' in defaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b
+                    for b' in defaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b'
                 }
         )
 
@@ -86,9 +87,9 @@ type Checkify =
             generator,
             fun (a: 'a, b: 'b, c: 'c) ->
                 seq {
-                    for a' in DefaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b, c
-                    for b' in DefaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b', c
-                    for c' in DefaultConfig.ArbMap.ArbFor<'c>().Shrinker c -> a, b, c'
+                    for a' in defaultConfig.ArbMap.ArbFor<'a>().Shrinker a -> a', b, c
+                    for b' in defaultConfig.ArbMap.ArbFor<'b>().Shrinker b -> a, b', c
+                    for c' in defaultConfig.ArbMap.ArbFor<'c>().Shrinker c -> a, b, c'
                 }
         )
 
@@ -102,8 +103,8 @@ type Checkify =
 
     /// <summary>TODO</summary>
     static member ForAllGen (expr: Expr<'a * 'b -> bool>, generator: Gen<'a * 'b>, ?shrinkA: 'a -> 'a seq, ?shrinkB: 'b -> 'b seq): Property =
-        let shrinkA: 'a -> 'a seq = defaultArg shrinkA (DefaultConfig.ArbMap.ArbFor<'a>().Shrinker)
-        let shrinkB: 'b -> 'b seq = defaultArg shrinkB (DefaultConfig.ArbMap.ArbFor<'b>().Shrinker)
+        let shrinkA: 'a -> 'a seq = defaultArg shrinkA (defaultConfig.ArbMap.ArbFor<'a>().Shrinker)
+        let shrinkB: 'b -> 'b seq = defaultArg shrinkB (defaultConfig.ArbMap.ArbFor<'b>().Shrinker)
         let arb: FsCheck.Arbitrary<'a * 'b> =
             FsCheck.FSharp.Arb.fromGenShrink (
                 generator,
@@ -131,21 +132,17 @@ type Checkify =
 
 
     static member CheckTest (expr: Expr, test: Expr -> 'Testable, ?config: Config): unit =
-        let config: Config = defaultArg config DefaultConfig
+        let config: Config = defaultArg config defaultConfig
         let captureRunner: CaptureRunner = CaptureRunner config.Runner
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, test expr) with ex ->
-            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+            let actualOption, expectedOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
 
             Core.failNow
             <| AssertifyResult.MakeResult (
                 "CheckTest",
-                expression = (
-                    captureRunner.Shrunk
-                    |> Option.map (List.rev >> Expressions.simplifyExpression expr)
-                    |> Option.defaultValue (expr.Decompile ())
-                ),
+                expression = Expressions.toReadableExpression captureRunner.Shrunk expr,
                 expected = expectedOption,
                 actual = actualOption,
                 ?originalInputs = captureRunner.Original,
@@ -160,48 +157,45 @@ type Checkify =
     /// <param name="expr">TODO</param>
     /// <param name="test">TODO</param>
     /// <param name="config">TODO</param>
-    static member CheckAdvanced<'a, 'b> (expr: Expr<'a -> 'b -> bool>, test: Expr<'a -> 'b -> bool> -> 'b -> FsCheck.Property, ?config: Config): unit =
-        let config: Config = defaultArg config DefaultConfig
-        let captureRunner: CaptureRunner = CaptureRunner config.Runner
-        let config: Config = config.WithRunner captureRunner
-
-        try Check.One (config, test expr) with ex ->
-            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
-
-            Core.failNow
-            <| AssertifyResult.MakeResult (
-                "CheckAdvanced",
-                expression = (
-                    captureRunner.Shrunk
-                    |> Option.map (List.rev >> Expressions.simplifyExpression expr)
-                    |> Option.defaultValue (expr.Decompile ())
-                ),
-                expected = expectedOption,
-                actual = actualOption,
-                ?originalInputs = captureRunner.Original,
-                ?shrunkInputs = captureRunner.Shrunk,
-                errorMessage = ex.Message,
-                stacktrace = ex.StackTrace
-            )
+    // static member CheckAdvanced<'a, 'b> (expr: Expr<'a -> 'b -> bool>, test: Expr<'a -> 'b -> bool> -> 'b -> FsCheck.Property, ?config: Config): unit =
+    //     let config: Config = defaultArg config defaultConfig
+    //     let captureRunner: CaptureRunner = CaptureRunner config.Runner
+    //     let config: Config = config.WithRunner captureRunner
+    //
+    //     try Check.One (config, test expr) with ex ->
+    //         let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+    //
+    //         Core.failNow
+    //         <| AssertifyResult.MakeResult (
+    //             "CheckAdvanced",
+    //             expression = (
+    //                 captureRunner.Shrunk
+    //                 |> fun s ->
+    //                     if s.IsSome then printfn $"{s.Value}"
+    //                     s
+    //                 |> Option.map (Expressions.simplifyExpression expr)
+    //                 |> Option.defaultValue (expr.Decompile ())
+    //             ),
+    //             expected = expectedOption,
+    //             actual = actualOption,
+    //             ?originalInputs = captureRunner.Original,
+    //             ?shrunkInputs = captureRunner.Shrunk,
+    //             errorMessage = ex.Message,
+    //             stacktrace = ex.StackTrace
+    //         )
 
 
     static member CheckWithProperty (expr: Expr<'a -> bool>, test: Expr<'a -> bool> -> FsCheck.Property, ?config: Config): unit =
-        let config: Config = defaultArg config DefaultConfig
+        let config: Config = defaultArg config defaultConfig
         let captureRunner: CaptureRunner = CaptureRunner config.Runner
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, test expr) with ex ->
-            let expectedOption, actualOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
-            // TODO: here happens the 'expected: null' problem, maybe pass the function body instead of the lambda?
-            // TODO: apply arguments!!! same as for "expression"
+            let actualOption, expectedOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
             Core.failNow
             <| AssertifyResult.MakeResult (
                 "CheckWithProperty",
-                expression = (
-                    captureRunner.Shrunk
-                    |> Option.map (Expressions.simplifyExpression expr)
-                    |> Option.defaultValue (expr.Decompile ())
-                ),
+                expression = Expressions.toReadableExpression captureRunner.Shrunk expr,
                 expected = expectedOption,
                 actual = actualOption,
                 ?originalInputs = captureRunner.Original,
@@ -228,20 +222,37 @@ type Checkify =
     // TODO: Add inline function like (???) instead of Checkify.Check
     // TODO: Add overrides like: CheckEquality, CheckGreaterThan, CheckBool, CheckProperty (takes FsCheck.Property as param)
     static member Check (expr: Expr<'a>, ?config: Config): unit =
-        let config: Config = defaultArg config DefaultConfig
+        let config: Config = defaultArg config defaultConfig
         let captureRunner: CaptureRunner = CaptureRunner config.Runner
         let config: Config = config.WithRunner captureRunner
 
         try Check.One (config, Expressions.eval<'a> expr) with ex ->
-            let expectedOption, actualOption  = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+            let actualOption, expectedOption  = Expressions.extractActualAndExpected expr captureRunner.Shrunk
             Core.failNow
             <| AssertifyResult.MakeResult (
                 "Check",
-                expression = (
-                    captureRunner.Shrunk
-                    |> Option.map (Expressions.simplifyExpression expr)
-                    |> Option.defaultValue (expr.Decompile ())
-                ),
+                expression = Expressions.toReadableExpression captureRunner.Shrunk expr,
+                expected = expectedOption,
+                actual = actualOption,
+                ?originalInputs = captureRunner.Original,
+                ?shrunkInputs = captureRunner.Shrunk,
+                errorMessage = ex.Message,
+                stacktrace = ex.StackTrace
+            )
+
+
+    static member CheckBoolean (expr: Expr<'a -> bool list>, ?config: Config): unit =
+        let config: Config = defaultArg config defaultConfig
+        let captureRunner: CaptureRunner = CaptureRunner config.Runner
+        let config: Config = config.WithRunner captureRunner
+
+        try Check.One (config, fun (x: 'a) -> (expr @@ [ x ]) |> Expressions.eval<bool list> |> List.forall id) with ex ->
+            let actualOption, expectedOption = Expressions.extractActualAndExpected expr captureRunner.Shrunk
+
+            Core.failNow
+            <| AssertifyResult.MakeResult (
+                "CheckTest",
+                expression = Expressions.toReadableExpression captureRunner.Shrunk expr,
                 expected = expectedOption,
                 actual = actualOption,
                 ?originalInputs = captureRunner.Original,
@@ -259,6 +270,8 @@ module Operators =
     /// <summary>TODO</summary>
     let inline (|?>) (expr: Expr) (test: Expr -> 'Testable): unit =
         Checkify.CheckTest (expr, test)
+
+
 
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

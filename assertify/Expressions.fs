@@ -17,21 +17,18 @@ open Swensen.Unquote
 /// <summary>TODO</summary>
 module Expressions =
     /// <summary>TODO</summary>
-    let rec applyArgs (args: 'a list) (expr: Expr): Expr =
+    let rec apply (args: obj list) (expr: Expr): Expr =
         match args, expr with
-        | arg :: rest, Patterns.Lambda (v, body) ->
-            let replaced =
-                body.Substitute (fun (x: Var) -> if x = v then Some (Expr.Value (arg, v.Type)) else None)
-            applyArgs rest replaced
         | [], _ -> expr
-        | _ -> failwith "Too many arguments applied."
+        | h :: t, Patterns.Lambda (var, body) ->
+            body.Substitute (fun (x: Var) -> if x = var then Some (Expr.Value (h, var.Type)) else None)
+            |> apply t
+        | _ -> failwith $"Too many arguments applied. Number of remaining arguments: %d{args.Length}, Expr: %s{expr.Decompile ()}"
 
 
-    let apply (arg: 'a) (expr: Expr): Expr =
-        match expr with
-        | Patterns.Lambda (v, body) ->
-            body.Substitute (fun (x: Var) -> if x = v then Some (Expr.Value (arg, v.Type)) else None)
-        | _ -> failwith "Too many arguments applied."
+    /// <summary>TODO</summary>
+    let applySingle (arg: obj) (expr: Expr): Expr =
+        expr |> apply [ arg ]
 
 
     /// <summary>TODO</summary>
@@ -41,12 +38,10 @@ module Expressions =
 
     /// <summary>TODO</summary>
     let simplifyExpression (expr: Expr) (args: obj list): string =
-        match expr |> applyArgs args with
+        match expr |> apply args with
         | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-            let rightSide = "" // TODO: Fix <null> for option types that are 'None'
-            printfn $"left: {left.Decompile()}"
-            printfn $"right: {right.Decompile()}"
-            $"%s{left.Decompile ()} = %A{right.Eval ()}"
+            let rightSide: string = try right.Eval().ToString() with _ -> try right.Decompile () with _ -> "<non-evaluatable>"
+            $"%s{left.Decompile ()} = %s{rightSide}"
         | _ -> expr.Decompile ()
 
 
@@ -56,21 +51,26 @@ module Expressions =
             match expr with
             | Patterns.Let (v, value, body) -> substituteVar v (simplify value) body |> simplify
             | Patterns.TupleGet (Patterns.Value (tupleObj, tupleTy), idx) ->
-                let values =
-                    Microsoft.FSharp.Reflection.FSharpValue.GetTupleFields tupleObj
-                let elemType: System.Type =
-                    (Microsoft.FSharp.Reflection.FSharpType.GetTupleElements tupleTy)[idx]
+                let values: objnull array = Microsoft.FSharp.Reflection.FSharpValue.GetTupleFields tupleObj
+                let elemType: System.Type = (Microsoft.FSharp.Reflection.FSharpType.GetTupleElements tupleTy)[idx]
                 Expr.Value (values[idx], elemType)
             | ExprShape.ShapeVar v -> Expr.Var v
             | ExprShape.ShapeLambda (v, body) -> Expr.Lambda (v, simplify body)
             | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map simplify)
-        and substituteVar (v: Var) (replacement: Expr) (body: Expr): Expr =
+        and substituteVar (var: Var) (replacement: Expr) (body: Expr): Expr =
             match body with
-            | ExprShape.ShapeVar x when x = v -> replacement
-            | ExprShape.ShapeLambda (var, b) -> Expr.Lambda (var, substituteVar v replacement b)
-            | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map (substituteVar v replacement))
+            | ExprShape.ShapeVar v when obj.ReferenceEquals(v, var) -> replacement
+            | ExprShape.ShapeLambda (v, _) as e when obj.ReferenceEquals (v, var) -> e
+            | ExprShape.ShapeLambda (v, b) -> Expr.Lambda (v, substituteVar var replacement b)
+            | ExprShape.ShapeCombination (shape, args) -> ExprShape.RebuildShapeCombination (shape, args |> List.map (substituteVar var replacement))
             | _ -> body
         simplify expr
+
+
+    let toReadableExpression (shrunkOptions: obj list option) (expr: Expr): string =
+        shrunkOptions
+        |> Option.map (simplifyExpression expr)
+        |> Option.defaultValue (expr.Decompile ())
 
 
     let rec extractList (expr: Expr): Expr list =
@@ -81,46 +81,56 @@ module Expressions =
 
         let rec extracter (expr: Expr): Expr list =
             match helper expr with
-            | Patterns.NewUnionCase (uci, [head; tail]) when uci.Name = "Cons" ->
-                head :: extracter tail
-            | Patterns.NewUnionCase (uci, []) when uci.Name = "Empty" ->
-                []
-            | _ ->
-                failwithf $"Not a list: %A{expr}"
+            | Patterns.NewUnionCase (uci, [head; tail]) when uci.Name = "Cons" -> head :: extracter tail
+            | Patterns.NewUnionCase (uci, []) when uci.Name = "Empty" -> []
+            | _ -> failwith $"Not a list: %A{expr}"
 
         match expr with
             | Patterns.Lambda (_, body) ->
                 match helper body with
-                | Patterns.NewUnionCase _ as listExpr ->
-                    extracter listExpr
+                | Patterns.NewUnionCase _ as listExpr -> extracter listExpr
                 | s -> failwith $"Not a list: {s.Decompile ()}"
             | s -> failwith $"Not a lambda: {s.Decompile()}"
 
 
     let evalAndApply<'a> (args: obj list) (expr: Expr): 'a =
         expr
-        |> applyArgs args
+        |> apply args
         |> eval<'a>
+
+
+    let evalActual (expr: Expr): string =
+        // TODO: <null> when option type 'None'
+        try expr.Eval().ToString() with _ ->
+            // try expr.Decompile () with _ ->
+                "<non-evaluatable> (Is the method still implemented with 'failwith \"TODO\"'?)"
+
+
+    let evalExpected (expr: Expr): string =
+        // TODO: <null> when option type 'None'
+        try expr.Eval().ToString() with _ ->
+            // try expr.Decompile () with _ ->
+                "<non-evaluatable> (Try to contact: Me)"
 
 
     let extractActualAndExpected (expr: Expr) (shrunkResults: obj list option): string option * string option =
         match shrunkResults with
             | Some shrunk ->
-                match applyArgs (shrunk |> List.rev) expr with
+                match expr |> apply shrunk with
                 | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
-                    let expected' = // TODO: Fix <null> for option types that are 'None'
-                        try left.Eval().ToString() with
-                        | _ -> "Cannot be evaluated. Possible reason: Method still implemented with 'failwith \"TODO\"'"
-                    let actual' = // TODO: Fix <null> for option types that are 'None'
-                        try right.Eval().ToString() with
-                        | _ -> "Cannot be evaluated"
-                    Some expected', Some actual'
+                    Some (evalActual left), Some (evalExpected right)
                 | _ -> None, None
             | _ -> None, None
 
 
+    let deconstructEquality (expr: Expr): (Expr * Expr) option =
+        match expr with
+        | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) -> Some (left, right)
+        | _ -> None
+
+
 module Operators =
-    let inline (@@) (expr: Expr) arg: Expr =
+    let inline (@@) (expr: Expr) (arg: obj list): Expr =
         expr |> Expressions.apply arg
 
 

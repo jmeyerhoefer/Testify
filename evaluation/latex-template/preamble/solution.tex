@@ -1,0 +1,152 @@
+% !TEX root = ../../sheet.tex
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SOLUTION ENVIRONMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% solution color
+\definecolor{solutionColor}{HTML}{0000ff}
+
+
+% solution environment
+\ifthenelse{\boolean{lsg}}%
+{ % if lsg = true then tcolorbox
+	\newtcblisting{solution}%
+	{
+		notitle,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		rightrule = 18pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 2pt,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\ifdim\tcbtextheight<1cm
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lsg};
+			\else
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lösung};
+			\fi
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+	
+	
+	% solution with comment environment
+	\newtcblisting{solutionwithcomment}[1]%
+	{
+		notitle,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		boxrule = 1pt,
+		rightrule = 18pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing and comment = true,
+		comment = #1,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 2pt,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\ifdim\tcbtextheight<1cm
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lsg};
+			\else
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lösung};
+			\fi
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		}
+	}
+
+
+    % fsharp solution input listing
+	\newtcbinputlisting{\solutioninput}[2]%
+	{
+		notitle,
+		colframe = solutionColor,
+		colback = white,
+		left = 5mm,
+		right = 2pt,
+		boxrule = 1pt,
+		rightrule = 18pt,
+		top = 1mm,
+		bottom = 1mm,
+		enhanced,
+        listing only = true,
+		listing file = #2,
+		listing engine = minted,
+		minted style = colorful,
+		minted language = fsharp,
+		minted options = {
+			escapeinside = \#\%,
+			fontsize = \small,
+			linenos = true,
+			numbersep = 1mm,
+			xleftmargin = 2pt,
+			breaklines = true,
+			breaksymbolleft = \tiny\ensuremath{\textcolor{black}{\hookrightarrow}},
+			breakbytokenanywhere = true,
+			stripnl = true,
+			tabsize = 4,
+			autogobble = true
+		},
+		overlay = {
+			\ifdim\tcbtextheight<1cm
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lsg};
+			\else
+				\node[rotate=-90, anchor=center, inner sep=2mm, text=white] (title) at ([xshift=-9pt]frame.east) {\bfseries Lösung};
+			\fi
+			\begin{tcbclipinterior}
+				\fill[solutionColor!25] (frame.south west) rectangle ([xshift=5mm]frame.north west);
+			\end{tcbclipinterior}
+		},
+		minted options app = {#1}
+	}
+}{ % if lsg = false then empty environment
+	\NewEnviron{solution}{}{}
+	\NewEnviron{solutionwithcomment}{}{}
+	\newcommand\solutioninput[2]{}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% EOF %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

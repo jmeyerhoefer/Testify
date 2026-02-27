@@ -1,0 +1,78 @@
+\newcommand*\elide{\textup{[\,\dots]}}
+
+\definecolor{themecolor}{named}{blue}
+\newcommand{\leftsp}{0.3cm}
+\newtcolorbox{mycitation}[1][]
+{
+    enhanced,
+    colback=themecolor!10,
+    coltitle=black,
+    colbacktitle=themecolor!3,
+    arc=0pt,
+    frame empty,
+    overlay={%
+        \begin{scope}[shift={(interior.north west)}]
+            \filldraw [themecolor!60] (\leftsp,0.1cm) -- ++(-0.075cm,-0.15cm) -- ++(0,-0.06cm) -- ++(0.08cm,0) -- ++(0,0.06cm) -- ++(0.055cm,0.155cm) --cycle;
+            \filldraw [themecolor!60] ($(\leftsp,0.1cm)+(0.2cm,0)$) -- ++(-0.075cm,-0.15cm) -- ++(0,-0.06cm) -- ++(0.08cm,0) -- ++(0,0.06cm) -- ++(0.055cm,0.155cm) --cycle;
+        \end{scope}
+    },
+    #1
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\texttt{Microsoft.FSharp.Quotations}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{mycitation}[title={\fs{} Documentation: \href{https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/code-quotations}{Code Quotations}}]
+    \elide, a language feature that enables you to generate and work with \fs{} code expressions programmatically.
+    This feature lets you generate an abstract syntax tree that represents \fs{} code.
+    The abstract syntax tree can then be traversed and processed according to the needs of your application.
+    For example, you can use the tree to generate \fs{} code or generate code in some other language.
+\end{mycitation}
+Under the hood a code quotation is stored using the non-generic type \href{https://fsharp.github.io/fsharp-core-docs/reference/fsharp-quotations-fsharpexpr.html}{\fsharp|Expr|}.
+\begin{fsharpcodeshort}{Examplary Code Quotation}{}
+let f = <@ fun (a: int) (b: int) -> a + b @>
+\end{fsharpcodeshort}
+\noindent Taking a closer look at this code quotation \fsharp|<@ ... @>| or more precisely the code inbetween, reveals a couple of informations:
+\begin{itemize}[nosep]
+    \item This statement is an anonymous function or \textit{lambda} expression
+    \item It is semantically equivalent to \fsharp|fun (a: int) -> fun (b: int) -> a + b|
+    \item With that we can also see the explicit type of this lambda expression: \fsharp|int -> int -> int|
+\end{itemize}
+Synactically and semantically speaking this is exactly what we are dealing with:
+\begin{itemize}[nosep]
+    \item The given code quotation conveniently has the type\\
+        \fsharp|Expr<(int -> int -> int)>|
+    \item Printing it gives us:\\
+        \fsharp{Lambda (a, Lambda (b, Call (None, op_Addition, [a, b])))}
+    \item Which looks exactly like what we had above:
+        \begin{itemize}[nosep]
+            \item \fsharp{Lambda (a, ...)}: Lambda expression with input parameter \texttt{a}
+            \item \fsharp{Lambda (b, ...)}: Lambda expression with input parameter \texttt{b}
+            \item \fsharp{Call (None, op_Addition, [a, b])}: Method call of \texttt{op\_Addition} with input parameters \texttt{a} and \texttt{b}
+        \end{itemize}
+\end{itemize}
+
+\noindent With this language feature we can not only execute code, but also analyze and even manipulate it before doing so.
+
+The Swensen.Unquote extends these functionalities.
+\begin{itemize}
+    \item \texttt{decompile}: To retrieve the code inbetween \texttt{<@} and \texttt{@>}
+    \item \texttt{reduce}: To perform a reduction according to yet unknown rules
+    \item \texttt{reduceFully}: Return a list of all reductions
+    \item \texttt{eval}: Evaluate (last reduction = evaluation)
+    \item \texttt{test}: test an expression
+    \item \texttt{unquote}: return an unquoted expression (what is that? TODO)
+\end{itemize}
+
+
+
+
+The initial idea was to execute tests without losing the information of the explicit code that was executed.
+Meaning the name of the tested method, the input variables, a potential expected result and more.
+Often error messages show the source of failure and not the executed code. Therefore the method called within the executed test might be hidden somewhere in the stacktrace.
+So you have to screen the stacktrace for files that are in the project and are not files under the hood to see the source of failure and what line of code caused it in the test file.
+
+From this POV the approach was to extract the most crucial information and display it with a clear format.

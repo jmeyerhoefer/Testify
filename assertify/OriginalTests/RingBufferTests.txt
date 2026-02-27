@@ -138,8 +138,8 @@ type Tests() =
     [<TestMethod>] [<Timeout 1000>]
     member this.``b) Beispiel 1`` (): unit =
         let ex = ex1()
-        try RingBuffer.get ex |> ignore; Assert.Fail("Keine RingEmpty Ausnahme geworfen.") with
-        | RingEmpty -> ()
+        try RingBuffer.get ex |> ignore; Assert.Fail("Keine BufferEmpty Ausnahme geworfen.") with
+        | BufferEmpty -> ()
         Assert.AreEqual<RingBuffer<int>>(ex1(), ex)
 
     [<TestMethod>] [<Timeout 1000>]
@@ -162,7 +162,7 @@ type Tests() =
             Assert.AreEqual<int64>(!expectedReadPos, !ex.readPos, "readPos stimmt nicht")
             Assert.AreEqual<int64>(!count, !ex.size, "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden.")
         try RingBuffer.get ex |> ignore; Assert.Fail("Ringpuffer sollte leer sein; keine Exception geworfen.") with
-        | RingEmpty -> ()
+        | BufferEmpty -> ()
 
     [<TestMethod>] [<Timeout 10000>]
     member this.``b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
@@ -175,10 +175,10 @@ type Tests() =
                   Assert.AreEqual<int64>(ar.[idx], e, "get sollte Array Element an Stelle "+(string idx)+" ausgeben.")
                   Assert.AreEqual<int64>(sizeVorher-1, !rb.size, "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden.")
                 with
-                | RingEmpty -> Assert.AreEqual<int64>(ar.Length, idx, "get liefert None obwohl noch Elemente vorhanden sind.")
+                | BufferEmpty -> Assert.AreEqual<int64>(ar.Length, idx, "get liefert None obwohl noch Elemente vorhanden sind.")
                 if idx < ar.Length then help (idx + 1) else
                   try RingBuffer.get rb |> ignore; Assert.Fail("Ringpuffer gibt Elemente zurück, obwohl None erwartet wird.") with
-                  | RingEmpty -> ()
+                  | BufferEmpty -> ()
             help 0
         )
 

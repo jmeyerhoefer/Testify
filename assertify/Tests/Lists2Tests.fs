@@ -39,7 +39,7 @@ type ArbMod =
 
 [<TestClass>]
 type Lists2Tests () =
-    let config = DefaultConfig.WithArbitrary [typeof<ArbMod>]
+    let config = defaultConfig.WithArbitrary [typeof<ArbMod>]
     // a)
 
     [<TestMethod; Timeout 1000>]

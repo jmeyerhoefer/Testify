@@ -32,7 +32,7 @@ type ZahlenTests () =
         Checkify.Check (
             <@ fun (x: Nat) (y: Nat) (z: Nat) -> Student.Zahlen.inOrder x y z = Solution.Zahlen.inOrder x y z @>,
             // <@ fun (x: Nat) (y: Nat) (z: Nat) -> Student.Zahlen.inOrder x y z = (x <= y && y <= z) @>,
-            DefaultConfig.WithEndSize 10000
+            defaultConfig.WithEndSize 10000
         )
 
     // ------------------------------------------------------------------------
@@ -63,7 +63,7 @@ type ZahlenTests () =
             |> List.item 1
         Checkify.Check (
             <@ fun (x: Nat) (y: Nat) (z: Nat) -> Student.Zahlen.median3 x y z = solution x y z @>,
-            DefaultConfig.WithEndSize 10000
+            defaultConfig.WithEndSize 10000
         )
 
     // ------------------------------------------------------------------------

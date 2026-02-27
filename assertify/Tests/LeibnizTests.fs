@@ -27,14 +27,14 @@ type LeibnizTests () =
                 let n = n + 1N // ensure > 0N so as not to try to take the log of 0
                 let m = Student.Leibniz.log2 n
                 2N ** m <= n && n < 2N ** (m + 1N) @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     [<TestMethod; Timeout 5000>]
     member _.``a) log2 Zufallstest (actual = expected)`` (): unit =
         Checkify.Check (
             <@ fun (n: Nat) -> n = 0N || Student.Leibniz.log2 n = Solution.Leibniz.log2 n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -59,6 +59,6 @@ type LeibnizTests () =
             |> Seq.forall (fun (a, b) -> a <= b)
         Checkify.Check (
             <@ fun (n: Nat) -> Student.Leibniz.sortedDigits n = solution n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 

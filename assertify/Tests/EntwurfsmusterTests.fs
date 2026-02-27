@@ -22,7 +22,7 @@ type EntwurfsmusterTests () =
         let solution (x: Nat): Nat = [ 1 .. int x ] |> List.sum |> Nat.Make
         Checkify.Check (
             <@ fun (x: Nat) -> Student.Entwurfsmuster.add x = solution x @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -49,7 +49,7 @@ type EntwurfsmusterTests () =
     member _.``c) mod5 Zufallstest`` (): unit =
         Checkify.Check (
             <@ fun (n: Nat) -> Student.Entwurfsmuster.mod5 n = n % 5N @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )
 
     // ------------------------------------------------------------------------
@@ -66,7 +66,7 @@ type EntwurfsmusterTests () =
     member _.``b) mult42 Zufallstest`` (): unit =
         Checkify.Check (
             <@ fun (n: Nat) -> Student.Entwurfsmuster.mult42 n = n * 42N @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
     )
 
     // ------------------------------------------------------------------------
@@ -91,5 +91,5 @@ type EntwurfsmusterTests () =
             |> Nat.Make
         Checkify.Check (
             <@ fun (n: Nat) -> Student.Entwurfsmuster.count5 n = solution n @>,
-            DefaultConfig.WithEndSize 1000
+            defaultConfig.WithEndSize 1000
         )

@@ -52,5 +52,5 @@ type RegExpTests () =
                 let inputStr = toString "" input
                 let m = Regex.Match (inputStr, "b*a")
                 m.Success && m.Value = inputStr, Student.RegExp.accept input @>,
-            DefaultConfig.WithEndSize 100
+            defaultConfig.WithEndSize 100
         )

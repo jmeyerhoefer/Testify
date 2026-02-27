@@ -10,7 +10,7 @@ let create<'a> (capacity: Int): RingBuffer<'a> =
 
 ////b)
 let get<'a> (r: RingBuffer<'a>): 'a =
-    failwith "TODO"
+    r.buffer[0]
 
 ////c)
 let put<'a> (r: RingBuffer<'a>) (elem: 'a): Unit =

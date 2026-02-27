@@ -10,10 +10,12 @@
         <Compile Include="Mini.fs" />
         <Compile Include="Types.fs" />
 	    <Compile Include="Implementation.fs" />
+	    <Compile Include="Solution.fs" />
         <Compile Include="Tests.fs" />
         <Compile Include="Assertify.fs" />
         <Compile Include="AssertifyTests.fs" />
         <Compile Include="Program.fs" />
+        <Content Include="Sample.txt" />
     </ItemGroup>
 
     <ItemGroup>

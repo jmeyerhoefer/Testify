@@ -7,6 +7,7 @@ namespace Assertify.Assertify
 
 
 open Assertify.Core
+open Assertify.Expressions
 open Assertify.History
 open Microsoft.FSharp.Quotations
 open Swensen.Unquote
@@ -103,17 +104,26 @@ type Assertify =
                     "Test",
                     ?message = message,
                     expression = expr.Decompile (),
-                    ?expected = expected, // TODO: why null?
-                    ?actual = actual // TODO: why null?
+                    expected = expected, // TODO: why null?
+                    actual = actual // TODO: why null?
                 )
         with ex ->
-            Core.failNow
-            <| AssertifyResult.MakeResult (
+            match expr with
+            | DerivedPatterns.SpecificCall <@ (=) @> (_, _, [ left; right ]) ->
+                Core.failNow
+                <| AssertifyResult.MakeResult (
+                    "Test",
+                    ?message = message,
+                    expression = expr.Decompile (),
+                    actual = Expressions.evalActual left,
+                    expected = right.Decompile (),
+                    stacktrace = ex.StackTrace
+                )
+            | _ -> Core.failNow <| AssertifyResult.MakeResult (
                 "Test",
-                ?message = message,
-                expression = expr.Decompile (),
-                stacktrace = ex.StackTrace
+                message = "Invalid expression pattern for Assertify.Test"
             )
+
 
 
     /// <summary>Tests an expression with a history and outputs failure information if the test fails.</summary>
@@ -135,8 +145,8 @@ type Assertify =
                     ?message = message,
                     expression = expr.Decompile (),
                     history = history,
-                    ?expected = expected,
-                    ?actual = actual
+                    expected = expected,
+                    actual = actual
                 )
         with ex ->
             Core.failNow

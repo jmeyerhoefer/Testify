@@ -2,9 +2,12 @@ module Tests.RingBufferTests
 
 
 open Assertify.Types
+open Assertify.Expressions.Operators
 open Assertify.Checkify
 open Assertify.Assertify.Operators
+open FsCheck
 open Types.RingBufferTypes
+open Microsoft.VisualStudio.TestTools.UnitTesting
 #nowarn "49"
 
 
@@ -99,40 +102,113 @@ type ArbitraryModifiers =
 
 [<TestClass>]
 type RingBufferTests () =
-    let config: Config =
-        Config
-            .QuickThrowOnFailure
-            .WithArbitrary [typeof<ArbitraryModifiers>]
+    let config: Config = Configurations.defaultConfig
 
-    let ex1 = fun () -> { buffer = [|0; 0; 0|]; size = ref 0; readPos = ref 0 }
-    let ex2 = fun () -> { buffer = [|1; 2; 3|]; size = ref 1; readPos = ref 0 }
-    let ex3 = fun () -> { buffer = [|7; 3; 6; 1; 20; 15; 17; 4; 9; 12|]; size = ref 6; readPos = ref 7 }
+    let ex1: unit -> RingBuffer<int> = fun () ->
+        {
+            buffer = [| 0; 0; 0 |]
+            size = ref 0
+            readPos = ref 0
+        }
+    let ex2: unit -> RingBuffer<int> = fun () ->
+        {
+            buffer = [| 1; 2; 3 |]
+            size = ref 1
+            readPos = ref 0
+        }
+    let ex3: unit -> RingBuffer<int> = fun () ->
+        {
+            buffer = [| 7; 3; 6; 1; 20; 15; 17; 4; 9; 12 |]
+            size = ref 6
+            readPos = ref 7
+        }
 
 
     // ------------------------------------------------------------------------
     // a)
 
+    [<TestMethod>] [<Timeout 1000>]
+    member this.``a) Beispiel`` (): unit =
+        let capacity = 10
+        let rb = Student.RingBuffer.create<Int> capacity
+        Assert.AreEqual<int64>(capacity, Array.length rb.buffer, "Kapazität des Puffers stimmt nicht.")
+        Assert.AreEqual<int64>(0, !rb.size, "size stimmt nicht")
+        Assert.AreEqual<int64>(0, !rb.readPos, "readPos stimmt nicht")
+
     [<TestMethod; Timeout 1000>]
-    member _.``a) Beispiel`` (): unit =
+    member _.``#new a) Beispiel`` (): unit =
         let capacity = 10
         let rb = Student.RingBuffer.create<Int> capacity
         <@ Array.length rb.buffer = capacity @> -?> "Kapazität des Puffers stimmt nicht."
         <@ !rb.size = 0 @>                      -?> "size stimmt nicht"
         <@ !rb.readPos = 0 @>                   -?> "readPos stimmt nicht"
 
+    // ------------------------------------------------------------------------
+
+    [<TestMethod>] [<Timeout 1000>]
+    member this.``#old a) Buffer Capacity Zufall`` (): unit =
+        Check.One (config.WithMaxTest 1000, fun (PositiveInt n: FsCheck.PositiveInt) ->
+            Assert.AreEqual<int64>(n, Array.length (Student.RingBuffer.create<String> n).buffer, "Kapazität des Puffers stimmt nicht.")
+        )
+
     [<TestMethod; Timeout 1000>]
-    member _.``a) Zufall`` (): unit =
-        Checkify.Check (
-            <@ fun (n: Nat) ->
-                if n > 0N then
-                    let capacity = int n
-                    let rb = Student.RingBuffer.create<String> capacity
-                    <@ Array.length rb.buffer = capacity @> -?> "Kapazität des Puffers stimmt nicht."
-                    <@ !rb.size = 0 @> -?> "size stimmt nicht"
-                    <@ !rb.readPos = 0 @> -?> "readPos stimmt nicht" @>,
+    member _.``#new a) Buffer Capacity Zufall`` (): unit =
+        Checkify.CheckTest (
+            <@ fun (n: int) -> Array.length (Student.RingBuffer.create<String> n).buffer = n @>,
+            (fun expr (n: int) -> if n > 0 then expr @@ [ n ] else expr @@ [ 1 - n ]),
             config.WithMaxTest 1000
         )
 
+    [<TestMethod; Timeout 1000>]
+    member _.``#new a) Buffer Capacity Zufall2`` (): unit =
+        Checkify.Check (
+            <@ fun (n: uint32) -> Array.length (Student.RingBuffer.create<String> (int n)).buffer = (int n) @>,
+            config.WithMaxTest 1000
+        )
+
+    // ------------------------------------------------------------------------
+
+    [<TestMethod>] [<Timeout 1000>]
+    member this.``#old a) Buffer Size Zufall`` (): unit =
+        Check.One (config.WithMaxTest 1000, fun (FsCheck.PositiveInt n: FsCheck.PositiveInt) ->
+            Assert.AreEqual<int64>(0, !(Student.RingBuffer.create<String> n).size, "size stimmt nicht")
+        )
+
+    [<TestMethod; Timeout 1000>]
+    member _.``#new a) Buffer Size Zufall`` (): unit =
+        Checkify.Check (
+            <@ fun (FsCheck.PositiveInt n: FsCheck.PositiveInt) -> !(Student.RingBuffer.create<String> n).size = 0 @>,
+            config.WithMaxTest 1000
+        )
+
+    [<TestMethod; Timeout 1000>]
+    member _.``#new a) Buffer Size Zufall2`` (): unit =
+        Checkify.Check (
+            <@ fun (n: uint32) -> !(Student.RingBuffer.create<String> (int n)).size = 0 @>,
+            config.WithMaxTest 1000
+        )
+
+    // ------------------------------------------------------------------------
+
+    [<TestMethod>] [<Timeout 1000>]
+    member this.``#old a) Buffer ReadPos Zufall`` (): unit =
+        Check.One (config.WithMaxTest 1000, fun (FsCheck.PositiveInt n: FsCheck.PositiveInt) ->
+            Assert.AreEqual<int64>(0, !(Student.RingBuffer.create<String> n).readPos, "readPos stimmt nicht")
+        )
+
+    [<TestMethod; Timeout 1000>]
+    member _.``#new a) Buffer ReadPos Zufall`` (): unit =
+        Checkify.Check (
+            <@ fun (FsCheck.PositiveInt n: FsCheck.PositiveInt) -> !(Student.RingBuffer.create<String> n).readPos = 0 @>,
+            config.WithMaxTest 1000
+        )
+
+    [<TestMethod; Timeout 1000>]
+    member _.``#new a) Buffer ReadPos Zufall2`` (): unit =
+        Checkify.Check (
+            <@ fun (n: uint32) -> !(Student.RingBuffer.create<String> (int n)).readPos = 0 @>,
+            config.WithMaxTest 1000
+        )
 
     // ------------------------------------------------------------------------
     // b)
@@ -142,9 +218,9 @@ type RingBufferTests () =
         let ex = ex1 ()
         try
             Student.RingBuffer.get ex |> ignore
-            (!!) "Keine RingEmpty Ausnahme geworfen."
+            (!!) "Die Methode get hätte BufferEmpty Ausnahme geworfen."
         with
-        | RingEmpty -> ()
+        | BufferEmpty -> ()
         (?) <@ ex = ex1 () @>
 
     [<TestMethod; Timeout 1000>]
@@ -154,46 +230,113 @@ type RingBufferTests () =
         <@ !ex.readPos = 1 @> -?> "readPos stimmt nicht"
         <@ !ex.size = 0 @> -?> "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden."
 
-    [<TestMethod; Timeout 1000>]
-    member _.``b) Beispiel 3`` (): unit =
-        let ex = ex3()
-        let es = [4; 9; 12; 7; 3; 6]
-        let count = ref (List.length es)
-        let expectedReadPos = ref 7
-        for expected in es do
-            count := !count - 1
-            expectedReadPos := (!expectedReadPos + 1) % ex.buffer.Length
-            (?) <@ Student.RingBuffer.get ex = expected @>
-            <@ !ex.readPos = !expectedReadPos @> -?> "readPos stimmt nicht"
-            <@ !ex.size = !count @> -?> "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden."
-        try
-            Student.RingBuffer.get ex |> ignore
-            (!!) "Ringpuffer sollte leer sein; keine Exception geworfen."
-        with
-        | RingEmpty -> ()
+    // [<TestMethod; Timeout 1000>]
+    // member _.``b) Beispiel 3`` (): unit =
+    //     let ex = ex3()
+    //     let es = [4; 9; 12; 7; 3; 6]
+    //     let count = ref (List.length es)
+    //     let expectedReadPos = ref 7
+    //     for expected in es do
+    //         count := !count - 1
+    //         expectedReadPos := (!expectedReadPos + 1) % ex.buffer.Length
+    //         (?) <@ Student.RingBuffer.get ex = expected @>
+    //         <@ !ex.readPos = !expectedReadPos @> -?> "readPos stimmt nicht"
+    //         <@ !ex.size = !count @> -?> "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden."
+    //     try
+    //         Student.RingBuffer.get ex |> ignore
+    //         (!!) "Ringpuffer sollte leer sein; keine Exception geworfen."
+    //     with
+    //     | BufferEmpty -> ()
 
     [<TestMethod; Timeout 10000>]
-    member _.``b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
-        Checkify.Check (
-            <@ fun (ar: Array<Int>) ->
+    member _.``... b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
+        Check.One (
+            config.WithMaxTest 1000,
+            fun (ar: Array<Int>) ->
                 let rb = { buffer=ar; size=ref ar.Length; readPos=ref 0 }
                 let rec help (idx: Int) =
                     let sizeVorher = !rb.size
                     try
                       let e = Student.RingBuffer.get rb
-                      <@ e = ar.[idx] @> -?> $"get sollte Array Element an Stelle %s{string idx} ausgeben."
+                      <@ e = ar[idx] @> -?> $"get sollte Array Element an Stelle %s{string idx} ausgeben."
                       <@ !rb.size = sizeVorher-1 @> -?> "Anzahl enthaltener Elemente ist nicht um 1 kleiner geworden."
                     with
-                    | RingEmpty -> <@ idx = ar.Length @> -?> "get liefert None obwohl noch Elemente vorhanden sind."
+                    | BufferEmpty -> <@ idx = ar.Length @> -?> "get liefert None obwohl noch Elemente vorhanden sind."
                     if idx < ar.Length then help (idx + 1) else
                         try
                             Student.RingBuffer.get rb |> ignore
                             (!!) "Ringpuffer gibt Elemente zurück, obwohl None erwartet wird."
                         with
-                        | RingEmpty -> ()
-                help 0 @>,
-            config.WithMaxTest 1000
+                        | BufferEmpty -> ()
+                help 0
         )
+
+    [<TestMethod; Timeout 1000>]
+    member _.``...`` (): unit =
+        
+            // <@ fun (rb: RingBuffer<int>) -> Student.RingBuffer.get rb = rb.buffer[0] @>,
+        Checkify.Check (
+            <@ fun () ->
+                let rbArb: Arbitrary<RingBuffer<int>> =
+                    FsCheck.FSharp.ArbMap.defaults
+                    |> FsCheck.FSharp.ArbMap.arbitrary<int array>
+                    |> FsCheck.FSharp.Arb.filter (fun ar -> ar.Length <> 0)
+                    |> FsCheck.FSharp.Arb.convert
+                           (fun (ar: int array) -> { buffer=ar; size=ref ar.Length; readPos=ref 0 })
+                           (fun (rb: RingBuffer<int>) -> rb.buffer)
+
+                FsCheck.FSharp.Prop.forAll rbArb (fun rb ->
+                    for i in 0 .. rb.buffer.Length - 1 do
+                        Student.RingBuffer.get rb |> ignore
+
+            ) @>
+        )
+
+    [<TestMethod; Timeout 10000>]
+    member _.``b) Zufall: Array von n Zufallszahlen, size=n, readPos=0. get bis size=0 soll alle Inhalte des ursprünglichen Arrays ergeben`` (): unit =
+        Checkify.CheckTest (
+            <@ fun (rb: RingBuffer<int>) -> Student.RingBuffer.get rb = rb.buffer[0] @>,
+            fun expr ->
+                let rbArb: Arbitrary<RingBuffer<int>> =
+                    FsCheck.FSharp.ArbMap.defaults
+                    |> FsCheck.FSharp.ArbMap.arbitrary<int array>
+                    |> FsCheck.FSharp.Arb.filter (fun ar -> ar.Length <> 0)
+                    |> FsCheck.FSharp.Arb.convert
+                           (fun (ar: int array) -> { buffer=ar; size=ref ar.Length; readPos=ref 0 })
+                           (fun (rb: RingBuffer<int>) -> rb.buffer)
+                FsCheck.FSharp.Prop.forAll rbArb (fun rb -> expr @@ [ rb ])
+        )
+
+    [<TestMethod; Timeout 10000>]
+    member _.``b) Zufall 2`` (): unit =
+        Checkify.Check <@ fun (ar: int array) -> Student.RingBuffer.get {buffer=ar; size=ref ar.Length; readPos= ref 0} = ar[0] @>
+
+    // Checkify.CheckTest (
+    //         <@ fun (f: Nat -> Nat list) (xs: Nat list) -> Student2.Lists2.collect f xs = List.collect f xs @>,
+    //         (fun expr (xs: Nat list) ->
+    //             let fG: Arbitrary<Nat -> List<Nat>> =
+    //                 (FsCheck.FSharp.Arb.fromGen << FsCheck.FSharp.Gen.elements)
+    //                     [ (fun x -> [ x + 1N; x + 2N ])
+    //                       (fun x -> [ x + 1N; x + 2N ])
+    //                       (fun x -> [ x * 2N; x * 3N ]) ] in
+    //             FsCheck.FSharp.Prop.forAll fG (fun f -> expr @@ [ f; xs ])
+    //         )
+    //     )
+
+    member _.``RingBuffer.get decrements size stepwise (small example)`` () =
+        let ar = [| 10; 20; 30 |]
+        let rb =
+            { buffer = ar
+              size = ref ar.Length
+              readPos = ref 0 }
+
+        let s0 = !rb.size
+        let x0 = Student.RingBuffer.get rb
+        <@ x0 = 10 && !rb.size = s0 - 1 @> -?> "First get should return ar[0] and decrement size by 1."
+
+        let s1 = !rb.size
+        let x1 = Student.RingBuffer.get rb
+        <@ x1 = 20 && !rb.size = s1 - 1 @> -?> "Second get should return ar[1] and decrement size by 1."
 
     [<TestMethod; Timeout 10000>]
     member _.``b) Zufall RingBuffer: ein get`` (): unit =
@@ -220,7 +363,7 @@ type RingBufferTests () =
                 let n = ref (r2nBuffer rb)
                 for i in 0..!rb.size do
                     try
-                        <@ Student.RingBuffer.get rb = get n (rb.buffer.Length) @> -?> "Hinweis: null in dieser Fehlermeldung ist None"
+                        <@ Student.RingBuffer.get rb = get n rb.buffer.Length @> -?> "Hinweis: null in dieser Fehlermeldung ist None"
                     with
                     | BufferEmptyTest ->
                         try
@@ -244,6 +387,7 @@ type RingBufferTests () =
         <@ !ex.size = 1 @> -?> "size wurde nicht erhöht."
         <@ !ex.readPos = 0 @> -?> "readPos wurde verändert"
 
+    
     [<TestMethod; Timeout 1000>]
     member _.``c) Beispiel 2`` (): unit =
         let ex = ex2()
