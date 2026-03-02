@@ -1,0 +1,125 @@
+\newcommand{\todo}[1]%
+{
+	\vspace{0.5em}\par\noindent
+	\begin{tcolorbox}%
+	[
+		% title
+		title = TODO,
+		fonttitle = \bfseries,
+		coltitle = white,
+		colbacktitle = blue,
+		center title,
+		% frame
+		colback = blue!20,
+		colframe = blue,
+		enhanced = true
+	]
+		\begin{minipage}[t]{\dimexpr\hsize-2\fboxsep-2\fboxrule-10pt\relax}
+			\ifx\empty#1\empty
+				Apparently there is something to do.
+			\else
+				#1
+			\fi
+		\end{minipage}
+	\end{tcolorbox}
+	\vspace{0.5em}\par\noindent
+}
+
+
+%===================================================================================================
+
+
+\newlist{todoenumerate}{enumerate}{1}
+\setlist[todoenumerate,1]{label = \textbf{(\arabic*)}}
+\newcommand{\todoitem}{\item}
+\newenvironment{todolist}%
+{%
+	\vspace{0.5em}\par\noindent
+	\begin{tcolorbox}%
+	[
+		% title
+		title = TODO,
+		fonttitle = \bfseries,
+		coltitle = white,
+		colbacktitle = blue,
+		center title,
+		% frame
+		colback = blue!20,
+		colframe = blue,
+		enhanced = true
+	]
+        \begin{todoenumerate}
+}%
+{%
+        \end{todoenumerate}
+    \end{tcolorbox}
+	\vspace{0.5em}\par\noindent
+}
+
+
+%===================================================================================================
+
+
+\tcbset {
+    base/.style={
+		enhanced,
+        title={#1},
+		attach boxed title to bottom*,
+        arc=0mm,
+        bottomtitle=0.5mm,
+        boxrule=0mm,
+        colbacktitle=black!10!white,
+        coltitle=black,
+        fonttitle=\sffamily,
+        left=2.5mm,
+        leftrule=1mm,
+        right=3.5mm,
+        toptitle=0.75mm,
+    }
+}
+
+\definecolor{brandblue}{rgb}{0.34, 0.7, 1}
+\newtcolorbox{mainbox}[1]{
+    colframe=brandblue,
+    base={#1}
+}
+
+
+%===================================================================================================
+
+
+
+\newtcolorbox{markerLine}[1][]{enhanced,
+	before skip balanced=2mm,after skip balanced=3mm,
+	boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+	colback=yellow!50,
+	colframe=yellow!20!black,
+	sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+	underlay={%
+	\path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[fill=yellow!50!black,draw=none]
+		(interior.south west)
+		rectangle node[white]{\fontfamily{ptm}\fontseries{b}\fontsize{5mm}{5mm}\selectfont!}
+		([xshift=4mm]interior.north west);
+	},
+	drop fuzzy shadow,#1
+}
+
+
+\newtcolorbox{marker}[1][]{enhanced,
+	before skip balanced=2mm,after skip balanced=3mm,
+	boxrule=0.4pt,left=5mm,right=2mm,top=1mm,bottom=1mm,
+	colback=yellow!50,
+	colframe=yellow!20!black,
+	sharp corners,rounded corners=southeast,arc is angular,arc=3mm,
+	underlay={%
+	\path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    \path[fill=yellow!50!black,draw=none]
+		(interior.south west)
+		rectangle node[white]{\fontfamily{ptm}\fontseries{b}\fontsize{10mm}{10mm}\selectfont!}
+		([xshift=4mm]interior.north west);
+	},
+	drop fuzzy shadow,#1
+}

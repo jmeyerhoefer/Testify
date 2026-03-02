@@ -1,0 +1,54 @@
+%===================================================================================================
+\section{Context and Assumptions} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \label{Context and Assumptions} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\begin{justify}
+	This thesis is situated in an introductory programming setting in which students solve small-to-medium programming exercises and receive automated feedback from compilation and testing.
+	The tasks are designed to be assessable automatically, and correctness is primarily determined through a combination of example-based unit tests (covering typical and edge cases) and,
+	where applicable, property-based tests (covering broader input spaces through generated test cases).
+
+	\skipM The problem analysis adopts the following context assumptions:
+
+	\skipS\begin{itemize}
+		\item \textbf{Novice audience:} The primary target group consists of first-semester students who have limited experience with debugging and limited familiarity with framework internals
+			(e.g., stack traces, reflection-based test runners, or property-based test shrinking).
+		\item \textbf{Feedback pipeline:} Students typically encounter feedback in two stages:
+			(i) compilation diagnostics when code does not type-check or parse, and
+			(ii) test failure output once code compiles and tests execute.
+		\item \textbf{Tooling baseline:} Tests are executed using established infrastructures (unit testing and property-based testing libraries).
+			The analysis treats these infrastructures as the baseline whose output is to be \emph{interpreted by students}, not as systems to be redesigned from scratch.
+		\item \textbf{Non-goals of this chapter:} This chapter does not attempt to redesign compiler diagnostics.
+			Instead, it focuses on the \emph{reporting problem} for test failures, while acknowledging that compiler errors remain a major part of the overall novice experience.
+	\end{itemize}
+
+	\skipS In addition, the analysis distinguishes between two kinds of information that appear in typical outputs:
+
+	\skipS\begin{itemize}
+		\item \textbf{Essential failure information} needed to understand \emph{what} failed (e.g., the failing expression or behaviour, and the expected vs.\ actual outcome).
+		\item \textbf{Auxiliary technical information} that can be useful for advanced debugging but often increases cognitive load for novices
+			(e.g., full stack traces, internal framework calls, runner configuration details, reflection invocation frames).
+	\end{itemize}
+
+	\skipS\textbf{Checkpoint (to fill with concrete course/tool details):}
+
+	\skipS\begin{itemize}
+		\item TODO: Specify the course/exercise setting (language version, IDE/editor setup, where students see output: console, CI/autograder log, IDE test explorer, etc.).
+		\item TODO: Summarise the types of tests used (example tests vs.\ random/property tests), including how failures are surfaced to students.
+		\item TODO: Clarify what students are allowed to modify (submission file only vs.\ tests visible/hidden), as this affects what output is actionable.
+	\end{itemize}
+\end{justify}
+
+
+%===============================================================================
+% TODO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+% TODO
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

@@ -1,0 +1,72 @@
+%===================================================================================================
+\section{Problem Statement and Objectives} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \label{Problem Statement and Objectives} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\begin{justify}
+    The primary problem addressed in this thesis is that, in introductory programming settings, the feedback produced by
+    common testing frameworks is often not presented in a form that is immediately interpretable for novice programmers.
+    In particular, failure reports frequently combine the core mismatch information (i.e., what was expected versus what occurred)
+    with framework-specific detail such as stack traces and internal method calls. As a consequence, beginners may struggle to
+    identify the relevant part of the output and translate it into concrete corrective actions in their own code.
+
+    \skipM From a technical perspective, this raises the question of how test feedback can be reformatted such that it is \textbf{(i)}
+    consistent and cognitively simple for first-semester students, while \textbf{(ii)} remaining compatible with established testing infrastructures.
+    This thesis therefore investigates the design and implementation of a lightweight assertion and reporting layer, \emph{Assertify},
+    which produces a compact and structured summary of test failures.
+
+    \skipM The objectives of this thesis are as follows:
+
+    \skipS\begin{itemize}[nosep]
+        \item Analyse the structure and typical content of failing test output in beginner exercises,
+            with particular attention to which elements are essential for interpreting the failure.
+        \item Design and implement a custom test/assertion library that enforces a consistent reporting scheme
+            (e.g., a compact summary of the \texttt{tested expression} and \texttt{expected} as well as \texttt{actual} value) on top of existing frameworks.
+        \item Evaluate the resulting artifact with respect to the derived requirements and reflect on remaining limitations,
+            thereby identifying technically feasible extensions and future improvements.
+    \end{itemize}
+
+    \skipS To achieve these objectives, the thesis presents \emph{Assertify} as a wrapper around existing mechanisms for unit and
+    property-based testing and discusses how the reporting format can be generalised, extended, and integrated into introductory teaching workflows.
+\end{justify}
+
+
+%===============================================================================
+% TODO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\begin{comment}
+    The primary problem addressed in this thesis is that, in introductory programming settings, the feedback produced by common testing frameworks is often not presented
+    in a form that is immediately interpretable for novice programmers. In particular, test failures frequently mix the core mismatch information
+    (what was expected versus what occurred) with framework-specific detail such as stack traces and internal method calls.
+    As a consequence, beginners may struggle to identify the relevant part of the output and to translate it into concrete corrective actions in their own code.
+
+    \skipM From a technical perspective, this raises the question of how test feedback can be reformatted in a way that is
+    both \textbf{(i)} more consistent and cognitively simpler for first-semester students and \textbf{(ii)} still compatible with established testing infrastructures.
+    This thesis therefore focuses on the design and implementation of a lightweight assertion and reporting layer, \emph{Assertify}, that produces a compact, structured summary of test failures.
+    The objectives of this thesis are as follows:
+
+    \skipS\begin{itemize}[nosep]
+        \item Analyse the structure and typical content of failing test output in beginner exercises, with a focus on which parts are essential for interpreting the failure.
+        \item Design and implement a custom test/assertion library that enforces a consistent reporting scheme (e.g., a compact \texttt{expected = actual} summary) on top of existing frameworks.
+        \item Reflect on design and implementation decisions by identifying current limitations of the library and outlining technically feasible extensions and future improvements.
+    \end{itemize}
+
+    \skipS To achieve these objectives, this thesis presents the implementation of \textit{Assertify} as a wrapper around existing mechanisms for unit and property-based testing,
+    and discusses how the reporting format can be further generalised, extended, and integrated into teaching workflows.
+\end{comment}
+
+
+%===============================================================================
+% TODO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+% TODO
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

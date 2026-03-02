@@ -1,19 +1,23 @@
 %===================================================================================================
 \chapter{Problem Analysis} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \label{Problem Analysis} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================
 
 
 \begin{justify}
-TODO
+    This chapter analyses why the feedback produced by compilers and common testing infrastructures is frequently difficult to use in introductory programming settings.
+    The focus is not on the correctness of the diagnostics themselves, but on how failure information is \emph{structured}, \emph{prioritised}, and \emph{presented} to learners.
+    Based on concrete examples from beginner exercises, the chapter identifies recurring shortcomings in existing output and derives design requirements for a novice-oriented reporting layer.
+    These requirements motivate the subsequent design and implementation decisions, in particular the use of a stable \emph{tested expression / expected / actual} summary as
+	the primary interface for understanding failures.
 \end{justify}
-
 
 %===============================================================================
 % CONTEXT %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
 
 
-\input{matter/main/problem-analysis/context.tex}
+\input{matter/main/problem-analysis/sections/context.tex}
 
 
 %===============================================================================
@@ -21,7 +25,7 @@ TODO
 %===============================================================================
 
 
-\input{matter/main/problem-analysis/observed-issues.tex}
+\input{matter/main/problem-analysis/sections/observed-issues.tex}
 
 
 %===============================================================================
@@ -29,7 +33,7 @@ TODO
 %===============================================================================
 
 
-\input{matter/main/problem-analysis/implications.tex}
+\input{matter/main/problem-analysis/sections/implications.tex}
 
 
 %===================================================================================================

@@ -1,0 +1,50 @@
+%===================================================================================================
+\section{Research Questions} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \label{Research Questions} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\begin{justify}
+    This thesis seeks to answer the following research questions:
+    \paragraph{RQ1 (Problem characterization)}
+        \label{RQ1 (Problem characterization)}
+        Which structural characteristics of compiler and testing-framework outputs make failing tests
+        difficult to interpret for novice programmers in introductory programming exercises?
+
+    \paragraph{RQ2 (Design requirements)}
+        \label{RQ2 (Design requirements)}
+        Which requirements can be derived for novice-oriented test feedback with
+        respect to consistency, cognitive load, and the actionability of failure information?
+
+    \paragraph{RQ3 (Reporting scheme)}
+        \label{RQ3 (Reporting scheme)}
+        How can a uniform \emph{tested expression/expected/actual} reporting scheme be defined
+        such that it remains applicable across different kinds of tests (example-based unit tests and property-based tests)?
+
+    \paragraph{RQ4 (Technical feasibility)}
+        \label{RQ4 (Technical feasibility)}
+        How can this reporting scheme be implemented in \fs{} using Quotations and Unquote for expression capture and evaluation,
+        while remaining compatible with existing tooling through wrappers around \texttt{Microsoft.\\VisualStudio.TestTools.UnitTesting} and \texttt{FsCheck}?
+
+    \paragraph{RQ5 (Results and discussion)}
+        \label{RQ5 (Results and discussion)}
+        To what extent does the implemented artifact (\emph{Assertify} \& \emph{Checkify}) satisfy the derived requirements in practice,
+        and what limitations and trade-offs emerge from the wrapper-based approach with respect to expression coverage,
+        supported assertion forms, formatting constraints, and integration boundaries?
+
+    \skipM By addressing these questions, this thesis positions its contribution as the design and implementation of a test feedback layer that simplifies and
+    standardises failure reporting for novice programmers, and as a critical reflection on how such a library can be extended and integrated into teaching contexts.
+\end{justify}
+
+
+%===============================================================================
+% TODO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+% TODO
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

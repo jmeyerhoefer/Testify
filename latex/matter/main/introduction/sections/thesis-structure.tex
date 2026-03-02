@@ -1,0 +1,97 @@
+%===================================================================================================
+\section{Thesis Structure} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  \label{Thesis Structure} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+\begin{justify}
+    The structure of this thesis is as follows:
+
+    \paragraph{\nameref{Background and Related Work}}
+        reviews research on the difficulties novice programmers face when interpreting compiler and test diagnostics,
+        and summarises prior approaches that aim to improve the structure and usefulness of error feedback. Building on these perspectives,
+        the chapter motivates the thesis goal of presenting failures in a more consistent and
+        cognitively simple format.
+
+    \paragraph{\nameref{Problem Analysis}}
+        examines typical compiler and testing-framework outputs as they appear in beginner exercises and characterises their technical properties,
+        such as verbosity, inconsistency, and the mixing of essential information with framework internals. Based on these observations,
+        the chapter derives design requirements for improved test failure reporting, with a stable \emph{tested expression/expected/actual} summary as the primary user-facing interface.
+
+    \paragraph{\nameref{Assertify (and Checkify): Design and Implementation}}
+        presents the design rationale and implementation of \emph{Assertify} as a lightweight test and assertion library that wraps existing testing infrastructures.
+        It explains how a consistent \texttt{expected=actual} output format is produced, including the use of Quotations and Unquote for expression capture and evaluation,
+        as well as wrappers around \texttt{Microsoft.VisualStudio.TestTools.UnitTesting} and \texttt{FsCheck}.
+        The chapter also discusses implementation choices and their implications for extensibility.
+
+    \paragraph{\nameref{Results and Discussion}}
+        reports the results of the implemented approach and discusses them in relation to the derived requirements and research questions.
+        The discussion focuses primarily on technical and qualitative properties achieved by the artifact (e.g., output consistency, coverage of supported assertion forms,
+        and integration with unit and property-based testing workflows) and uses illustrative comparisons to baseline framework output to
+        highlight differences in interpretability, while separating concrete observations from generalisable claims.
+
+    \paragraph{\nameref{Conclusion}}
+        concludes the thesis by summarising the contributions and revisiting the research questions in light of the presented results.
+        It then outlines future work, including potential extensions within the wrapper-based approach (e.g., broader expression coverage, richer formatting layers,
+        and tighter tooling integration) and longer-term directions that would require more substantial redesign beyond wrappers.
+\end{justify}
+
+
+%===============================================================================
+% OLD STRUCTURE +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+%===============================================================================
+
+\begin{comment}
+    This thesis is structured as follows:
+    \begin{itemize}
+        \item \textbf{Chapter 2: Related Work}
+            \skipN Reviews research on novice programmers' difficulties with compiler and test diagnostics,
+            and summarises prior approaches to improving the structure and usefulness of error feedback.
+            The chapter establishes the conceptual motivation for presenting failures in a more consistent and cognitively simple format.
+
+        \item \textbf{Chapter 3: Analysis of Previous Semester Data}
+            \skipN Analyses artefacts from earlier course iterations (e.g., submissions, test outcomes, and common failure patterns)
+            to identify recurring sources of errors and to contextualise which kinds of feedback are most frequently encountered by students.
+            This chapter motivates the design goals of a novice-oriented reporting scheme by grounding the problem in a concrete teaching setting.
+
+        \item \textbf{Chapter 4: Problem Analysis}
+            \skipN Examines typical compiler and testing-framework outputs as they appear in beginner exercises and characterises their technical properties
+            (e.g., verbosity, inconsistency, mixing of essential information with framework internals). Based on this analysis, the chapter derives design requirements
+            for improved test failure reporting, focusing on a stable \emph{tested expression/expected/actual} summary as the primary interface.
+
+        \item \textbf{Chapter 5: Assertify - Design and Implementation}
+            \skipN Presents the design rationale and implementation of \emph{Assertify} as a lightweight test and assertion library that wraps existing testing infrastructures.
+            It explains how a consistent \texttt{expected=actual} output format is produced, including the use of Quotations and Unquote for expression capture and evaluation,
+            as well as wrappers around \texttt{UnitTesting} and \texttt{FsCheck}. The chapter also discusses implementation choices and their implications for extensibility.
+
+        \item \textbf{Chapter 6: Evaluation and Results}
+            \skipN Evaluates Assertify primarily from a technical and qualitative perspective, focusing on the properties the implementation achieves
+            (e.g., consistency of output, coverage of supported assertion forms, integration with unit and property-based testing workflows).
+            Where applicable, the chapter contrasts Assertify output with baseline framework output to illustrate differences in interpretability,
+            while clearly separating observations from generalisable claims.
+
+        \item \textbf{Chapter 7: Discussion and Future Work}
+            \skipN Reflects on the contribution and limitations of Assertify and outlines potential extensions.
+            This includes incremental improvements within the wrapper approach (e.g., broader expression coverage, richer formatting layers, IDE integration),
+            as well as a discussion of what would become possible with more extensive redesign efforts, such as implementing a dedicated testing framework from scratch instead of relying on wrappers.
+            The chapter concludes by positioning Assertify as a step toward more pedagogically aligned testing feedback and summarising open directions for future work.
+
+        \item \textbf{Chapter 8: Conclusion}
+            \skipN Summarises the thesis contributions, revisits the research questions, and highlights the main insights regarding the feasibility and
+            design space of novice-oriented test feedback.
+    \end{itemize}
+
+    \skipS This structure emphasizes the design and implementation contribution of the thesis and concludes with a focused discussion of technical possibilities and future extensions,
+    ranging from incremental refinements of the current library to more fundamental redesigns of testing feedback infrastructures.
+\end{comment}
+
+%===============================================================================
+% TODO +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+% TODO
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
