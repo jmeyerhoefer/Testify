@@ -60,28 +60,78 @@
 %===================================================================================================
 
 
-\tcbset {
-    base/.style={
-		enhanced,
-        title={#1},
-		attach boxed title to bottom*,
-        arc=0mm,
-        bottomtitle=0.5mm,
-        boxrule=0mm,
-        colbacktitle=black!10!white,
-        coltitle=black,
-        fonttitle=\sffamily,
-        left=2.5mm,
-        leftrule=1mm,
-        right=3.5mm,
-        toptitle=0.75mm,
-    }
+\newcounter{panelAsset}
+\newcounter{panelListing}
+\newcounter{panelTable}
+\newcounter{panelImage}
+
+
+\numberwithin{panelAsset}{chapter}
+\numberwithin{panelListing}{chapter}
+\numberwithin{panelTable}{chapter}
+\numberwithin{panelImage}{chapter}
+
+\def\panelCounter{panelAsset}
+\def\panelNumber{0}
+
+
+\def\panelColor{metroRed}
+\def\panelColorDefault{metroRed}
+\def\panelKindText{Asset}
+\newif\ifpanelColorExplicit
+
+
+\pgfkeys{
+	/panel/.is family,
+	/panel,
+	color/.code={ \def\panelColor{#1}\panelColorExplicittrue },
+	kind/.is choice,
+	kind/asset/.code  ={ \def\panelKindText{Asset}  \def\panelCounter{panelAsset}  \def\panelColorDefault{metroRed}    },
+	kind/listing/.code={ \def\panelKindText{Listing}\def\panelCounter{panelListing}\def\panelColorDefault{metroBlue}   },
+	kind/table/.code  ={ \def\panelKindText{Table}  \def\panelCounter{panelTable}  \def\panelColorDefault{metroOrange} },
+	kind/image/.code  ={ \def\panelKindText{Image}  \def\panelCounter{panelImage}  \def\panelColorDefault{metroYellow} },
+	asset/.style  ={ kind=asset },
+	listing/.style={ kind=listing },
+	table/.style  ={ kind=table },
+	image/.style  ={ kind=image },
 }
 
-\definecolor{brandblue}{rgb}{0.34, 0.7, 1}
-\newtcolorbox{mainbox}[1]{
-    colframe=brandblue,
-    base={#1}
+
+\tcbset{
+	panel setup/.code={
+		\panelColorExplicitfalse%
+		\pgfkeys{/panel/.cd, asset, #1}%
+		\ifpanelColorExplicit\else\let\panelColor\panelColorDefault\fi%
+		\refstepcounter{\panelCounter}%
+		% \edef\panelNumber{\number\value{\panelCounter}}%
+	},
+	panel base/.style={
+		enhanced,
+		attach boxed title to bottom*,
+		fonttitle=\sffamily,
+		colframe=\panelColor,
+		colback=black!5!white,
+		colbacktitle=\panelColor!25!white,
+		coltitle=black,
+		arc=0mm,
+		boxrule=0mm,
+		toprule=0mm,
+		leftrule=0mm,
+		rightrule=0mm,
+		toptitle=0.5mm,
+		bottomtitle=0.5mm,
+		top=1mm,
+		bottom=1mm,
+		left=2mm,
+		right=2mm,
+		borderline west = {1.5mm}{-3mm}{\panelColor},
+	}
+}
+
+\newtcolorbox{panel}[2][]{%
+	panel setup={#1},
+	panel base,
+	title={\strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2},
 }
 
 

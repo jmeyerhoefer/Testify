@@ -26,9 +26,11 @@
 
     \skipS\begin{markerLine}Test Test\end{markerLine}
 
-    \skipS\begin{mainbox}{Title Test}
-        \blindtext[2]
-    \end{mainbox}
+    \pagebreak
+    \begin{panel}[listing,color=metroGreen]{BOTH} \blindtext[1] \end{panel}
+    \begin{panel}[listing]{LISTING ONLY} \blindtext[1] \end{panel}
+    \begin{panel}[color=gray]{COLOR ONLY} \blindtext[1] \end{panel}
+    \begin{panel}[]{NOTHING} \blindtext[1] \end{panel}
 
     \skipM In \fs{}, multiple testing frameworks and assertion libraries are available. A commonly used option is
     \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting}{Microsoft.VisualStudio.TestTools.UnitTesting}. For example, using
