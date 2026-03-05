@@ -1,6 +1,82 @@
-\def\fs{\texttt{F\#}}
+%===================================================================================================
+\makeatletter % COMMANDS +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\ExplSyntaxOn
+\bool_new:N \l_fs_color_bool
+\bool_new:N \l_fs_bold_bool
+\bool_new:N \l_fs_italic_bool
+\bool_new:N \l_fs_short_bool
+
+\keys_define:nn { fs }
+    {
+        % color / bw
+        color  .bool_set:N = \l_fs_color_bool,
+        color  .initial:n  = true,
+        bw     .code:n     = \bool_set_false:N \l_fs_color_bool,
+
+        % weight / shape
+        bold   .bool_set:N = \l_fs_bold_bool,
+        bold   .initial:n  = false,
+        nobold .code:n     = \bool_set_false:N \l_fs_bold_bool,
+
+        italic .bool_set:N = \l_fs_italic_bool,
+        italic .initial:n  = false,
+        noitalic .code:n   = \bool_set_false:N \l_fs_italic_bool,
+
+        % short / long
+        short  .bool_set:N = \l_fs_short_bool,
+        short  .initial:n  = true, % default: F#
+        long   .code:n     = \bool_set_false:N \l_fs_short_bool,
+    }
+
+\NewDocumentCommand{\fs}{ O{} }{%
+    \group_begin:
+        \keys_set:nn { fs } {#1}
+        \bool_if:NT \l_fs_bold_bool   { \bfseries }
+        \bool_if:NT \l_fs_italic_bool { \itshape }
+
+    \bool_if:NTF \l_fs_color_bool
+        { % colored output
+            \bool_if:NTF \l_fs_short_bool
+            { {\color{fsharpDarkBlue}F}{\color{fsharpBlue}\lapbox[\width]{-.1em}{\raisebox{.1em}{\#}}} }
+            { {\color{fsharpDarkBlue}F}{\color{fsharpBlue}Sharp} }
+        }
+        { % black/white output
+            \bool_if:NTF \l_fs_short_bool
+            { F\# }
+            { FSharp }
+        }
+    \group_end:
+    \xspace
+}
+\ExplSyntaxOff
+
 
 \newcommand{\skipN}{\newline\noindent}
 \newcommand{\skipS}{\smallskip\noindent}
 \newcommand{\skipM}{\medskip\noindent}
 \newcommand{\skipL}{\bigskip\noindent}
+
+
+\hypersetup{ pdftitle = {\@title}, pdfauthor= {\@author} }
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
+\DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
+
+
+% Put "chapter" or "appendix" in front of the chapter number in running head
+\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}
+
+\renewcommand*\DTstylecomment{\rmfamily\color{green!70!black}\textsc}
+\renewcommand*\DTstyle{\ttfamily}
+
+
+\DTsetlength{0.2em}{1em}{0.2em}{0.4pt}{1.6pt}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+
+%===================================================================================================
+\makeatother % EOF +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

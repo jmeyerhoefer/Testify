@@ -1,8 +1,10 @@
 %!TEX root = ../thesis.tex
 
+
 %===================================================================================================
 % PREAMBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================
+
 
 \documentclass[
 	bibliography=totoc, % Add the bibliography to the TOC
@@ -12,41 +14,36 @@
 ]{scrbook}              % scrbook defaults: a4paper, twoside, openright, 11pt
 
 
-%===================================================================================================
+%===============================================================================
+% MODULES ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
 
 
 \input{preamble/modules/packages.tex}
 \input{preamble/modules/colors.tex}
 \input{preamble/modules/variables.tex}
 \input{preamble/modules/commands.tex}
+\input{preamble/modules/pgfkeys.tex}
+\input{preamble/modules/tcbset.tex}
 \input{preamble/modules/tcb.tex}
-\input{preamble/modules/tcb-minted.tex}
 
 
-%===================================================================================================
+%===============================================================================
+% MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
 
 
-\addbibresource{bibliography/references.bib}
-\makeatletter
-    \hypersetup{ pdftitle = {\@title}, pdfauthor= {\@author} }
-\makeatother
-
-%===================================================================================================
+\renewcommand{\theFancyVerbLine}{ \ttfamily\textcolor{black}{\tiny\arabic{FancyVerbLine}} }
+\setminted{ extrakeywordstype = { Nat, int, TestMethod, Timeout, test, printfn, failwith, LinkedList } }
+\newmintinline[fsharp]{fsharp}{ fontsize=\small, style = colorful }
+\newmintinline[out]{fsharp}{ fontsize=\small, style=bw }
 
 
-\renewcommand{\familydefault}{\sfdefault}
-\makeatletter
-    \renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
-\makeatother
-\DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
+%===============================================================================
+% STYLE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
 
 
-%===================================================================================================
-% Style ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%===================================================================================================
-
-
-\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}% Put "chapter" or "appendix" in front of the chapter number in running head
 \clearpairofpagestyles
 \ohead{\headmark}
 \automark[chapter]{chapter}
@@ -54,25 +51,15 @@
 \ofoot*{\pagemark}
 \pagestyle{scrheadings}
 
+
 % Disable Small Caps
 % \renewcommand*{\mkbibnamefamily}[1]{\textbf{#1}}
 % \renewcommand*{\mkbibnamegiven}[1]{\textbf{#1}}
 
+
 % Citation style
 %\DeclareFieldFormat{labelalpha}{\thefield{entrykey}}
 %\DeclareFieldFormat{extraalpha}{}
-
-
-%===================================================================================================
-% DIRTREE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%===================================================================================================
-
-
-\renewcommand*\DTstylecomment{\rmfamily\color{green!70!black}\textsc}
-\renewcommand*\DTstyle{\ttfamily}
-
-% \DTsetlength{offset}{width}{sep}{rule-width}{dot-size}
-\DTsetlength{0.2em}{1em}{0.2em}{0.4pt}{1.6pt}
 
 
 %===================================================================================================

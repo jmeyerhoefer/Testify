@@ -17,40 +17,18 @@
     are expected to implement missing functions or data structures. In such settings, learners are frequently unfamiliar with unit testing and
     are immediately confronted with stack traces and framework-specific output formats.
 
-    \begin{marker}
-        \begin{justify}
-            Test\\
-            Test
-        \end{justify}
-    \end{marker}
-
-    \skipS\begin{markerLine}Test Test\end{markerLine}
-
-    \pagebreak
-    \begin{panel}[listing,color=metroGreen]{BOTH} \blindtext[1] \end{panel}
-    \begin{panel}[listing]{LISTING ONLY} \blindtext[1] \end{panel}
-    \begin{panel}[color=gray]{COLOR ONLY} \blindtext[1] \end{panel}
-    \begin{panel}[]{NOTHING} \blindtext[1] \end{panel}
-
-    \skipM In \fs{}, multiple testing frameworks and assertion libraries are available. A commonly used option is
+    \skipM In \fs, multiple testing frameworks and assertion libraries are available. A commonly used option is
     \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting}{Microsoft.VisualStudio.TestTools.UnitTesting}. For example, using
     \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting.assert.areequal?view=mstest-net-3.8}{\texttt{Assert.AreEqual}}
     can yield the following output on failure:
-\end{justify}
+    \begin{verbatimpanel}[error message, hl={2-3}]{Example Ouput of \texttt{Assert.AreEqual}}
+    Assert.AreEqual failed. Expected:<[1; 2; 4]>. Actual:<[1; 4; 2]>.
+        at MapTests.TestsMapSortedList.Tests.testSetBeispiele() in /code/TestsMapSortedList.fs:line 53
+        at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+        at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+    \end{verbatimpanel}
 
-\begin{fsharpoutput}%
-{Example Ouput of \texttt{Assert.AreEqual}}%
-{exampleOutputForAreEqual}
-Assert.AreEqual failed. Expected:<[1; 2; 4]>. Actual:<[1; 4; 2]>.
-
-    at MapTests.TestsMapSortedList.Tests.testSetBeispiele() in /code/TestsMapSortedList.fs:line 53
-    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-\end{fsharpoutput}
-
-
-\begin{justify}
-    For more advanced programmers, this output is usually sufficient: they can quickly identify the relevant mismatch and ignore the remaining details.
+    \noindent For more advanced programmers, this output is usually sufficient: they can quickly identify the relevant mismatch and ignore the remaining details.
     See Section \hl{TODO} for a discussion of common issues in diagnostic messages and strategies for extracting key information.
 
     \skipM In my experience as a tutor for a first-semester lecture, I frequently observe students struggling with such messages, unsure what went wrong and how to fix their code.

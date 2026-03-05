@@ -1,0 +1,114 @@
+\tcbset{
+    % === MARKER SETUP ===
+	marker setup/.code={
+		\markerColorExplicitfalse%
+		\markerBangSizeExplicitfalse%
+		\pgfkeys{/marker/.cd, low, #1}%
+		\ifmarkerColorExplicit\else\let\markerColor\markerColorDefault\fi%
+	},
+    % === MARKER BASE ===
+	marker base/.style={
+		title=\textbf{Marker},
+		coltitle=black,
+		colbacktitle=\markerColor!70!black,
+		enhanced,
+		valign=center,
+		before skip balanced=2mm,
+		after skip balanced=3mm,
+		boxrule=0.4pt,
+		left=5mm, right=2mm,
+		top=1mm, bottom=1mm,
+		colback=\markerColor!80,
+		colframe=\markerColor!25!black,
+		sharp corners, rounded corners=southeast,
+		arc is angular, arc=3mm,
+		drop fuzzy shadow,
+		borderline west = { 3mm }{ -15mm }{ \markerColor },
+		borderline west = { 3mm }{ -12mm }{ \markerColor!80!black },
+		overlay={
+			\path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    		\path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+		},
+    },
+	panel setup/.code={
+		\panelColorExplicitfalse%
+		\panelUseMintedfalse%
+		\def\panelMintedApp{}%
+
+		\def\panelMintedFirstLine{}%
+		\def\panelMintedLastLine{}%
+		\def\panelMintedHighlightLines{}%
+		\def\panelMintedHighlightColor{metroOrange!25}%
+
+		\pgfkeys{/panel/.cd, listing, #1}%
+		\ifpanelColorExplicit\else\let\panelColor\panelColorDefault\fi%
+		\refstepcounter{\panelCounter}%
+
+		\edef\panelMintedOptExtra{}%
+		\ifstrempty{\panelMintedHighlightLines}{}{%
+			\edef\panelMintedOptExtra{%
+				highlightlines=\panelMintedHighlightLines,%
+				highlightcolor=\panelMintedHighlightColor%
+			}%
+		}%
+	},
+    % === PANEL BASE ===
+	panel base/.style={
+		enhanced,
+		attach boxed title to bottom*,
+		fonttitle=\sffamily,
+		colframe=\panelColor,
+		colback=black!5!white,
+		colbacktitle=\panelColor!25!white,
+		coltitle=black,
+		arc=0mm,
+		boxrule=0mm,
+		toprule=0mm,
+		leftrule=0mm, rightrule=0mm,
+		toptitle=0.5mm, bottomtitle=0.5mm,
+		top=1mm, bottom=1mm,
+		left=2mm, right=2mm,
+		borderline west = { 1.5mm }{ -3mm }{ \panelColor },
+		before={ \par\medskip\parindent=0pt }, after={ \par\medskip },
+	},
+    % === PANEL MINTED ===
+    panel minted/.style={
+		listing only,
+		listing engine=minted,
+		minted style=colorful,
+		minted language=\panelMintedLanguage,
+		minted options={
+			fontsize=\footnotesize,
+			linenos=true, numbers=right,
+			xrightmargin=-.5em,
+			numbersep=0.1pt,
+			breaklines=true,
+			breaksymbolleft=\tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
+			breakbytokenanywhere=true,
+			stripnl=true,
+			tabsize=4, autogobble=true,
+		},
+		minted options app={ \panelMintedApp },
+		minted options app/.expanded={ \panelMintedOptExtra },
+	},
+    % === PANEL TABLE ===
+    panel table/.style={
+        tabularx*={%
+            \begingroup%
+            \setlength{\arrayrulewidth}{.4pt}%
+            \renewcommand\arraystretch{1.4}%
+        }{ @{\hspace{5mm}}#1@{\hspace{5mm}} },
+        after upper app={ \endgroup },
+	},
+	% === HIGHLIGHT ===
+	highlight base/.style={
+		% fontupper=\ttfamily,
+		nobeforeafter,
+		tcbox raise base,
+		arc=0pt,outer arc=0pt, boxsep=0.5mm,
+		top=0pt,bottom=0pt, toprule=0.3mm,bottomrule=0.3mm,
+		left=0mm,right=0mm, leftrule=0pt,rightrule=0pt,
+		colback=#1!10!white,
+		colframe=#1!50!black,
+	},
+}

@@ -1,6 +1,4 @@
 %!TEX root = thesis.tex
-
-
 %===================================================================================================
 \input{preamble/preamble.tex} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \begin{document} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -10,21 +8,13 @@
 %===============================================================================
 
 
-% ========== TITLEPAGE ==========
-\newgeometry{margin=1in}
-\input{matter/front/titlepage.tex}
-\restoregeometry
-
-% ========== AUTHORSHIP STATEMENT ==========
-\input{matter/front/authorship.tex}
-
-% ========== ABSTRACT ==========
-\include{matter/front/abstract.tex}
-
-% ========== TABLE OF CONTENTS ==========
-\cleardoublepage                    % Open right (req. for bookmark)
-\pdfbookmark[0]{\contentsname}{toc} % Add TOC to PDF bookmarks
-\tableofcontents                    % Print TOC
+\input{matter/front/titlepage.tex}                % Titlepage
+\input{matter/front/authorship.tex}               % Authorship
+\vfill\pagebreak\input{matter/front/abstract.tex} % Abstract
+\vfill\input{matter/front/summary.tex}            % Abstract
+\vfill\thispagestyle{empty}\cleardoublepage       % Open right (req. for bookmark)
+\pdfbookmark[0]{\contentsname}{toc}               % Add TOC to PDF bookmarks
+\tableofcontents                                  % Print TOC
 
 
 %===============================================================================
@@ -32,23 +22,12 @@
 %===============================================================================
 
 
-% ========== INTRODUCTION ==========
-\input{matter/main/introduction/introduction.tex}
-
-% ========== RELATED WORK ==========
-\input{matter/main/related-work/related-work.tex}
-
-% ========== PROBLEM ANALYSIS ==========
-\input{matter/main/problem-analysis/problem-analysis.tex}
-
-% ========== ASSERTIFY / CHECKIFY ==========
-\input{matter/main/assertify-checkify/assertify-checkify.tex}
-
-% ========== RESULTS / DISCUSSION ==========
-\input{matter/main/results-discussion/results-discussion.tex}
-
-% ========== CONCLUSION ==========
-\input{matter/main/conclusion/conclusion.tex}
+\input{matter/main/introduction/introduction.tex}             % Introduction
+\input{matter/main/related-work/related-work.tex}             % Related Work
+\input{matter/main/problem-analysis/problem-analysis.tex}     % Problem Analysis
+\input{matter/main/assertify-checkify/assertify-checkify.tex} % Assertify/Checkify
+\input{matter/main/results-discussion/results-discussion.tex} % Results/Discussion
+\input{matter/main/conclusion/conclusion.tex}                 % Conclusion
 
 
 %===============================================================================
@@ -56,21 +35,12 @@
 %===============================================================================
 
 
-% ========== Figures ==========
-\listoffigures
-
-% ========== Listings ==========
-\tcblistof[\chapter*]{lol}{List of Listings}
-\addcontentsline{toc}{chapter}{List of Listings}
-
-% ========== Tables ==========
-\listoftables
-
-% ========== APPENDIX ==========
-\input{matter/back/appendix.tex}
-
-% ========== BIBLIOGRAPHY ==========
-\printbibliography
+\listoffigures                                   % List of Figures (LoF)
+\tcblistof[\chapter*]{lol}{List of Listings}     % List of Listings (LoL)
+\addcontentsline{toc}{chapter}{List of Listings} % TOC Entry List for LoL
+\listoftables                                    % List of Tables (LoT)
+\input{matter/back/appendix.tex}                 % Appendix
+\printbibliography                               % Bibliography
 
 
 %===================================================================================================

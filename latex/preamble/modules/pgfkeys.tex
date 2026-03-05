@@ -1,0 +1,79 @@
+\pgfkeys{
+	/marker/.is family,
+	/marker,
+	color/.code={ \def\markerColor{#1}\markerColorExplicittrue },
+	priority/.is choice,
+	priority/low/.code={%
+		\def\markerBangSize{5mm}%
+		\def\markerColor{yellow}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	priority/med/.code={%
+		\def\markerBangSize{10mm}%
+		\def\markerColor{orange}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	priority/high/.code={%
+		\def\markerBangSize{15mm}%
+		\def\markerColor{red}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	low/.style={ priority=low },
+	med/.style={ priority=med },
+	high/.style={ priority=high },
+}
+
+
+\pgfkeys{
+	/panel/.is family,
+	/panel,
+	color/.code={ \def\panelColor{#1}\panelColorExplicittrue },
+	kind/.is choice,
+	kind/asset/.code={%
+		\def\panelKindText{Asset}%
+		\def\panelCounter{panelAsset}%
+		\def\panelColorDefault{metroRed}%
+		\panelUseMintedfalse%
+	},
+	kind/error message/.code={%
+		\def\panelKindText{Error Message}%
+		\def\panelCounter{panelErrorMessage}%
+		\def\panelColorDefault{metroRed}%
+		\panelUseMintedfalse%
+	},
+	kind/listing/.code={%
+		\def\panelKindText{Listing}%
+		\def\panelCounter{panelListing}%
+		\def\panelColorDefault{metroBlue}%
+		\panelUseMintedtrue%
+	},
+	kind/table/.code={%
+		\def\panelKindText{Table}%
+		\def\panelCounter{panelTable}%
+		\def\panelColorDefault{metroOrange}%
+		\panelUseMintedfalse%
+	},
+	kind/image/.code={%
+		\def\panelKindText{Image}%
+		\def\panelCounter{panelImage}%
+		\def\panelColorDefault{metroYellow}%
+		\panelUseMintedfalse%
+	},
+	asset/.style={ kind=asset },
+	error message/.style={ kind=error message },
+	listing/.style={ kind=listing },
+	table/.style={ kind=table },
+	image/.style={ kind=image },
+	mopts/.store in=\panelMintedApp,
+	minted language/.store in=\panelMintedLanguage,
+	minted style/.store in=\panelMintedStyle,
+	fs/.style={ listing, minted language=fsharp },
+	fsharp/.style={ fs },
+	start/.store in=\panelMintedFirstLine,
+	end/.store in=\panelMintedLastLine,
+	hl/.store in=\panelMintedHighlightLines,
+	hlcolor/.store in=\panelMintedHighlighColor,
+}
