@@ -1,7 +1,24 @@
+%===================================================================================================
+% PACKAGES +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+%===============================================================================
+% FONT/ENCODING/GEOMETRY/STYLE/ETC +++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+% FONT/ENCODING ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
 \usepackage{lmodern}
 \usepackage{tgtermes}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+
+
+%===========================================================
+% GEOMETRY +++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
 
 \usepackage[
 	a4paper,
@@ -15,6 +32,11 @@
 	%showframe  % Can be enabled to debug the page geometry
 ]{geometry}
 
+
+%===========================================================
+% OTHER STYLE RELATED STUFF ++++++++++++++++++++++++++++++++
+%===========================================================
+
 \usepackage[
 	headsepline,
 	footsepline,
@@ -27,12 +49,6 @@
 ]{caption}
 
 \usepackage[
-	bookmarksdepth=3,   % bookmark levels in the PDF.
-	bookmarksnumbered,   % Show section numbering in bookmark
-	colorlinks=true
-]{hyperref}
-
-\usepackage[
 	backend=biber,
 	% style=alphabetic,
 	style=numeric-verb,
@@ -41,26 +57,52 @@
 ]{biblatex}
 \addbibresource{bibliography/references.bib}
 
+
+%===============================================================================
+% OTHER PACKAGES +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+% TIKZ +++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
 \usepackage{tikz}
 \usetikzlibrary{%
-external, % Externalizes Tikz graphics - speeds up compilation if unchanged.
-automata,
-arrows,
-arrows.meta,
-decorations.pathmorphing,
-backgrounds,
-fit,
-positioning,
-shapes.symbols,
-shapes,
-shapes.geometric,
-chains,
-shapes.multipart,
-shapes.misc,
-matrix,
-scopes,
-calc
+	external, % Externalizes Tikz graphics - speeds up compilation if unchanged.
+	automata,
+	arrows,
+	arrows.meta,
+	decorations.pathmorphing,
+	backgrounds,
+	fit,
+	positioning,
+	shapes.symbols,
+	shapes,
+	shapes.geometric,
+	chains,
+	shapes.multipart,
+	shapes.misc,
+	matrix,
+	scopes,
+	calc
 }
+
+
+%===========================================================
+% HYPERREF +++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\usepackage[
+	bookmarksdepth=3,   % bookmark levels in the PDF.
+	bookmarksnumbered,   % Show section numbering in bookmark
+	colorlinks=true
+]{hyperref}
+
+
+%===========================================================
+% OTHERS +++++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
 
 
 \usepackage[ngerman,english]{babel}
@@ -96,6 +138,10 @@ calc
 \usepackage[dvipsnames]{xcolor}
 \usepackage{adjustbox}
 \usepackage{twemojis}
-
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

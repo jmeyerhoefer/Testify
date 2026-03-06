@@ -1,11 +1,7 @@
 %!TEX root = ../thesis.tex
-
-
 %===================================================================================================
 % PREAMBLE +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================
-
-
 \documentclass[
 	bibliography=totoc, % Add the bibliography to the TOC
 	listof=totoc,      % Add the "List of *" to the TOC
@@ -14,36 +10,29 @@
 ]{scrbook}              % scrbook defaults: a4paper, twoside, openright, 11pt
 
 
-%===============================================================================
 % MODULES ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
+\input{preamble/modules/packages.tex}		% Packages
+\input{preamble/modules/colors.tex}			% Color definitions
+\input{preamble/modules/library.tex}		% Library
+\input{preamble/modules/marker.tex}			% Post-it/Note/To do
+\input{preamble/modules/panel.tex}			% Panels for text, code, tables | TODO: Panel for images?
+\input{preamble/modules/tcbset.tex}			% General tcbset variables for smaller tcboxes
+\input{preamble/modules/tcb.tex}			% All tcolorboxes (Main code is inside individual file: e.g. 'panel.tex')
 
 
-\input{preamble/modules/packages.tex}
-\input{preamble/modules/colors.tex}
-\input{preamble/modules/variables.tex}
-\input{preamble/modules/commands.tex}
-\input{preamble/modules/pgfkeys.tex}
-\input{preamble/modules/tcbset.tex}
-\input{preamble/modules/tcb.tex}
-
-
-%===============================================================================
 % MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
-
-
 \renewcommand{\theFancyVerbLine}{ \ttfamily\textcolor{black}{\tiny\arabic{FancyVerbLine}} }
 \setminted{ extrakeywordstype = { Nat, int, TestMethod, Timeout, test, printfn, failwith, LinkedList } }
 \newmintinline[fsharp]{fsharp}{ fontsize=\small, style = colorful }
 \newmintinline[out]{fsharp}{ fontsize=\small, style=bw }
 
 
-%===============================================================================
 % STYLE ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
-
-
+% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
 \clearpairofpagestyles
 \ohead{\headmark}
 \automark[chapter]{chapter}
@@ -52,6 +41,8 @@
 \pagestyle{scrheadings}
 
 
+% SMALL CAPS/CITATION STYLE ++++++++++++++++++++++++++++++++
+%===========================================================
 % Disable Small Caps
 % \renewcommand*{\mkbibnamefamily}[1]{\textbf{#1}}
 % \renewcommand*{\mkbibnamegiven}[1]{\textbf{#1}}
@@ -62,6 +53,30 @@
 %\DeclareFieldFormat{extraalpha}{}
 
 
-%===================================================================================================
+% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
+\DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
+
+
+% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+% Put "chapter" or "appendix" in front of the chapter number in running head
+\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}
+
+
+% DIR TREE +++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+\renewcommand*\DTstylecomment{\rmfamily\color{green!70!black}\textsc}
+\renewcommand*\DTstyle{\ttfamily}
+\DTsetlength{0.2em}{1em}{0.2em}{0.4pt}{1.6pt}
+
+
+% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+
 % EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================

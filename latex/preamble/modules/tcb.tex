@@ -1,140 +1,19 @@
 %===================================================================================================
 % TCOLORBOXES ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================
-% MARKER +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+% HIGHLIGHT ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
 
 
-% Marker color
-\def\markerColor{gray}
-\def\markerColorDefault{gray}
-\newif\ifmarkerColorExplicit
-\markerColorExplicitfalse
-
-
-% Marker bang size
-\def\markerBangSize{5mm}
-\newif\ifmarkerBangSizeExplicit
-\markerBangSizeExplicitfalse
-
-
-%===========================================================
-% MARKER +++++++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcolorbox{marker}[1][]{
-	marker setup={ low, #1 },
-	marker base,
-}
-
-
-%===============================================================================
-% PANEL = LISTING ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%===============================================================================
-
-
-% Counters
-\newcounter{panelAsset}\numberwithin{panelAsset}{chapter}
-\newcounter{panelErrorMessage}\numberwithin{panelErrorMessage}{chapter}
-\newcounter{panelListing}\numberwithin{panelListing}{chapter}
-\newcounter{panelTable}\numberwithin{panelTable}{chapter}
-\newcounter{panelImage}\numberwithin{panelImage}{chapter}
-
-
-% Panel color
-\def\panelColor{metroRed}
-\def\panelColorDefault{metroRed}
-\def\panelKindText{Asset}
-\newif\ifpanelColorExplicit
-
-
-% Minted active?
-\newif\ifpanelUseMinted
-\panelUseMintedfalse
-
-
-% \def\panelMintedStyle{colorful}
-\def\panelMintedLanguage{fsharp}
-\def\panelMintedApp{}
-
-
-% Minted slicing/highlighting defaults (used via /panel keys: start/end/hl/hlcolor)
-\def\panelMintedFirstLine{}% start=<n>
-\def\panelMintedLastLine{}% end=<n>
-\def\panelMintedHighlightLines{}% hl={...}
-\def\panelMintedHighlightColor{metroOrange!25}% hlcolor=<color>
-\def\panelMintedOptExtra{}
-
-
-%===========================================================
-% BASIC PANEL ++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcolorbox{panel}[2][]{%
-	panel setup={ asset, #1 },
-	panel base,
-	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
-}
-
-
-%===========================================================
-% CODE +++++++++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcblisting{codepanel}[2][]{%
-	panel setup={ fs, #1 },
-	panel base,
-	panel minted,
-	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
-}
-
-
-%===========================================================
-% INPUT CODE +++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcbinputlisting{\inputcodepanel}[3][]{%
-	panel setup={ fs, #1 },
-	panel base,
-	panel minted,
-	listing file=#3,
-	minted options app/.expanded={%
-		\ifstrempty{\panelMintedFirstLine}{}{firstline=\panelMintedFirstLine,}%
-		\ifstrempty{\panelMintedLastLine}{}{lastline=\panelMintedLastLine,}%
-	},
-	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
-}
-
-
-%===========================================================
-% VERBATIM +++++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcblisting{verbatimpanel}[2][]{%
-	panel setup={ fs, #1 },
-	panel base,
-	panel minted,
-	minted style=bw,
-	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
-}
-
-
-%===========================================================
-% SHEET = TABLE ++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-\newtcolorbox{sheet}[3][]{%
-	panel setup={ table, #1 },
-	panel table={ #3 },
-	panel base,
-	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
-}
-
-%===========================================================
-% INLINE +++++++++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
 \NewTotalTCBox{\tcbverb}{ O{red} v }{%
 	highlight base={ #1 },
 }{#2}
+
+
+%===============================================================================
+% INLINE CODEBOX +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
 
 
 \NewTotalTCBox{\codebox}{s v}{%
@@ -149,7 +28,6 @@
 }{%
 	\mintinline[fontsize=\footnotesize,breaklines,breakanywhere]{fsharp}{#2}%
 }
-
 
 
 %===================================================================================================

@@ -1,0 +1,285 @@
+%===================================================================================================
+% PANEL ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+%===============================================================================
+% DEFINITIONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%==========================================================
+% COUNTERS ++++++++++++++++++++++++++++++++++++++++++++++++
+%==========================================================
+
+
+\newcounter{panelAsset}\numberwithin{panelAsset}{chapter}
+\newcounter{panelErrorMessage}\numberwithin{panelErrorMessage}{chapter}
+\newcounter{panelListing}\numberwithin{panelListing}{chapter}
+\newcounter{panelTable}\numberwithin{panelTable}{chapter}
+\newcounter{panelImage}\numberwithin{panelImage}{chapter}
+
+
+%===========================================================
+% PANEL COLOR ++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\def\panelColor{metroRed}
+\def\panelColorDefault{metroRed}
+\def\panelKindText{Asset}
+\newif\ifpanelColorExplicit
+
+
+%===========================================================
+% MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newif\ifpanelUseMinted
+\panelUseMintedfalse
+\def\panelMintedLanguage{fsharp}
+\def\panelMintedApp{}
+\def\panelMintedFirstLine{}% start=<n>
+\def\panelMintedLastLine{}% end=<n>
+\def\panelMintedHighlightLines{}% hl={...}
+\def\panelMintedHighlightColor{metroOrange!25}% hlcolor=<color>
+\def\panelMintedOptExtra{}
+
+
+%===============================================================================
+% PGFKEYS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\pgfkeys{
+	/panel/.is family,
+	/panel,
+	color/.code={ \def\panelColor{#1}\panelColorExplicittrue },
+	kind/.is choice,
+    %=======================================================
+	% GENERAL ASSET STYLE ++++++++++++++++++++++++++++++++++
+	%=======================================================
+	kind/asset/.code={%
+		\def\panelKindText{Asset}%
+		\def\panelCounter{panelAsset}%
+		\def\panelColorDefault{metroRed}%
+		\panelUseMintedfalse%
+	},
+    %=======================================================
+	% ERROR MESSAGE STYLE ++++++++++++++++++++++++++++++++++
+	%=======================================================
+	kind/error message/.code={%
+		\def\panelKindText{Error Message}%
+		\def\panelCounter{panelErrorMessage}%
+		\def\panelColorDefault{metroRed}%
+		\panelUseMintedfalse%
+	},
+    %=======================================================
+	% LISTING STYLE ++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	kind/listing/.code={%
+		\def\panelKindText{Listing}%
+		\def\panelCounter{panelListing}%
+		\def\panelColorDefault{metroBlue}%
+		\panelUseMintedtrue%
+	},
+    %=======================================================
+	% TABLE STYLE ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	kind/table/.code={%
+		\def\panelKindText{Table}%
+		\def\panelCounter{panelTable}%
+		\def\panelColorDefault{metroOrange}%
+		\panelUseMintedfalse%
+	},
+    %=======================================================
+	% IMAGE STYLE ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	kind/image/.code={%
+		\def\panelKindText{Image}%
+		\def\panelCounter{panelImage}%
+		\def\panelColorDefault{metroYellow}%
+		\panelUseMintedfalse%
+	},
+	asset/.style={ kind=asset },
+	error message/.style={ kind=error message },
+	listing/.style={ kind=listing },
+	table/.style={ kind=table },
+	image/.style={ kind=image },
+	mopts/.store in=\panelMintedApp,
+	minted language/.store in=\panelMintedLanguage,
+	minted style/.store in=\panelMintedStyle,
+	fs/.style={ listing, minted language=fsharp },
+	fsharp/.style={ fs },
+	start/.store in=\panelMintedFirstLine,
+	end/.store in=\panelMintedLastLine,
+	hl/.store in=\panelMintedHighlightLines,
+	hlcolor/.store in=\panelMintedHighlightColor,
+}
+
+
+%===============================================================================
+% TCBSET +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\tcbset{
+    %=======================================================
+	% PANEL SETUP ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+    panel setup/.code={
+		\panelColorExplicitfalse%
+		\panelUseMintedfalse%
+		\def\panelMintedApp{}%
+
+		\def\panelMintedFirstLine{}%
+		\def\panelMintedLastLine{}%
+		\def\panelMintedHighlightLines{}%
+		\def\panelMintedHighlightColor{metroOrange!25}%
+
+		\pgfkeys{/panel/.cd, listing, #1}%
+		\ifpanelColorExplicit\else\let\panelColor\panelColorDefault\fi%
+		\refstepcounter{\panelCounter}%
+
+		\edef\panelMintedOptExtra{}%
+		\ifstrempty{\panelMintedHighlightLines}{}{%
+			\edef\panelMintedOptExtra{%
+				highlightlines=\panelMintedHighlightLines,%
+				highlightcolor=\panelMintedHighlightColor%
+			}%
+		}%
+	},
+    %=======================================================
+	% PANEL BASE +++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	panel base/.style={
+		enhanced,
+		attach boxed title to bottom*,
+		fonttitle=\sffamily,
+		colframe=\panelColor,
+		colback=black!5!white,
+		colbacktitle=\panelColor!25!white,
+		coltitle=black,
+		arc=0mm,
+		boxrule=0mm,
+		toprule=0mm,
+		leftrule=0mm, rightrule=0mm,
+		toptitle=0.5mm, bottomtitle=0.5mm,
+		top=1mm, bottom=1mm,
+		left=2mm, right=2mm,
+		borderline west = { 1.5mm }{ -3mm }{ \panelColor },
+		before={ \par\medskip\parindent=0pt }, after={ \par\medskip },
+	},
+    %=======================================================
+	% PANEL MINTED +++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+    panel minted/.style={
+		listing only,
+		listing engine=minted,
+		minted style=colorful,
+		minted language=\panelMintedLanguage,
+		minted options={
+			fontsize=\footnotesize,
+			linenos=true, numbers=right,
+			xrightmargin=-.5em,
+			numbersep=0.1pt,
+			breaklines=true,
+			breaksymbolleft=\tiny\ensuremath{\textcolor{colorLineBreakSymbol}{\hookrightarrow}},
+			breakbytokenanywhere=true,
+			stripnl=true,
+			tabsize=4, autogobble=true,
+		},
+		minted options app={ \panelMintedApp },
+		minted options app/.expanded={ \panelMintedOptExtra },
+	},
+    %=======================================================
+	% PANEL TABLE ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+    panel table/.style={
+        tabularx*={%
+            \begingroup%
+            \setlength{\arrayrulewidth}{.4pt}%
+            \renewcommand\arraystretch{1.4}%
+        }{ @{\hspace{5mm}}#1@{\hspace{5mm}} },
+        after upper app={ \endgroup },
+	},
+}
+
+
+%===============================================================================
+% DEFINITIONS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+% BASIC PANEL ++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcolorbox{panel}[2][]{%
+	panel setup={ asset, #1 },
+	panel base,
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	% label={ #2 },
+}
+
+
+%===========================================================
+% CODE +++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcblisting{codepanel}[2][]{%
+	panel setup={ fs, #1 },
+	panel base,
+	panel minted,
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	% label={ #2 },
+}
+
+
+%===========================================================
+% INPUT CODE +++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcbinputlisting{\inputcodepanel}[3][]{%
+	panel setup={ fs, #1 },
+	panel base,
+	panel minted,
+	listing file=#3,
+	minted options app/.expanded={%
+		\ifstrempty{\panelMintedFirstLine}{}{firstline=\panelMintedFirstLine,}%
+		\ifstrempty{\panelMintedLastLine}{}{lastline=\panelMintedLastLine,}%
+	},
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	% label={ #2 },
+}
+
+
+%===========================================================
+% VERBATIM +++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcblisting{verbatimpanel}[2][]{%
+	panel setup={ fs, #1 },
+	panel base,
+	panel minted,
+	minted style=bw,
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	% label={ #2 },
+}
+
+
+%===========================================================
+% SHEET = TABLE ++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcolorbox{sheetpanel}[3][]{%
+	panel setup={ table, #1 },
+	panel table={ #3 },
+	panel base,
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	% label={ #2 },
+}
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================

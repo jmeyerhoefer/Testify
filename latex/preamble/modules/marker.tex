@@ -1,0 +1,125 @@
+%===================================================================================================
+% MARKER +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+%===============================================================================
+% DEFINITIONS / VARIABLES / IFS ++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+% MARKER COLOR +++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+\def\markerColor{gray}
+\def\markerColorDefault{gray}
+\newif\ifmarkerColorExplicit
+\markerColorExplicitfalse
+
+
+%===========================================================
+% MARKER BANG SIZE +++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\def\markerBangSize{5mm}
+\newif\ifmarkerBangSizeExplicit
+\markerBangSizeExplicitfalse
+
+
+%===============================================================================
+% PGFKEYS ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\pgfkeys{
+	/marker/.is family,
+	/marker,
+	color/.code={ \def\markerColor{#1}\markerColorExplicittrue },
+	priority/.is choice,
+	%=======================================================
+	% LOW PRIORITY +++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	priority/low/.code={%
+		\def\markerBangSize{5mm}%
+		\def\markerColor{yellow}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	%=======================================================
+	% MEDIUM SETUP +++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	priority/med/.code={%
+		\def\markerBangSize{10mm}%
+		\def\markerColor{orange}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	%=======================================================
+	% HIGH SETUP +++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	priority/high/.code={%
+		\def\markerBangSize{15mm}%
+		\def\markerColor{red}%
+		\markerBangSizeExplicittrue%
+		\markerColorExplicittrue%
+	},
+	low/.style={ priority=low },
+	med/.style={ priority=med },
+	high/.style={ priority=high },
+}
+
+
+%===============================================================================
+% TCBSET +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\tcbset{
+	%=======================================================
+	% MARKER SETUP +++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	marker setup/.code={
+		\markerColorExplicitfalse%
+		\markerBangSizeExplicitfalse%
+		\pgfkeys{/marker/.cd, low, #1}%
+		\ifmarkerColorExplicit\else\let\markerColor\markerColorDefault\fi%
+	},
+	%=======================================================
+	% MARKER BASE ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+	marker base/.style={
+		title=\textbf{Marker},
+		coltitle=black,
+		colbacktitle=\markerColor!70!black,
+		enhanced,
+		valign=center,
+		before skip balanced=2mm,
+		after skip balanced=3mm,
+		boxrule=0.4pt,
+		left=5mm, right=2mm,
+		top=1mm, bottom=1mm,
+		colback=\markerColor!80,
+		colframe=\markerColor!25!black,
+		sharp corners, rounded corners=southeast,
+		arc is angular, arc=3mm,
+		drop fuzzy shadow,
+		borderline west = { 3mm }{ -15mm }{ \markerColor },
+		borderline west = { 3mm }{ -12mm }{ \markerColor!80!black },
+		overlay={
+			\path[fill=tcbcolback!80!black] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+    		\path[draw=tcbcolframe,shorten <=-0.05mm,shorten >=-0.05mm] ([yshift=3mm]interior.south east)--++(-0.4,-0.1)--++(0.1,-0.2);
+		},
+    },
+}
+
+%===============================================================================
+% DEFINITION +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\newtcolorbox{marker}[1][]{
+	marker setup={ low, #1 },
+	marker base,
+}
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
