@@ -13,6 +13,9 @@
 \usepackage{tgtermes}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\renewcommand{\familydefault}{\sfdefault}
+\renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
+\DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
 
 
 %===========================================================
@@ -22,13 +25,13 @@
 
 \usepackage[
 	a4paper,
-	top=35mm,
-	bottom=40mm,
-	inner=35mm,
-	outer=40mm,
+	top=20mm,
+	bottom=25mm,
+	inner=20mm,
+	outer=20mm,
 	bindingoffset=5mm,
 	marginparsep=5mm,
-	marginparwidth=40mm,
+	marginparwidth=20mm,
 	%showframe  % Can be enabled to debug the page geometry
 ]{geometry}
 
@@ -48,14 +51,6 @@
 	labelfont={normal,bf}
 ]{caption}
 
-\usepackage[
-	backend=biber,
-	% style=alphabetic,
-	style=numeric-verb,
-	minnames=4,
-	maxnames=10
-]{biblatex}
-\addbibresource{bibliography/references.bib}
 
 
 %===============================================================================

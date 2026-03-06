@@ -4,6 +4,9 @@
 %===================================================================================================
 
 
+\todo
+
+
 \begin{justify}
 	Based on the issues above, this section derives requirements for novice-oriented test failure reporting.
 	Each requirement is phrased as a constraint on the \emph{user-facing report}, independent of any specific implementation technique.
@@ -75,11 +78,11 @@
 
 	\skipS\textbf{Checkpoint (traceability to later chapters):}
 
-	\skipS\begin{itemize}
+	\begin{marker}[med]
 		\item TODO: Add a small mapping table from issues $\rightarrow$ requirements $\rightarrow$ implementation mechanisms (one row per requirement).
 		\item TODO: Decide which requirements are \emph{must-have} vs.\ \emph{nice-to-have} for the first version of Assertify.
 		\item TODO: State explicitly which requirements are out of scope (e.g., improving compiler diagnostics beyond test reporting).
-	\end{itemize}
+	\end{marker}
 \end{justify}
 
 
@@ -88,7 +91,7 @@
 %===============================================================================
 
 
-\begin{justify}
+\begin{marker}[med]
 	\begin{itemize}
 		\item Add at least one fully worked example for each failure category (compiler error, unit test failure, property-based failure).
 		\item Add an explicit ``signal vs.\ noise'' annotation for each example output.
@@ -96,7 +99,7 @@
 		\item Add short, properly cited connections to prior work on diagnostic usability and novice comprehension (do not overclaim; separate observation from generalisation).
 		\item Verify terminology consistency with later chapters (e.g., always use \emph{tested expression / expected / actual} in the same order).
 	\end{itemize}
-\end{justify}
+\end{marker}
 
 
 %===============================================================================
