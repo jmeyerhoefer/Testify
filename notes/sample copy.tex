@@ -1,0 +1,471 @@
+%===================================================================================================
+% SAMPLE (IMPROVED NOTES) ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\documentclass[
+	bibliography=totoc,
+	listof=totoc,
+    % draft
+]{scrbook}
+
+
+\input{preamble/preamble.tex}
+
+
+%===================================================================================================
+\begin{document} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\frontmatter %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+%===============================================================================
+\section*{General} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+\begin{marker}\begin{itemize}
+    \todoItem Ensure scope stays on \emph{test feedback output} (Assertify/Checkify), move IDE/AI/``self-learning framework'' ideas to Future Work.
+    \todoItem Make RQ coverage explicit: which RQs are answered by analysis/design/implementation vs what would require evaluation.
+    \todoItem Add a traceability chain: Observed issue $\rightarrow$ requirement $\rightarrow$ mechanism $\rightarrow$ limitation.
+    \todoItem Decide (and state) evaluation framing: artifact-based validation (examples + requirement satisfaction), not learning-outcome claims.
+    \todoItem Maintain didactic constraint: avoid revealing reference solutions while still showing tested expression and values.
+    \improveItem Standardise terminology: ``test failure output'', ``diagnostic message'', ``tested expression/expected/actual''.
+    \finalizeItem Prepare 2--3 representative running examples used consistently across chapters (unit + property-based + data-structure sequence).
+    \noteItem Keep citations in mind: Barik et al. (reading behaviour) and Becker et al. (landscape/guidelines) motivate relevance of message design.
+\end{itemize}\end{marker}
+
+
+%===============================================================================
+\vfill\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\section*{Abstract} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+\begin{marker}\begin{justify}
+TODO: 150--250 words. Problem, approach (Assertify/Checkify wrappers + quotations), what is demonstrated (consistent reporting + examples), key limitations.
+(No claims about learning improvements without empirical evidence.)
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\section*{Summary} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+\begin{marker}\begin{justify}
+TODO: Short German/English summary depending on requirements. Mirror abstract with slightly more context.
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\vfill\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\mainmatter %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Introduction} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Goal of this chapter (already drafted elsewhere): establish why novice programmers struggle with compiler/test feedback, and motivate a structured reporting scheme.
+
+Key points to keep consistent with later chapters:
+\begin{itemize}
+    \item Context: introductory programming, hidden tests / constrained feedback channel, students must act on output alone.
+    \item Core problem: failing test output mixes essential information with framework internals; novices struggle to find actionable signal.
+    \item Thesis contribution: design + implementation of Assertify/Checkify that standardises failure feedback using \emph{tested expression/expected/actual}.
+    \item Boundaries: focus is on \emph{test failure reporting}. Compiler diagnostics may be analysed for context, but not fully redesigned.
+\end{itemize}
+\end{justify}
+
+
+%===========================================================
+\section{Problem Statement and Objectives} %+++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Reference your existing draft. Ensure objectives match what you can deliver without user-study claims:
+(1) analyse current outputs, (2) derive requirements, (3) implement wrappers, (4) demonstrate properties + limitations.
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Research Questions} %++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Reference your existing draft. Add one sentence clarifying which chapters answer which RQs.
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Thesis Structure} %+++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Reference your existing draft. Ensure chapter descriptions align with artifact-based validation in Results.
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Background and Related Work} %+++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Purpose: provide evidence that error/test messages matter, summarise what is known, and position the gap Assertify addresses.
+
+Structure idea (do not overdo; keep it targeted to your artifact):
+\begin{itemize}
+    \item Role of diagnostic messages in developer work and why they are cognitively demanding (use Barik/related).
+    \item Research landscape + design guidelines (use Becker et al. as an organising anchor).
+    \item Novice-specific issues: cognitive load, fragmentation of information, difficulties mapping output to code.
+    \item Existing improvement approaches (high-level): better wording, better localisation, richer context, pedagogic environments.
+    \item Testing feedback specifics: unit vs property-based outputs; shrinking/counterexamples; reproducibility.
+\end{itemize}
+
+End the chapter with: the \emph{gap} this thesis targets is not ``better compilers'', but a wrapper-based reporting layer that enforces a consistent, minimal, actionable structure for failing tests in F\# exercises.
+\end{justify}
+
+
+%===========================================================
+\section{Challenges for Novice Programmers} %+++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Define ``novice'' for your setting; explain why mapping output $\rightarrow$ code change is hard under hidden tests and limited experience.
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Programming Error Messages in Research} %++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Summarise key findings from Barik (reading behaviour) and Becker (survey + guidelines). Extract only what feeds your requirements.
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Existing Approaches to Improving Feedback} %++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Briefly note language/tool approaches (e.g., better diagnostics, educational IDEs). Keep as context, not as a full survey.
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Implications for This Thesis} %+++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Bridge to Problem Analysis: ``Given these findings, we analyse the failure outputs encountered in our course setting and derive requirements for novice-oriented test feedback.''
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Problem Analysis} %++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Goal: characterise why existing compiler/testing outputs are difficult for novices and derive implementable requirements.
+
+Make the chapter systematic:
+\begin{itemize}
+    \item Start with the course/tooling context (F\#, hidden tests, typical student edit scope).
+    \item Provide a small set of representative failure outputs (compiler error + unit test fail + property-based fail + sequence/history case).
+    \item Extract issues using a simple taxonomy (signal/noise, missing ``tested expression'', inconsistency, non-local information, poor actionability).
+    \item Derive requirements and explicitly map them to implementation implications.
+\end{itemize}
+
+Important boundary statement for later honesty:
+\begin{itemize}
+    \item Compiler diagnostics can be analysed for context and future work, but the thesis artifact mainly targets \emph{test failure reporting}.
+\end{itemize}
+\end{justify}
+
+
+%===========================================================
+\section{Context and Assumptions} %+++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Teaching context: what students implement, typical exercise template structure, hidden tests constraint.
+    \item Operational constraints: output channel (plain text), integration boundaries (existing frameworks), no changes to external tooling.
+    \item Novice assumptions: limited debugging skills, limited framework knowledge, focus on one edited file.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Observed Issues in Existing Compiler/Test Output} %
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Build a short taxonomy with examples.
+
+Suggested issue categories (each with at least one example + explanation of novice difficulty):
+\begin{itemize}
+    \item \textbf{Signal-to-noise:} essential mismatch buried among stack traces/framework internals.
+    \item \textbf{Missing tested expression:} output shows values but not which function call failed (or only indirectly via test name).
+    \item \textbf{Inconsistent structure:} different frameworks print the ``same'' concept (failure) in incompatible formats.
+    \item \textbf{Non-local information:} to understand failure, one must reconstruct prior operations (data structure sequences).
+    \item \textbf{Poor actionability:} message does not suggest what to check next (inputs, edge cases, invariants).
+    \item \textbf{Property-based specifics:} counterexample/shrinking exists but is not rendered in a novice-friendly way.
+\end{itemize}
+
+Include the didactic constraint explicitly:
+\begin{itemize}
+    \item Tested expression must be shown without revealing a reference implementation or giving away the solution.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Derived Requirements and Design Implications} %++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Derive requirements as ``R1, R2, ...'' and map each to a design implication.
+
+Candidate requirements (adjust to your final argument):
+\begin{itemize}
+    \item \textbf{R1 Consistency:} same high-level structure for failures across unit and property-based tests.
+    \item \textbf{R2 Minimal actionable core:} always show \emph{tested expression}, \emph{expected}, \emph{actual} as the first screenful.
+    \item \textbf{R3 Progressive disclosure:} optional sections for reductions/history/stack traces; novices start with compact view.
+    \item \textbf{R4 Expression capture:} render a readable representation of what was tested (with simplification).
+    \item \textbf{R5 Value extraction + rendering:} compute and display values in a stable, comparable representation.
+    \item \textbf{R6 Reproducibility:} for property-based failures, preserve shrunk/original inputs and configuration where possible.
+    \item \textbf{R7 Integration constraints:} wrapper-based interception of failures without changing surrounding tooling.
+    \item \textbf{R8 No-solution leakage:} reporting must not expose reference implementations.
+\end{itemize}
+
+End with a transition sentence: these requirements define the design goals of Assertify/Checkify.
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Assertify (and Checkify): Design and Implementation} %+++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Goal: explain how requirements are realised technically in F\# with Quotations/Unquote and wrappers around existing frameworks.
+
+Keep a clear separation:
+\begin{itemize}
+    \item \textbf{Design:} what the reporting scheme is and why each field exists.
+    \item \textbf{Mechanisms:} how expressions/values/inputs are captured.
+    \item \textbf{Integration:} how failures are intercepted and emitted (e.g., JSON output for downstream formatting).
+    \item \textbf{Boundaries:} which assertion forms and expression shapes are supported; what fails and why.
+\end{itemize}
+\end{justify}
+
+
+%===========================================================
+\section{Design Goals and Principles} %+++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Map each requirement (R1--R8) to a design decision.
+    \item Define the canonical report fields (tested expression / simplified expression / expected / actual / optional history / optional reductions / optional stack trace).
+    \item Define verbosity modes and what each mode reveals.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Output Model: Representing Tests} %++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Specify the output format (e.g., structured object that can be rendered as text; JSON as interchange format).
+    \item Explain ordering: ``core summary first'', optional details below.
+    \item Note how this model accommodates unit and property-based tests uniformly.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Mechanisms: Expression Capture and Value Extraction}
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Quotations for capturing the tested expression; Unquote for evaluation/simplification patterns.
+    \item Handling of equality assertions (\texttt{left = right}) to extract both sides as expected/actual.
+    \item Failure modes: exceptions during evaluation, unsupported quotation shapes, side effects / double evaluation considerations.
+    \item Property-based testing: capturing original and shrunk inputs; preserving minimal counterexample information.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Reporting: Formatting and Integration with the Test Pipeline}
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Wrapper approach: where Assertify intercepts failures from UnitTesting/Unquote and emits your report.
+    \item How Checkify integrates with FsCheck (runner/config capture) to unify the report.
+    \item Downstream rendering: how raw report output becomes the final student-visible text (and what is feasible in ExClaim).
+    \item Explicit integration boundaries: what you cannot override in the surrounding tooling.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Results and Discussion} %++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Frame this chapter as \textbf{artifact-based validation}.
+
+If no reliable empirical evaluation is available, do not make learning-outcome claims. Instead:
+\begin{itemize}
+    \item Demonstrate achieved properties using representative examples (before/after outputs).
+    \item Evaluate requirement satisfaction qualitatively and technically (coverage, consistency, integration success, limitations).
+    \item Discuss trade-offs and where the wrapper approach breaks down.
+\end{itemize}
+
+Tie explicitly to RQ5: ``To what extent does the artifact satisfy requirements, and what limitations/trade-offs emerge?''
+\end{justify}
+
+
+%===========================================================
+\section{Research Question Coverage and Requirement Satisfaction}
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Provide a table mapping RQ1--RQ5 to chapters/sections.
+    \item Provide a second table mapping requirements (R1--R8) to implemented features + evidence (example/behaviour).
+    \item Be explicit about partial satisfaction and known gaps.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Artifact Outcomes} %+++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item What Assertify provides (supported assertion forms, output fields, verbosity toggles).
+    \item What Checkify provides (property-based wrapper, captured inputs/shrinks, unified reporting).
+    \item Demonstrate on 2--3 consistent examples reused from Problem Analysis.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Key Findings and Interpretations} %++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: ``Findings'' here mean \emph{observations about the artifact}, not student performance.
+\begin{itemize}
+    \item Consistency improvements: same report skeleton across failure types.
+    \item Actionability: tested expression + expected/actual presented first.
+    \item Progressive disclosure: when history/reductions help (sequence failures) and when they add noise.
+    \item Property-based testing: clarity of shrunk counterexample in the same format.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Strengths and Limitations} %+++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Strengths: wrapper compatibility, uniform report, structured output suitable for downstream UI rendering.
+    \item Limitations: expression coverage, evaluation pitfalls, assertion forms not represented as expected/actual, framework integration boundaries.
+    \item Threats to validity of conclusions (no user study; examples may not cover all student cases).
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===============================================================================
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter{Conclusion} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+%===========================================================
+\section*{Motivation} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{justify}
+Goal: close the argument without overclaiming.
+
+Must include:
+\begin{itemize}
+    \item Summary of contribution (requirements + reporting scheme + implementation).
+    \item Explicit answers to RQs (especially RQ5: what worked, what did not).
+    \item Clear boundary: what remains future work (evaluation, deeper compiler diagnostics, richer IDE integration).
+\end{itemize}
+\end{justify}
+
+
+%===========================================================
+\section{Summary} %+++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO:
+\begin{itemize}
+    \item Restate the core problem in one paragraph.
+    \item Summarise the reporting scheme and how it generalises across test paradigms.
+    \item Summarise the main technical outcomes and limitations.
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Future Work} %+++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: Layered future work (ranked by feasibility).
+\begin{itemize}
+    \item \textbf{Within wrappers:} extend assertion forms, broaden supported expression patterns, improve rendering/verbosity policies.
+    \item \textbf{Tooling integration:} stable ExClaim integration, optional VS Code/HTML renderer based on structured output.
+    \item \textbf{Beyond wrappers:} compiler-service-based diagnostics and richer static analysis (explicitly out of scope here).
+\end{itemize}
+\end{justify}\end{marker}
+
+
+%===========================================================
+\section{Final Remarks} %+++++++++++++++++++++++++++++++++++
+%===========================================================
+
+\begin{marker}\begin{justify}
+TODO: One short paragraph: why consistent, structured feedback is a promising direction; emphasize that the artifact is a concrete step, not a final solution.
+\end{justify}\end{marker}
+
+
+%===================================================================================================
+\end{document} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
