@@ -4,16 +4,31 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
 \begin{justify}
+Baseline compiler and test outputs are a central feedback channel in introductory programming courses,
+yet they often fail to support novices in turning failures into actionable debugging steps.
+The problem is typically not that messages contain no relevant information, but that crucial facts are difficult to find,
+inconsistently structured, or weakly connected to the learner's own code. As a result, students must spend effort on reconstructing
+what was actually evaluated and why it failed instead of focusing on correcting their implementation.
+
+Prior work indicates that error messages are frequently perceived as confusing and difficult to act upon, particularly for beginners,
+and that difficulties in reading error messages are associated with worse performance on programming tasks \cite{becker, barik}.
+Moreover, improving error messages is constrained by technical challenges such as locality and the mapping from internal tool representations
+back to source-level explanations \cite{becker}. These observations motivate a systematic analysis of baseline outputs and the derivation
+of explicit requirements for novice-oriented test reporting.
+\end{justify}
+
+
+\begin{comment}
     This chapter analyses why the feedback produced by compilers and common testing infrastructures is frequently difficult to use in introductory programming settings.
     The focus is not on the correctness of the diagnostics themselves, but on how failure information is \emph{structured}, \emph{prioritised}, and \emph{presented} to learners.
     Based on concrete examples from beginner exercises, the chapter identifies recurring shortcomings in existing output and derives design requirements for a novice-oriented reporting layer.
     These requirements motivate the subsequent design and implementation decisions, in particular the use of a stable \emph{tested expression / expected / actual} summary as
     the primary interface for understanding failures.
-\end{justify}
+\end{comment}
 
 
 %===============================================================================

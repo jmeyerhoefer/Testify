@@ -6,27 +6,19 @@
 %===============================================================================
 
 
-\input{preamble/modules/packages.tex}		% Packages
-\input{preamble/modules/colors.tex}			% Color definitions
-\input{preamble/modules/library.tex}		% Library
-\input{preamble/modules/marker.tex}			% Post-it/Note/To do
-\input{preamble/modules/panel.tex}			% Panels for text, code, tables | TODO: Panel for images?
-\input{preamble/modules/tcbset.tex}			% General tcbset variables for smaller tcboxes
-\input{preamble/modules/tcb.tex}			% All tcolorboxes (Main code is inside individual file: e.g. 'panel.tex')
+\input{preamble/modules/packages.tex} % packages
+\input{preamble/modules/colors.tex} % color definitions
+\input{preamble/modules/library.tex} % commands/snippets/etc
+\input{preamble/modules/minted.tex} % pure minted options
+\input{preamble/modules/marker.tex} % Post-it/note/todo
+\input{preamble/modules/panel.tex} % panels for text, code, etc
+\input{preamble/modules/tcbset.tex} % general tcbset variables
+\input{preamble/modules/tcb.tex} % all tcolorboxes definitions
+\input{preamble/modules/algorithmics.tex} % algorithmicx environments
 
 \renewcommand{\familydefault}{\sfdefault}
 \renewcommand{\scshape}{\usefont{T1}{qtm}{m}{sc}\selectfont}
 \DeclareRobustCommand{\textsc}[1]{{\usefont{T1}{qtm}{m}{sc}#1}}
-
-%===============================================================================
-% MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-%===============================================================================
-
-
-\renewcommand{\theFancyVerbLine}{ \ttfamily\textcolor{black}{\tiny\arabic{FancyVerbLine}} }
-\setminted{ extrakeywordstype = { Nat, int, TestMethod, Timeout, test, printfn, failwith, LinkedList } }
-\newmintinline[fsharp]{fsharp}{ fontsize=\small, style = colorful }
-\newmintinline[out]{fsharp}{ fontsize=\small, style=bw }
 
 
 %===============================================================================
@@ -45,6 +37,10 @@
 \pagestyle{scrheadings}
 
 
+% Put "chapter" or "appendix" in front of the chapter number in running head
+\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}
+
+
 %===========================================================
 % SMALL CAPS/CITATION STYLE ++++++++++++++++++++++++++++++++
 %===========================================================
@@ -61,15 +57,6 @@
 
 
 %===========================================================
-% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-
-
-% Put "chapter" or "appendix" in front of the chapter number in running head
-\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter:\enskip}
-
-
-%===========================================================
 % DIR TREE +++++++++++++++++++++++++++++++++++++++++++++++++
 %===========================================================
 
@@ -77,14 +64,6 @@
 \renewcommand*\DTstylecomment{\rmfamily\color{green!70!black}\textsc}
 \renewcommand*\DTstyle{\ttfamily}
 \DTsetlength{0.2em}{1em}{0.2em}{0.4pt}{1.6pt}
-
-
-%===========================================================
-% HEADER/FOOTER ++++++++++++++++++++++++++++++++++++++++++++
-%===========================================================
-
-
-\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 
 
 %===================================================================================================

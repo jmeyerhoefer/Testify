@@ -4,10 +4,35 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
 \begin{justify}
+The analysis in this chapter is situated in introductory programming exercises where students
+implement functions according to a specification and receive feedback through compilation and
+automated tests. Students typically iterate by running tests locally or by submitting to an
+assessment system then inspecting the returned compiler and test feedback. A key assumption is that
+students primarily control the \emph{solution code}, while the tests may be partially or fully
+hidden. Consequently, the error message becomes the primary artifact from which learners must derive
+actionable debugging information.
+
+The examples in this thesis focus on the \fs ecosystem and a test setup that combines (i)
+example-based tests using Unquote and (ii) unit and property-based tests executed via the MSTest
+framework and FsCheck. The analysis assumes that novice students have limited familiarity with
+testing conventions such as stack traces, reflection-based invocation, and framework-specific
+formatting. They may also struggle to distinguish between information that is actionable for
+correcting their own logic and information that is mainly relevant for diagnosing the test
+infrastructure.
+
+Finally, the chapter assumes that effective feedback should reduce reconstruction effort.
+Barik et al.\ show that developers spend substantial time attending to error message regions and
+that difficulty in reading error messages predicts task performance \cite{barik}. While their
+participants are not restricted to novices, the findings motivate presenting relevant failure
+information in a structured, easy-to-scan form.
+\end{justify}
+
+
+\begin{comment}
 	This thesis is situated in an introductory programming setting in which students solve small-to-medium programming exercises and receive automated feedback from compilation and testing.
 	The tasks are designed to be assessable automatically, and correctness is primarily determined through a combination of example-based unit tests (covering typical and edge cases) and,
 	where applicable, property-based tests (covering broader input spaces through generated test cases).
@@ -41,7 +66,7 @@
 		\item TODO: Summarise the types of tests used (example tests vs.\ random/property tests), including how failures are surfaced to students.
 		\item TODO: Clarify what students are allowed to modify (submission file only vs.\ tests visible/hidden), as this affects what output is actionable.
 	\end{itemize}
-\end{justify}
+\end{comment}
 
 
 %===============================================================================

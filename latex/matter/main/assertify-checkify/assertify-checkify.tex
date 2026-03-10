@@ -1,10 +1,22 @@
 %===================================================================================================
 \chapter{Assertify (and Checkify): Design and Implementation} %+++++++++++++++++++++++++++++++++++++
-  \label{Assertify (and Checkify): Design and Implementation} %+++++++++++++++++++++++++++++++++++++
+\label{chpt:assertify-and-checkify-design-and-implementation} %+++++++++++++++++++++++++++++++++++++
 %===================================================================================================
 
 
-\todo
+\improve
+
+
+\begin{justify}
+This chapter presents the design rationale and technical realisation of \emph{Assertify} and
+\emph{Checkify}, a lightweight library intended to improve the pedagogical usefulness of test
+feedback for novice programmers. The starting point is the requirement set derived in
+\nameref{Problem Analysis}. Students need concise, consistently structured reports that make the
+tested expression and the expected/actual mismatch explicit, while avoiding the fragmentation and
+verbosity typical of baseline frameworks. The overall approach is \emph{non-invasive}: rather than
+replacing existing test runners, Assertify/Checkify wrap established tooling and refine the reported
+information before failing the test. \cite{becker,barik}
+\end{justify}
 
 
 %===============================================================================

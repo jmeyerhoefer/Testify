@@ -1,10 +1,62 @@
 %===================================================================================================
 \section{Design Goals and Principles} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-  \label{Design Goals and Principles} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\label{sctn:design-goals-and-principles} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===================================================================================================
 
 
-\todo
+\improve
+
+
+\begin{justify}
+The design of Assertify is guided by four principles that target novice-relevant
+shortcomings of baseline output: clarity, contextualisation, usability, and
+flexibility. These principles mirror the objectives stated for the library in
+the current thesis draft, but are restated here in a form that directly
+motivates concrete technical decisions.
+\end{justify}
+
+
+%===============================================================================
+\paragraph{Clarity through a stable report schema.}%
+\label{par:clarity-through-a-stable-report-schema} The primary goal is
+to present failure information in a structured and easily readable form, such
+that learners can quickly identify (i) what was evaluated, (ii) what was
+expected, and (iii) what was actually obtained. In contrast to baseline failures
+that interleave this information with low-level noise, Assertify prioritises a
+compact summary view centred on an explicit expected/actual comparison.
+
+
+%===============================================================================
+\paragraph{Context where it supports debugging.}%
+\label{par:context-where-it-supports-debugging} Some failures cannot be
+understood solely from a final mismatch, especially when a failure is preceded
+by intermediate evaluations or when expressions are syntactically complex.
+Assertify therefore supports adding context in two complementary ways: (i)
+simplifying or reducing expressions to remove irrelevant technical detail while
+preserving the structure that matters for interpretation, and (ii) optionally
+attaching a \emph{history} of previously evaluated expressions in scenarios
+where a sequence of operations precedes a failure (e.g., stateful data structure
+tests).
+
+
+%===============================================================================
+\paragraph{Usability and minimal intrusion.}%
+\label{par:usability-and-minimal-intrusion} A central design choice is to
+integrate into existing workflows without requiring a new execution environment
+or substantial changes to test code. The library is therefore implemented as a
+wrapper around established frameworks (e.g., MSTest assertions and FsCheck
+properties) and aims to preserve familiar testing idioms while improving the
+resulting feedback.
+
+
+%===============================================================================
+\paragraph{Flexibility and configuration.}%
+\label{par:flexibility-and-configuration} Students, tutors, and developers can
+have different information needs. Assertify is therefore designed to support
+configurable verbosity, for example by enabling or disabling optional report
+components such as reduction steps or history information. This allows the same
+testing infrastructure to serve both novice-oriented feedback (minimal,
+high-signal summaries) and more detailed debugging scenarios (extended context).
 
 
 %===================================================================================================

@@ -4,40 +4,61 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
-\begin{justify}
-    The structure of this thesis is as follows:
+The structure of this thesis is as follows:
 
-    \paragraph{\nameref{Background and Related Work}}
-        reviews research on the difficulties novice programmers face when interpreting compiler and test diagnostics,
-        and summarises prior approaches that aim to improve the structure and usefulness of error feedback. Building on these perspectives,
-        the chapter motivates the thesis goal of presenting failures in a more consistent and
-        cognitively simple format.
 
-    \paragraph{\nameref{Problem Analysis}}
-        examines typical compiler and testing-framework outputs as they appear in beginner exercises and characterises their technical properties,
-        such as verbosity, inconsistency, and the mixing of essential information with framework internals. Based on these observations,
-        the chapter derives design requirements for improved test failure reporting, with a stable \emph{tested expression/expected/actual} summary as the primary user-facing interface.
+%===============================================================================
+\paragraph{\nameref{Background and Related Work}}
+    \label{Thesis Structure: Background and Related Work}
+reviews research on the difficulties novice programmers face when interpreting compiler and test
+diagnostics, and summarises prior approaches that aim to improve the structure and usefulness of
+error feedback. Building on these perspectives, the chapter motivates the thesis goal of presenting
+failures in a more consistent and cognitively simple format.
 
-    \paragraph{\nameref{Assertify (and Checkify): Design and Implementation}}
-        presents the design rationale and implementation of \emph{Assertify} as a lightweight test and assertion library that wraps existing testing infrastructures.
-        It explains how a consistent \texttt{expected=actual} output format is produced, including the use of Quotations and Unquote for expression capture and evaluation,
-        as well as wrappers around \texttt{Microsoft.VisualStudio.TestTools.UnitTesting} and \texttt{FsCheck}.
-        The chapter also discusses implementation choices and their implications for extensibility.
 
-    \paragraph{\nameref{Results and Discussion}}
-        reports the results of the implemented approach and discusses them in relation to the derived requirements and research questions.
-        The discussion focuses primarily on technical and qualitative properties achieved by the artifact (e.g., output consistency, coverage of supported assertion forms,
-        and integration with unit and property-based testing workflows) and uses illustrative comparisons to baseline framework output to
-        highlight differences in interpretability, while separating concrete observations from generalisable claims.
+%===============================================================================
+\paragraph{\nameref{Problem Analysis}}
+    \label{Thesis Structure: Problem Analysis}
+examines typical compiler and testing-framework outputs as they appear in beginner exercises and
+characterises their technical properties, such as verbosity, inconsistency, and the mixing of
+essential information with framework internals. Based on these observations, the chapter derives
+design requirements for improved test failure reporting, with a stable
+\emph{tested expression/expected/actual} summary as the primary user-facing interface.
 
-    \paragraph{\nameref{Conclusion}}
-        concludes the thesis by summarising the contributions and revisiting the research questions in light of the presented results.
-        It then outlines future work, including potential extensions within the wrapper-based approach (e.g., broader expression coverage, richer formatting layers,
-        and tighter tooling integration) and longer-term directions that would require more substantial redesign beyond wrappers.
-\end{justify}
+
+%===============================================================================
+\paragraph{\nameref{Assertify (and Checkify): Design and Implementation}}
+    \label{Thesis Structure: Assertify (and Checkify): Design and Implementation}
+presents the design rationale and implementation of \emph{Assertify} as a lightweight test and
+assertion library that wraps existing testing infrastructures. It explains how a consistent
+\texttt{expected=actual} output format is produced, including the use of Quotations and Unquote for
+expression capture and evaluation, as well as wrappers around \texttt{Microsoft.VisualStudio.
+TestTools.UnitTesting} and \texttt{FsCheck}. The chapter also discusses implementation choices and
+their implications for extensibility.
+
+
+%===============================================================================
+\paragraph{\nameref{Results and Discussion}}
+    \label{Thesis Structure: Results and Discussion}
+reports the results of the implemented approach and discusses them in relation to the derived
+requirements and research questions. The discussion focuses primarily on technical and qualitative
+properties achieved by the artifact (e.g., output consistency, coverage of supported assertion
+forms, and integration with unit and property-based testing workflows) and uses illustrative
+comparisons to baseline framework output to highlight differences in interpretability, while
+separating concrete observations from generalisable claims.
+
+
+%===============================================================================
+\paragraph{\nameref{Conclusion}}
+    \label{Thesis Structure: Conclusion}
+concludes the thesis by summarising the contributions and revisiting the research questions in light
+of the presented results. It then outlines future work, including potential extensions within the
+wrapper-based approach (e.g., broader expression coverage, richer formatting layers, and tighter
+tooling integration) and longer-term directions that would require more substantial redesign beyond
+wrappers.
 
 
 %===============================================================================

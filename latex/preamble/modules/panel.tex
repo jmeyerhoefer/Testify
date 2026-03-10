@@ -147,6 +147,34 @@
 		}%
 	},
     %=======================================================
+	% SIMPLE BASE ++++++++++++++++++++++++++++++++++++++++++
+	%=======================================================
+    panel base simple/.style={
+		enhanced,
+        notitle,
+		colback=black!5!white,
+		arc=0mm,
+		boxrule=0mm,
+		toprule=0mm,
+		leftrule=0mm, rightrule=0mm,
+		top=1mm, bottom=1mm,
+		left=2mm, right=2mm,
+		borderline west = { 1.5mm }{ -3mm }{ #1 },
+		before={ \par\medskip\parindent=0pt }, after={ \par\smallskip },
+	},
+    panel inline/.style={
+        enhanced,
+        notitle,
+        colback=black!5!white,
+        arc=0mm,
+		boxrule=0mm,
+		leftrule=0mm, rightrule=0mm,
+		top=1mm, bottom=1mm,
+		left=2mm, right=2mm,
+		borderline west = { 1.5mm }{ -3mm }{ #1 },
+		before={ \par\medskip\parindent=0pt }, after={ \par\smallskip },
+    },
+    %=======================================================
 	% PANEL BASE +++++++++++++++++++++++++++++++++++++++++++
 	%=======================================================
 	panel base/.style={
@@ -165,19 +193,21 @@
 		top=1mm, bottom=1mm,
 		left=2mm, right=2mm,
 		borderline west = { 1.5mm }{ -3mm }{ \panelColor },
-		before={ \par\medskip\parindent=0pt }, after={ \par\medskip },
+		before={ \par\medskip\parindent=0pt }, after={ \par\smallskip },
+        fontlower=\ttfamily\footnotesize,
+        colbacklower=green,
 	},
     %=======================================================
 	% PANEL MINTED +++++++++++++++++++++++++++++++++++++++++
 	%=======================================================
     panel minted/.style={
-		listing only,
 		listing engine=minted,
 		minted style=colorful,
 		minted language=\panelMintedLanguage,
 		minted options={
 			fontsize=\footnotesize,
 			linenos=true, numbers=right,
+            escapeinside=\#\%,
 			xrightmargin=-.5em,
 			numbersep=0.1pt,
 			breaklines=true,
@@ -215,7 +245,6 @@
 	panel setup={ asset, #1 },
 	panel base,
 	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
-	% label={ #2 },
 }
 
 
@@ -227,9 +256,20 @@
 \newtcblisting{codepanel}[2][]{%
 	panel setup={ fs, #1 },
 	panel base,
+    listing only,
 	panel minted,
 	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
 	% label={ #2 },
+}
+
+\newtcblisting{outputpanel}[4][]{%
+	panel setup={ fs, #1 },
+	panel base,
+    listing and comment,
+    comment={ #4 },
+	panel minted,
+	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
+	label={ code:#3 },
 }
 
 
@@ -241,6 +281,7 @@
 \newtcbinputlisting{\inputcodepanel}[3][]{%
 	panel setup={ fs, #1 },
 	panel base,
+    listing only,
 	panel minted,
 	listing file=#3,
 	minted options app/.expanded={%
@@ -260,6 +301,7 @@
 \newtcblisting{verbatimpanel}[2][]{%
 	panel setup={ fs, #1 },
 	panel base,
+    listing only,
 	panel minted,
 	minted style=bw,
 	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
@@ -279,6 +321,17 @@
 	title={ \strut\textbf{\panelKindText\ \csname the\panelCounter\endcsname}~#2 },
 	% label={ #2 },
 }
+
+
+%===========================================================
+% DESCRIPTION/DEFINITION +++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newtcolorbox{defpanel}[1][metroRed]{%
+    panel base simple={ #1 },
+}
+
 
 %===================================================================================================
 % EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

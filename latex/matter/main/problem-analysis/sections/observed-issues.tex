@@ -4,30 +4,171 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
 \begin{justify}
-	This section characterises the structural properties of baseline outputs that contribute to poor interpretability for novices.
-	The analysis is organised around recurring patterns, illustrated through representative examples from beginner exercises.
+This section identifies recurring issues in baseline outputs produced by common compiler and testing
+tools. The focus is on how test failures are reported and how students must reconstruct key
+information that is not explicitly presented. The examples are drawn from representative beginner
+exercises used throughout this thesis.
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Issue 1: Essential information is fragmented or implicit} %++++++++
+\subsection{Examples of current error messages} %+++++++++++++++++++++++++++++++
+     \label{Examples of current error messages} %+++++++++++++++++++++++++++++++
 %===============================================================================
 
 
 \begin{justify}
-	In many baseline test outputs, the information required to reconstruct the failing behaviour is not presented as a single, explicit summary.
-	Instead, learners must infer it by combining multiple fragments (e.g., a test name, a partially printed expression, and a comparison line).
-	When the \emph{tested expression} is not explicitly shown, students may not be able to associate the failure with a specific function call in their submission,
-	especially when a test method executes multiple assertions or multiple inputs.
+Error messages often require the programmer to understand not only \emph{what} was tested but also
+\emph{how} it was tested. For instance, tests for data structures and stateful components may
+involve sequences of operations (e.g., insertions and removals) followed by an invariant check.
+If a failure occurs after multiple steps, baseline output rarely describes the sequence leading to
+the assertion point, even though a compact description of the minimal failing history would often be
+sufficient for debugging.
+
+In addition, baseline frameworks frequently present essential information in a fragmented manner.
+For example, \texttt{Assert.AreEqual} can report an expected/actual mismatch, but it does not
+inherently encode the tested expression. Unless the test method name and surrounding context are
+highly descriptive, students may struggle to associate the mismatch with a concrete call in their
+own code. As a consequence, learners must infer missing context from indirect cues such as test
+names, inputs printed elsewhere, or stack traces.
+\end{justify}
+
+
+%===========================================================
+\subsubsection{Example 1 --- \texttt{digitSum}} %+++++++++++
+        \label{Example 1 digitSum} %++++++++++++++++++++++++
+%===========================================================
+
+
+\begin{justify}
+Consider the exercise \fsharp{digitSum : Nat |$\to$| Nat}, where the task is to compute the digit
+sum of a natural number. A representative novice mistake is an incorrect base case, such as
+returning \texttt{1N} for input \texttt{0N}. Example-based tests using Unquote can display the
+failed equality as a quoted expression and show the boolean result of the comparison, but the output
+also contains repeated, qualified expression renderings and a stack trace that dominates the overall
+message.
+
+For novices, this reduces the signal-to-noise ratio: the crucial mismatch is present, yet not
+highlighted as a compact summary.
+
+When property-based testing is used (e.g., FsCheck integrated with MSTest assertions), the output
+typically reports that a property is falsifiable and provides an original and a shrunk
+counterexample (often a minimal input such as \texttt{0N}). This information is valuable, but the
+message does not necessarily provide a direct, novice-friendly statement of the failing behaviour in
+terms of a single reconstructed expression such as:
+
+\begin{quote}
+    \emph{Tested expression: \texttt{digitSum 0N}. Expected: \texttt{0N}. Actual: \texttt{1N}.}
+\end{quote}
+
+Instead, students must combine fragments from different parts of the output (counterexample,
+expected/actual mismatch, and implicit knowledge about what the test invokes) to arrive at that
+statement.
+\end{justify}
+
+
+%===========================================================
+\subsubsection{Example 2 --- \texttt{sortedDigits}} %+++++++
+        \label{Example 2 sortedDigits} %++++++++++++++++++++
+%===========================================================
+
+
+\begin{justify}
+A similar pattern occurs for boolean-valued exercises such as \\
+\fsharp{sortedDigits : Nat |$\to$| bool}. Failures may hinge on subtle predicate choices
+(e.g., strict vs.\ non-strict comparisons), where the difference between \texttt{<} and \texttt{<=}
+becomes visible only on specific counterexamples (e.g., repeated digits). In baseline outputs, the
+essential information is the concrete failing input together with the expected and actual boolean
+result. However, this information is often presented without an explicit reconstruction of the
+tested call, and it is not consistently formatted across different testing mechanisms \cite{barik}.
+As a result, students must infer which invocation produced the mismatch and why the counterexample
+is relevant to the specification.
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Issue 2: Mixing core mismatch information with framework internals}
+\subsection{Recurring structural problems} %++++++++++++++++++++++++++++++++++++
+     \label{Recurring structural problems} %++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+Across the examples above, the following structural problems recur.
+
+
+%===========================================================
+\paragraph{Missing explicit linkage to the tested expression.}
+    \label{Missing explicit linkage to the tested expression.}
+Many assertion messages focus on the mismatch (expected vs.\ actual) without explicitly reporting
+the expression or call that produced it. For novices, this disconnect is critical because it
+introduces ambiguity about what exactly was evaluated. The problem is amplified when tests are
+hidden, since the student cannot inspect the failing test case and must rely on the message alone.
+
+
+%===========================================================
+\paragraph{Fragmentation of essential information.}
+    \label{Fragmentation of essential information.}
+Even when all necessary facts are present (inputs, expected value, actual value), they may appear in
+separate lines or in different parts of the output. Students are required to reconstruct the failing
+behaviour by manually combining fragments. This reconstruction increases cognitive load and
+encourages trial-and-error rather than systematic debugging.
+
+
+%===========================================================
+\paragraph{Inconsistent message formats across tools.}
+    \label{Inconsistent message formats across tools.}
+In the considered setting, example-based tests (e.g., Unquote) and framework assertions (e.g.,
+MSTest \texttt{Assert.AreEqual}) produce different output structures and emphasize different aspects
+of a failure. Such inconsistency prevents novices from developing a stable reading strategy.
+More generally, diagnostics often originate from internal tool representations that do not map
+cleanly back to what the programmer wrote \cite{becker}.
+
+
+%===========================================================
+\paragraph{Verbosity and low-level noise.}
+    \label{Verbosity and low-level noise.}
+Stack traces, framework invocation details, and module-qualified names can obscure the central
+mismatch. While such details may help experienced developers diagnose infrastructure issues, they
+often do not help novices fix solution logic. Verbose output can reduce readability and make it
+difficult to locate actionable information.
+
+
+%===========================================================
+\paragraph{Locality and causality gaps.}
+    \label{Locality and causality gaps.}
+Error reports are not always local to the underlying cause. Becker et al.\ note that errors are
+frequently detected far away from their generation sites (the ``locality problem''), and that
+diagnostics may reflect tool-internal viewpoints rather than the programmer's conceptual model
+\cite{becker}. In educational contexts, this manifests when the message points to the test harness
+location (which students may not access) rather than to the relevant part of their own code.
+
+This section characterises the structural properties of baseline outputs that contribute to poor
+interpretability for novices. The analysis is organised around recurring patterns, illustrated
+through representative examples from beginner exercises.
+
+
+%===============================================================================
+\subsection{Issue 1: Essential information is fragmented or implicit} %+++++++++
+     \label{Issue 1: Essential information is fragmented or implicit} %+++++++++
+%===============================================================================
+
+
+\begin{justify}
+In many baseline test outputs, the information required to reconstruct the failing behaviour is not
+presented as a single, explicit summary. Instead, learners must infer it by combining multiple
+fragments (e.g., a test name, a partially printed expression, and a comparison line). When the
+\emph{tested expression} is not explicitly shown, students may not be able to associate the failure
+with a specific function call in their submission, especially when a test method executes multiple
+assertions or multiple inputs.
+\end{justify}
+
+
+%===============================================================================
+\subsection{Issue 2: Mixing core mismatch information with framework internals}%
+     \label{Issue 2: Mixing core mismatch information with framework internals}%
 %===============================================================================
 
 
@@ -39,72 +180,88 @@
 
 
 %===============================================================================
-\subsection*{Issue 3: Inconsistent structure across test types and frameworks} %
+\subsection{Issue 3: Inconsistent structure across test types and frameworks} %+
+     \label{Issue 3: Inconsistent structure across test types and frameworks} %+
 %===============================================================================
 
 
 \begin{justify}
-	Even within a single course setup, students may encounter multiple output formats depending on whether a failure stems from:
+Even within a single course setup, students may encounter multiple output formats depending on
+whether a failure stems from:
 
-	\skipS\begin{enumerate}[label={(\alph*)}]
-		\item a unit-test assertion,
-		\item a quotation-based assertion mechanism, or
-		\item a property-based test with counterexample generation and shrinking.
-	\end{enumerate}
+\skipS\begin{enumerate}[label={(\alph*)}]
+    \item a unit-test assertion,
+    \item a quotation-based assertion mechanism, or
+    \item a property-based test with counterexample generation and shrinking.
+\end{enumerate}
 
-	\skipS If these formats differ substantially in vocabulary, ordering, and level of detail, students cannot form stable expectations about where to look for essential information.
+\skipS If these formats differ substantially in vocabulary, ordering, and level of detail, students
+cannot form stable expectations about where to look for essential information.
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Issue 4: Property-based testing output is informative but not pedagogically structured}
+\subsection{Issue 4: Property-based testing output is informative but not pedagogically structured}
+     \label{Issue 4: Property-based testing output is informative but not pedagogically structured}
 %===============================================================================
 
 
 \begin{justify}
-	Property-based testing frameworks can provide powerful information (e.g., a counterexample input and a shrunk minimal failing case).
-	However, this information is often embedded in output that assumes familiarity with the property-testing workflow.
-	In particular, the relationship between (i) the generated input, (ii) the shrunk counterexample,
-	and (iii) the failing assertion is not always made explicit in a way that supports novice mental models.
+Property-based testing frameworks can provide powerful information (e.g., a counterexample input and
+a shrunk minimal failing case). However, this information is often embedded in output that assumes
+familiarity with the property-testing workflow. In particular, the relationship between (i) the
+generated input, (ii) the shrunk counterexample, and (iii) the failing assertion is not always made
+explicit in a way that supports novice mental models.
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Issue 5: Missing execution context for stateful or multi-step scenarios}
+\subsection{Issue 5: Missing execution context for stateful or multi-step scenarios}
+     \label{Issue 5: Missing execution context for stateful or multi-step scenarios}
 %===============================================================================
 
 
 \begin{justify}
-	For exercises involving stateful data structures or sequences of operations, a single expected/actual mismatch may be insufficient to understand the failure.
-	If the failure occurs after a sequence of updates, students may need to know \emph{what was executed before the failing check} in order to reproduce the bug.
-	Baseline outputs typically do not preserve such operational context.
+For exercises involving stateful data structures or sequences of operations, a single
+expected/actual mismatch may be insufficient to understand the failure. If the failure occurs after
+a sequence of updates, students may need to know \emph{what was executed before the failing check}
+in order to reproduce the bug. Baseline outputs typically do not preserve such operational context.
 
-	\skipM\textbf{Checkpoint (examples and evidence to add):}
+\skipM\textbf{Checkpoint (examples and evidence to add):}
 
-	\skipS\begin{itemize}
-		\item TODO: Insert 2--3 concrete baseline outputs from your own exercise set and annotate them (highlight: where is the tested expression? where is expected/actual? what is noise?).
-		\item TODO: Add at least one example for each: (i) example-based unit test failure, (ii) quotation/assertion failure, (iii) property-based failure with shrinking.
-		\item TODO: Provide a short ``signal vs.\ noise'' breakdown for each example (e.g., mark lines as essential vs.\ auxiliary).
-		\item TODO: If you discuss multi-step/stateful tests, add a small scenario (e.g., linked list operations) and show precisely what context is missing in baseline output.
-	\end{itemize}
+\skipS\begin{itemize}
+    \item TODO: Insert 2--3 concrete baseline outputs from your own exercise set and annotate them
+        (highlight: where is the tested expression? where is expected/actual? what is noise?).
+    \item TODO: Add at least one example for each: (i) example-based unit test failure, (ii)
+        quotation/assertion failure, (iii) property-based failure with shrinking.
+    \item TODO: Provide a short ``signal vs.\ noise'' breakdown for each example (e.g., mark lines
+        as essential vs.\ auxiliary).
+    \item TODO: If you discuss multi-step/stateful tests, add a small scenario (e.g., linked list
+        operations) and show precisely what context is missing in baseline output.
+\end{itemize}
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Mock-up: additional observations to validate with literature (not yet backed by your local examples)}
+\subsection{Mock-up: additional observations to validate with literature (not yet backed by your local examples)}
+     \label{Mock-up: additional observations to validate with literature (not yet backed by your local examples)}
 %===============================================================================
 
 
 \begin{justify}
-	The following patterns are frequently discussed in the broader literature on novice-facing diagnostics and may apply to your setting,
-	but should be validated with either (i) your own collected outputs or (ii) clearly cited prior work:
+The following patterns are frequently discussed in the broader literature on novice-facing
+diagnostics and may apply to your setting, but should be validated with either (i) your own
+collected outputs or (ii) clearly cited prior work:
 
-	\skipS\begin{itemize}
-		\item TODO: \textbf{Jargon and modality switching:} natural-language fragments mixed with code tokens can force frequent context switches during reading.
-		\item TODO: \textbf{Redundant repetition:} repeating the same information in multiple forms (e.g., multiple representations of the same expression)
-			can increase reading effort without improving comprehension.
-		\item TODO: \textbf{Poor localisation:} messages may be accurate but point novices to symptoms rather than the likely source of misunderstanding.
-	\end{itemize}
+\skipS\begin{itemize}
+    \item TODO: \textbf{Jargon and modality switching:} natural-language fragments mixed with code
+        tokens can force frequent context switches during reading.
+    \item TODO: \textbf{Redundant repetition:} repeating the same information in multiple forms
+        (e.g., multiple representations of the same expression) can increase reading effort without
+        improving comprehension.
+    \item TODO: \textbf{Poor localisation:} messages may be accurate but point novices to symptoms
+        rather than the likely source of misunderstanding.
+\end{itemize}
 \end{justify}
 
 

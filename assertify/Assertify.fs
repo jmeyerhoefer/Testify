@@ -153,6 +153,7 @@ type Assertify =
             <| AssertifyResult.MakeResult (
                 "Test",
                 ?message = message,
+                
                 expression = expr.Decompile (),
                 stacktrace = ex.StackTrace
             )

@@ -4,7 +4,72 @@
 %===================================================================================================
 
 
-\todo
+\improve
+
+
+\begin{justify}
+To make failure feedback consistent across different testing mechanisms, Assertify/Checkify use a
+common \emph{output model} that represents the essential components of a test outcome in a
+structured form. The model is designed around the minimal information that is directly actionable
+for novices: the tested expression and an explicit expected/actual comparison.
+This directly operationalises the requirements derived from the problem analysis chapter.
+\end{justify}
+
+
+%===============================================================================
+\paragraph{Core fields.}
+    \label{Core fields.}
+At the centre of the model are three fields:
+
+\begin{enumerate}
+    \item \textbf{Tested expression}: a textual representation of what was evaluated
+        (e.g., \texttt{digitSum 123N = 6N}), intended to be readable without requiring knowledge of
+        the test harness.
+    \item \textbf{Expected value}: the reference value implied by the specification or by the
+        right-hand side of an equality.
+    \item \textbf{Actual value}: the value produced by evaluating the implementation under test.
+\end{enumerate}
+
+This triad supports the stable reading strategy targeted by Assertify: identify the
+expression, compare expected vs.\ actual, then localise the relevant part of the implementation.
+
+
+%===============================================================================
+\paragraph{Readable vs. technical renderings.}
+    \label{Readable vs. technical renderings.}
+In practice, expression strings produced by tooling
+may include module qualifications or syntactic artifacts that are not helpful for novices.
+The model therefore distinguishes between a \emph{full} expression rendering (useful for
+traceability in the pipeline) and an optional \emph{simplified} rendering intended for
+student-facing output. This design is reflected in the before/after examples already included in
+the draft, where both the fully qualified and simplified versions are displayed.
+
+
+%===============================================================================
+\paragraph{Optional context fields.}
+    \label{Optional context fields.}
+The model also supports optional context fields that may be
+included depending on the test mechanism and configuration:
+
+\begin{itemize}
+    \item \textbf{History}: a sequence of successfully evaluated expressions leading up to a
+        failure, intended to preserve operational context in multi-step tests.
+    \item \textbf{Property-based inputs}: original and shrunk counterexamples for property-based
+        failures, enabling students to focus on the minimal failing case while retaining access to
+        the unshrunk case for additional context.
+    \item \textbf{Diagnostic metadata}: a message and stack trace for traceability and for
+        tutor/debugging use, while keeping this information secondary to the student-facing summary.
+\end{itemize}
+
+
+%===============================================================================
+\paragraph{Serialisation and downstream use.}
+    \label{Serialisation and downstream use.}
+A structured output model also enables alternative
+presentations beyond plain console text. The project notes explicitly mention serialisable outputs
+(e.g., JSON) as a basis for visualisation and for integrating reports into external tooling
+(such as IDE support). While the thesis primarily discusses the human-readable rendering,
+the model is designed to remain usable in such downstream scenarios.
 
 
 %===================================================================================================

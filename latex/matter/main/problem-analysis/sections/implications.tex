@@ -4,100 +4,128 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
 \begin{justify}
-	Based on the issues above, this section derives requirements for novice-oriented test failure reporting.
-	Each requirement is phrased as a constraint on the \emph{user-facing report}, independent of any specific implementation technique.
-	The subsequent design chapter then maps these requirements onto concrete mechanisms (e.g., expression capture, value extraction, and framework wrappers).
+Based on the issues above, this section derives requirements for novice-oriented test failure
+reporting. Each requirement is phrased as a constraint on the \emph{user-facing report}, independent
+of any specific implementation technique. The subsequent design chapter then maps these requirements
+onto concrete mechanisms (e.g., expression capture, value extraction, and framework wrappers).
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Requirements} %++++++++++++++++++++++++++++++++++++++++++++++++++++
+\subsection{Requirements} %+++++++++++++++++++++++++++++++++++++++++++++++++++++
+     \label{Requirements} %+++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
 
 
 \begin{description}
 	\item[\textbf{R1: Stable summary structure.}]
 		\begin{justify}
-			Every failing test should provide a compact, consistently ordered summary containing at least: (i) the tested expression (or an equivalent description of the behaviour under test), (ii) the expected value/condition, and (iii) the actual value/observed result.
-		\end{justify}	
+			Every failing test should provide a compact, consistently ordered summary containing at
+            least: (i) the tested expression (or an equivalent description of the behaviour under
+            test), (ii) the expected value/condition, and (iii) the actual value/observed result.
+		\end{justify}
 	\item[\textbf{R2: Explicit tested expression.}]
 		\begin{justify}
-			The report must explicitly identify \emph{what was executed} (e.g., a reconstructed function call) rather than relying on the test name or on implicit context.
+			The report must explicitly identify \emph{what was executed} (e.g., a reconstructed
+            function call) rather than relying on the test name or on implicit context.
 		\end{justify}
 
 	\item[\textbf{R3: Expected vs.\ actual as the primary comparison.}]
 		\begin{justify}
-			The expected and actual outcomes must be presented side-by-side (or in a tightly coupled pair) in a way that supports rapid visual comparison.
-		\end{justify}	
+			The expected and actual outcomes must be presented side-by-side (or in a tightly coupled
+            pair) in a way that supports rapid visual comparison.
+		\end{justify}
 
 	\item[\textbf{R4: Separation of essential and auxiliary information.}]
 		\begin{justify}
-			Framework internals (stack traces, runner frames, reflection calls) must not obscure the essential summary. If included at all, such details should be clearly separated and optionally suppressible.
-		\end{justify}	
+			Framework internals (stack traces, runner frames, reflection calls) must not obscure the
+            essential summary. If included at all, such details should be clearly separated and
+            optionally suppressible.
+		\end{justify}
 
 	\item[\textbf{R5: Applicability across test paradigms.}]
 		\begin{justify}
-			The same summary structure should apply to both example-based unit tests and property-based tests, even when additional information (e.g., counterexamples) is present.
-		\end{justify}	
+			The same summary structure should apply to both example-based unit tests and
+            property-based tests, even when additional information (e.g., counterexamples) is
+            present.
+		\end{justify}
 
 	\item[\textbf{R6: Structured representation of property-based counterexamples.}]
 		\begin{justify}
-			If a property fails, the report must clearly indicate (i) the failing input, (ii) any shrunk/minimised counterexample, and (iii) how this input relates to the tested expression and observed mismatch.
-		\end{justify}	
+			If a property fails, the report must clearly indicate (i) the failing input, (ii) any
+            shrunk/minimised counterexample, and (iii) how this input relates to the tested
+            expression and observed mismatch.
+		\end{justify}
 
 	\item[\textbf{R7: Support for contextual history when needed.}]
 		\begin{justify}
-			For multi-step/stateful scenarios, the reporting layer should be able to attach an execution history (e.g., a sequence of operations) to make the failure reproducible and interpretable.
-		\end{justify}	
+			For multi-step/stateful scenarios, the reporting layer should be able to attach an
+            execution history (e.g., a sequence of operations) to make the failure reproducible and
+            interpretable.
+		\end{justify}
 \end{description}
 
 
 %===============================================================================
-\subsection*{Design implications for Assertify/Checkify} %++++++++++++++++++++++
+\subsection{Design implications for Assertify/Checkify} %+++++++++++++++++++++++
+     \label{Design implications for Assertify/Checkify} %+++++++++++++++++++++++
 %===============================================================================
 
 
 \begin{justify}
-	The requirements above imply that a reporting layer must (a) gain access to the tested expression at runtime,
-	(b) evaluate it to obtain the actual value, (c) retain or compute the expected value, and (d) serialise both
-	into a stable output model that is independent of any particular baseline framework.
+The requirements above imply that a reporting layer must (a) gain access to the tested expression at
+runtime, (b) evaluate it to obtain the actual value, (c) retain or compute the expected value, and
+(d) serialise both into a stable output model that is independent of any particular baseline
+framework.
 
-	\skipM In the scope of this thesis, these implications motivate:
+\skipM In the scope of this thesis, these implications motivate:
 
-	\skipS\begin{itemize}
-		\item \textbf{Expression capture:} obtain a representation of the tested expression that can be displayed to the user (and simplified where appropriate).
-		\item \textbf{Value extraction:} evaluate expressions in a controlled way to compute actual values and to render values consistently.
-		\item \textbf{Wrapper-based integration:} intercept failures from existing unit testing and property-based testing frameworks and replace or
-			augment their output without requiring changes to the surrounding tooling.
-		\item \textbf{Unified output model:} define a single report representation that can be produced for different assertion forms and test paradigms.
-	\end{itemize}
+\skipS\begin{itemize}
+    \item \textbf{Expression capture:} obtain a representation of the tested expression that can be
+        displayed to the user (and simplified where appropriate).
+    \item \textbf{Value extraction:} evaluate expressions in a controlled way to compute actual
+        values and to render values consistently.
+    \item \textbf{Wrapper-based integration:} intercept failures from existing unit testing and
+        property-based testing frameworks and replace or augment their output without requiring
+        changes to the surrounding tooling.
+    \item \textbf{Unified output model:} define a single report representation that can be produced
+        for different assertion forms and test paradigms.
+\end{itemize}
 
-	\skipS\textbf{Checkpoint (traceability to later chapters):}
+\skipS\textbf{Checkpoint (traceability to later chapters):}
 
-	\begin{marker}[med]
-		\item TODO: Add a small mapping table from issues $\rightarrow$ requirements $\rightarrow$ implementation mechanisms (one row per requirement).
-		\item TODO: Decide which requirements are \emph{must-have} vs.\ \emph{nice-to-have} for the first version of Assertify.
-		\item TODO: State explicitly which requirements are out of scope (e.g., improving compiler diagnostics beyond test reporting).
-	\end{marker}
+\begin{marker}[med]
+    \item TODO: Add a small mapping table from issues $\to$ requirements $\to$ implementation
+        mechanisms (one row per requirement).
+    \item TODO: Decide which requirements are \emph{must-have} vs.\ \emph{nice-to-have} for the
+        first version of Assertify.
+    \item TODO: State explicitly which requirements are out of scope (e.g., improving compiler
+        diagnostics beyond test reporting).
+\end{marker}
 \end{justify}
 
 
 %===============================================================================
-\subsection*{Completion Checklist for This Chapter} %+++++++++++++++++++++++++++
+\subsection{Completion Checklist for This Chapter} %++++++++++++++++++++++++++++
+     \label{Completion Checklist for This Chapter} %++++++++++++++++++++++++++++
 %===============================================================================
 
 
 \begin{marker}[med]
 	\begin{itemize}
-		\item Add at least one fully worked example for each failure category (compiler error, unit test failure, property-based failure).
+		\item Add at least one fully worked example for each failure category (compiler error, unit
+            test failure, property-based failure).
 		\item Add an explicit ``signal vs.\ noise'' annotation for each example output.
-		\item Ensure every derived requirement is supported by at least one observed issue (traceability).
-		\item Add short, properly cited connections to prior work on diagnostic usability and novice comprehension (do not overclaim; separate observation from generalisation).
-		\item Verify terminology consistency with later chapters (e.g., always use \emph{tested expression / expected / actual} in the same order).
+		\item Ensure every derived requirement is supported by at least one observed issue
+            (traceability).
+		\item Add short, properly cited connections to prior work on diagnostic usability and novice
+            comprehension (do not overclaim; separate observation from generalisation).
+		\item Verify terminology consistency with later chapters (e.g., always use
+            \emph{tested expression / expected / actual} in the same order).
 	\end{itemize}
 \end{marker}
 

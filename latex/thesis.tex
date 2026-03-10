@@ -18,8 +18,10 @@
 
 \input{matter/front/titlepage.tex}                % Titlepage
 \input{matter/front/authorship.tex}               % Authorship
+
 \vfill\pagebreak\input{matter/front/abstract.tex} % Abstract
-\vfill\input{matter/front/summary.tex}            % Abstract
+\vfill\input{matter/front/summary.tex}            % Summary
+
 \vfill\thispagestyle{empty}\cleardoublepage       % Open right (req. for bookmark)
 \pdfbookmark[0]{\contentsname}{toc}               % Add TOC to PDF bookmarks
 \tableofcontents                                  % Print TOC

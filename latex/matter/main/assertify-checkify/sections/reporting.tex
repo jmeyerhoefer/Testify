@@ -4,9 +4,84 @@
 %===================================================================================================
 
 
-\begin{marker}[high]
-With output comparison
-\end{marker}
+\improve
+
+
+\begin{justify}
+Assertify/Checkify are designed to integrate into existing test workflows by wrapping standard
+frameworks and replacing baseline failure text with a structured report. The integration strategy
+follows the ``minimal intrusion'' principle: tests are still executed by conventional runners, but
+failures are intercepted and re-raised with enriched information in a stable format.
+\end{justify}
+
+
+%===============================================================================
+\subsection{Integration with example-based unit tests} %++++++++++++++++++++++++
+     \label{Integration with example-based unit tests} %++++++++++++++++++++++++
+%===============================================================================
+
+
+\begin{justify}
+For example-based tests, Assertify acts as a wrapper around standard assertion-style checks by
+evaluating the quoted test expression and failing the test if it evaluates to \texttt{false}.
+When a failure occurs, Assertify produces a report that explicitly includes:
+
+\begin{itemize}
+  \item the tested/failed expression,
+  \item an optional simplified expression rendering, and
+  \item the expected and actual values.
+\end{itemize}
+
+This structure is illustrated by the existing before/after comparison listings in the draft, where
+Assertify reports the fully qualified expression alongside a simplified rendering and then prints
+expected and actual results in a dedicated block.
+\end{justify}
+
+
+%===============================================================================
+\subsection{Integration with property-based tests} %++++++++++++++++++++++++++++
+     \label{Integration with property-based tests} %++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\begin{justify}
+For property-based tests, Checkify provides a wrapper that executes the property via FsCheck and,
+on failure, captures both the original and shrunk counterexample inputs. These inputs are
+incorporated into the structured report to make the falsifying case reproducible and to ensure that
+the student-facing expression is presented with the relevant (typically shrunk) input instantiated.
+This preserves the value of shrinking while presenting the result in the same
+expected/actual-oriented format as example-based tests.
+\end{justify}
+
+
+%===============================================================================
+\subsection{Formatting strategy} %++++++++++++++++++++++++++++++++++++++++++++++
+     \label{Formatting strategy} %++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+
+\begin{justify}
+The reporting format is designed around a high-signal summary that foregrounds the novice-relevant
+fields. The draft output examples show explicit section markers (e.g., for ``TESTED EXPRESSION'' and
+``EXPECTED AND ACTUAL''), which support scanning and reduce the likelihood that students miss the
+crucial mismatch due to stack trace noise. Additional details such as stack traces remain available
+for traceability but are treated as secondary information.
+\end{justify}
+
+
+%===============================================================================
+\subsection{Configurable verbosity and optional context} %++++++++++++++++++++++
+     \label{Configurable verbosity and optional context} %++++++++++++++++++++++
+%===============================================================================
+
+
+\begin{justify}
+Finally, reporting is configurable with respect to optional context components. In line with the
+stated design considerations, the library supports toggling whether reductions and history
+information are included, allowing the same testing setup to be used with different levels of
+verbosity depending on the educational context (introductory debugging vs.\ more advanced
+troubleshooting).
+\end{justify}
 
 
 %===================================================================================================

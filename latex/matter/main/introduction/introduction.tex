@@ -4,50 +4,50 @@
 %===================================================================================================
 
 
-\todo
+\improve
 
 
 \begin{justify}
-    All programmers have to start at the beginning: What is programming? What is required to write and execute code? What are variables and methods and how are they used?
-    From there, learners gradually encounter key concepts and algorithms, and later data structures such as maps and sets. However, moving from basic syntax to
-    independently writing correct programs is a long process, which also includes implementing corresponding unit tests to validate solutions.
+All programmers have to start at the beginning: What is programming? What is required to write and execute code? What are variables and methods and how are they used?
+From there, learners gradually encounter key concepts and algorithms, and later data structures such as maps and sets. However, moving from basic syntax to
+independently writing correct programs is a long process, which also includes implementing corresponding unit tests to validate solutions.
 
-    \skipM Understanding and interpreting error messages is a fundamental challenge for novice programmers. Error messages serve as an essential form of feedback,
-    enabling programmers to diagnose issues in their code. In practice, standard diagnostics - especially those produced by compilers and testing frameworks -
-    are often technical, verbose, and difficult for beginners to interpret.
+\skipM Understanding and interpreting error messages is a fundamental challenge for novice programmers. Error messages serve as an essential form of feedback,
+enabling programmers to diagnose issues in their code. In practice, standard diagnostics - especially those produced by compilers and testing frameworks -
+are often technical, verbose, and difficult for beginners to interpret.
 
-    \skipM This becomes particularly apparent in introductory programming courses where students receive exercise templates with predefined tests and
-    are expected to implement missing functions or data structures. In such settings, learners are frequently unfamiliar with unit testing and
-    are immediately confronted with stack traces and framework-specific output formats.
+\skipM This becomes particularly apparent in introductory programming courses where students receive exercise templates with predefined tests and
+are expected to implement missing functions or data structures. In such settings, learners are frequently unfamiliar with unit testing and
+are immediately confronted with stack traces and framework-specific output formats.
 
-    \skipM In \fs, multiple testing frameworks and assertion libraries are available. A commonly used option is
-    \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting}{Microsoft.VisualStudio.TestTools.UnitTesting}. For example, using
-    \href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting.assert.areequal?view=mstest-net-3.8}{\texttt{Assert.AreEqual}}
-    can yield the following output on failure:
-    \begin{verbatimpanel}[error message, hl={2-3}, hlcolor=red!90]{Example Ouput of \texttt{Assert.AreEqual}}
-    Assert.AreEqual failed. Expected:<[1; 2; 4]>. Actual:<[1; 4; 2]>.
-        at MapTests.TestsMapSortedList.Tests.testSetBeispiele() in /code/TestsMapSortedList.fs:line 53
-        at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
-        at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
-    \end{verbatimpanel}
+\skipM In \fs, multiple testing frameworks and assertion libraries are available. A commonly used option is
+\href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting}{Microsoft.VisualStudio.TestTools.UnitTesting}. For example, using
+\href{https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.testtools.unittesting.assert.areequal?view=mstest-net-3.8}{\texttt{Assert.AreEqual}}
+can yield the following output on failure:
+\begin{verbatimpanel}[error message, hl={2-3}, hlcolor=red!90]{Example Ouput of \texttt{Assert.AreEqual}}
+Assert.AreEqual failed. Expected:<[1; 2; 4]>. Actual:<[1; 4; 2]>.
+    at MapTests.TestsMapSortedList.Tests.testSetBeispiele() in /code/TestsMapSortedList.fs:line 53
+    at System.RuntimeMethodHandle.InvokeMethod(Object target, Void** arguments, Signature sig, Boolean isConstructor)
+    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
+\end{verbatimpanel}
 
-    \noindent For more advanced programmers, this output is usually sufficient: they can quickly identify the relevant mismatch and ignore the remaining details.
-    See Section \hl{TODO} for a discussion of common issues in diagnostic messages and strategies for extracting key information.
+\noindent For more advanced programmers, this output is usually sufficient: they can quickly identify the relevant mismatch and ignore the remaining details.
+See Section \hl{TODO} for a discussion of common issues in diagnostic messages and strategies for extracting key information.
 
-    \skipM In my experience as a tutor for a first-semester lecture, I frequently observe students struggling with such messages, unsure what went wrong and how to fix their code.
-    Instead of guiding them toward a solution, poorly structured error messages can lead to frustration and trial-and-error debugging,
-    which may hinder learning and delay progress on key programming concepts.
+\skipM In my experience as a tutor for a first-semester lecture, I frequently observe students struggling with such messages, unsure what went wrong and how to fix their code.
+Instead of guiding them toward a solution, poorly structured error messages can lead to frustration and trial-and-error debugging,
+which may hinder learning and delay progress on key programming concepts.
 
-    \skipM Didactically, complex concepts are typically introduced gradually, often by reducing incidental complexity at the beginning:
+\skipM Didactically, complex concepts are typically introduced gradually, often by reducing incidental complexity at the beginning:
 
-    \skipS\begin{itemize}[nosep]
-        \item Lightweight IDE's are often preferred to heavy, feature-rich IDE's
-        \item Simplistic I/O is introduced before full input validation only valid inputs and error handling (e.g., malformed inputs, exceptions, and missing values).
-    \end{itemize}
+\skipS\begin{itemize}[nosep]
+    \item Lightweight IDE's are often preferred to heavy, feature-rich IDE's
+    \item Simplistic I/O is introduced before full input validation only valid inputs and error handling (e.g., malformed inputs, exceptions, and missing values).
+\end{itemize}
 
-    \skipS The same  Diagnostic verbosity can be staged for testing: Initially showing only the most relevant information and revealing additional technical details as students gain experience.
-    This thesis explores how a similar scaffolding approach can be applied to testing feedback. By providing more minimalistic and structured output,
-    the goal is to help students interpret failures more effectively and support a more efficient and engaging learning process.
+\skipS The same  Diagnostic verbosity can be staged for testing: Initially showing only the most relevant information and revealing additional technical details as students gain experience.
+This thesis explores how a similar scaffolding approach can be applied to testing feedback. By providing more minimalistic and structured output,
+the goal is to help students interpret failures more effectively and support a more efficient and engaging learning process.
 \end{justify}
 
 

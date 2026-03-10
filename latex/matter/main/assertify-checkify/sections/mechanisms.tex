@@ -1,15 +1,403 @@
 %===================================================================================================
 \section{Mechanisms: Expression Capture and Value Extraction} %+++++++++++++++++++++++++++++++++++++
-  \label{Mechanisms: Expression Capture and Value Extraction} %+++++++++++++++++++++++++++++++++++++
+\label{sctn:mechanisms-expression-capture-and-value-extraction} %+++++++++++++++++++++++++++++++++++
 %===================================================================================================
 
 
-\begin{marker}[high]
-\begin{itemize}
-  \item leftSide, rightSide extraction, blablabla
-  \item CaptureRunner
-\end{itemize}
-\end{marker}
+% \improve
+
+
+The output model introduced in the previous section centers on three core
+fields: (i) a \emph{tested expression} that communicates what was evaluated in a
+harness-independent form --- without needing to know anything about the
+surrounding test infrastructure, (ii) an \emph{expected value} that reflects
+the specification, and (iii) an \emph{actual value} obtained from executing the
+implementation under test. Together, these fields shift the focus of test
+feedback from \emph{how} a test is implemented to \emph{what} claim the test
+makes about the student program.
+
+\skipM However, standard unit testing APIs typically observe only the
+\emph{outcome} of an assertion --- for instance, two already-computed values
+passed into an \fsharp|AreEqual| check, or a boolean predicate. The literal
+source-level claim that the test author wrote is not preserved. Reconstructing
+the \emph{tested expression} field therefore cannot be achieved by merely
+forwarding existing assertion parameters. Providing the full test harness would
+reintroduce the very problem the model aims to avoid, namely that students must
+read and interpret auxiliary test code instead of focusing on the semantic
+mismatch.
+
+\skipM A practical observation is that many example-based tests and a large
+subset of property-based tests can be normalized to an equality-shaped claim of
+the form $\textit{actual} = \textit{expected}$, even if the surrounding test
+method constructs inputs, performs intermediate computations, or more complex
+tasks. Consequently, the key technical requirement is to capture the \emph{claim
+itself} in a form that can later be displayed and analyzed, and then to evaluate
+that representation to obtain the expected and actual values for reporting.
+
+
+%===============================================================================
+\subsection{Expression capture via code quotations} %+++++++++++++++++++++++++++
+\label{ssctn:expression-capture-via-code-quotations} %++++++++++++++++++++++++++
+%===============================================================================
+
+
+\fs offers code quotations as a structured representation of code that can be
+inspected and evaluated later.
+
+\begin{defpanel}
+\begin{description}
+    \item[{Code quotations:}] a language feature that enables you to generate
+    and work with \fs code expressions programmatically. This feature lets you
+    generate an abstract syntax tree that represents \fs code. The abstract
+    syntax tree can then be traversed and processed according to the needs of
+    your application. For example, you can use the tree to generate \fs code or
+    generate code in some other language. \cite{CodeQuot}
+\end{description}
+\end{defpanel}
+
+\noindent A simple example for a code quotation is \fsharp|let expr: Expr<int> =
+<@ 1 @>| with \fsharp|1| being the code to be represented, wrapped by the
+symbols \texttt{<@} and \texttt{@>}. The code quotation is stored using the
+non-generic type \texttt{Expr}. \cite{FsExpr} Consider the following example
+expression:
+
+\begin{codepanel}{Example code quotation}
+let f = <@ fun (a: int) (b: int) -> a + b @>
+\end{codepanel}
+
+%===========================================================
+\paragraph{Characterization of represented code.}%
+\label{par:characterization-of-represented-code} The code inbetween can be
+characterized by a few things: (i) it is an anonymous function or \emph{lambda}
+expression, (ii) it is semantically equivalent to \fsharp|fun (a: int) -> (b:
+int) -> a + b| and (iii) with that we can also see the explicit type of this
+lambda: \fsharp|int -> int -> int|.
+
+
+%===========================================================
+\paragraph{Characterization of expression.}%
+\label{par:characterization-the-expression} A look at the string representation
+reveals that we are dealing with a nested lambda expression of form:
+
+\begin{center}\fsharp|Lambda (a, Lambda (b, Call (None, op_Addition, [a,
+b])))|\end{center}
+
+\noindent which (i) seems to align with the pattern of the original code --- the
+types are not printed yet present so type information is not lost, (ii) seems to
+be semantically equivalent to the represented code and lastly (iii) type inference
+implies the type \fsharp|Expr<int -> int -> int>|.
+
+\skipL In conclusion, the comparison shows that \fsharp|fun (a:int) (b:int) -> a
++ b| denotes a curried function, whereas \fsharp|<@ fun (a:int) (b:int) -> a + b
+@>| denotes a quotation of that function expression. Accordingly, the two
+expressions are not equivalent at the level of \fs evaluation: the former
+evaluates to an executable function value, while the latter evaluates to a
+representation of the function's syntax. However, the quotation still captures a
+term with the same computational behavior as the unquoted function and since
+preserving syntactic structure its crucial advantage is enabling inspection and
+transformation of the program as data. At the same time, quotations remain
+executable in the sense that they can be evaluated (or partially evaluated)
+programmatically and --- where required --- transformed back into executable
+function values. Thus, quotations unite syntactic preservation with
+computational expressiveness.
+
+\skipM The \fsharp{Microsoft.FSharp.Quotations} namespace offers various active
+patterns to analyze expressions, as well as a member \fsharp{Substitute} from
+the \fsharp{Expr} type to map variables to new values, which is helpful for
+partial evaluations of curried functions.
+
+
+%===========================================================
+\paragraph{Swensen.Unquote library.}
+    \label{Swensen.Unquote}
+Before going into more detail about the value extraction, it is worth
+pointing out that there are already libraries offering testing tools using code
+quotations like Swensen.Unquote. \cite{SwenUnq} The following example using
+Unquote's \fsharp{test} method illustrates how a quoted equality implicitly
+contains all three core fields --- tested expression, expected value, and actual
+value:
+
+\begin{outputpanel}{Example \texttt{Swensen.Unquote.test} output}{Example Swensen.Unquote.test}{
+Swensen.Unquote.AssertionFailedException: Test failed:\newline\newline
+\hlbox[metroBlue]{add 1 2} = \hlbox[metroOrange]{1 + 2}\newline
+\hlbox[metroRed]{4} = \hlbox[metroGreen]{3}\newline
+false
+}
+let add a b = a + b + 1
+test <@ add 1 2 = 1 + 2 @>
+\end{outputpanel}
+
+\noindent In \hlbox[metroBlue]{blue} the tested expression \fsharp|add 1 2|, in
+\hlbox[metroRed]{red} the actual value and in \hlbox[metroGreen]{green} the
+expected value. Combining code quotations and Swensen.Unquote offers not only
+functionality to analyze code via known patterns, but also to easily modify it
+via functionalities like: \texttt{eval}, \texttt{reduce}, \texttt{decompile},
+\texttt{substitute} or the above mentioned \texttt{test}.
+\cite{FsExpr, SwenUnqUserGuide}
+
+While this output makes the mismatch transparent, it also hints at a design
+tension: depending on the level of detail, the output may reveal how the
+expected value is constructed (here: the right-hand side expression), which can
+unintentionally disclose test-oracle information. In \hlbox[metroOrange]{orange}
+it is visible that the correct computation seems to be \fsharp|1 + 2|, which
+strongly suggest the correct implementation \fsharp|let add a b = a + b|.
+Depending on the usage, information may leak that is not intended for students.
+
+\skipM While offering a good foundation to suit the usecase some optimization
+are needed which I will mention later.
+
+
+%===============================================================================
+\subsection{Value extraction for unit tests and property based tests} %+++++++++
+\label{ssctn:value-extraction-for-unit-tests-and-property-based-tests} %++++++++
+%===============================================================================
+
+
+While quotations preserve the structure of a test claim, Assertify still needs
+to \emph{separate} the claim into the parts that correspond to the output model
+(i.e., tested expression, expected value, and actual value) and then
+\emph{evaluate} those parts. This is achieved by restricting the supported
+shape of claims to a normal form that is both common in introductory exercises
+and directly compatible with the reporting scheme: an equality-shaped claim of
+the form $\textit{actual} = \textit{expected}$.
+
+\skipM In practice, such claims are represented as quoted boolean expressions.
+At runtime, Assertify and Checkify inspect these quotations using standard
+quotation patterns. In the intended case, the quotation contains a call to the
+equality operator, which can be deconstructed into its left-hand side (the
+implementation/result under test) and right-hand side (the reference
+implementation or result). This deconstruction step forms the bridge from quoted
+code to the three-field output model: the \emph{tested expression} is rendered
+from the left-hand side (with concrete inputs substituted, if necessary), while
+\emph{actual} and \emph{expected} are obtained by evaluating the left and right
+subexpressions respectively.
+
+
+%===========================================================
+\paragraph{Unit tests.}
+\label{par:value-extraction-unit-tests}
+For ordinary unit tests, the quoted claim already contains concrete values.
+Accordingly, extraction proceeds directly by deconstructing the equality-shaped
+quotation into its two subexpressions and evaluating them independently.
+Conceptually, this maps
+\begin{align*}
+\texttt{actualExpr} &= \texttt{\hlbox[metroBlue]{add 1 2}} &
+\texttt{expectedExpr} &= \texttt{\hlbox[metroOrange]{1 + 2}}\\
+\llbracket\,\texttt{actualExpr}\,\rrbracket &= \texttt{\hlbox[metroRed]{4}} &
+\llbracket\,\texttt{expectedExpr}\,\rrbracket &= \texttt{\hlbox[metroGreen]{3}}
+\end{align*}
+where $\llbracket\,\cdot\,\rrbracket$ denotes evaluation of a quotation.
+
+\skipM This also ensures that no solution-relevant information is leaked to
+students in raw syntactic form. For example, in a claim such as
+\fsharp|add 1 2 = 1 + 2|, the critical right-hand side is not exposed as source
+code in the feedback, but only through its evaluated result. This supports the
+didactic goal of revealing enough information to diagnose the error while
+avoiding direct disclosure of the reference solution.
+
+\skipM This also assures that no information is leaked to students,
+because the critical right hand side \fsharp|1 + 2| in \ref{code:Example
+Swensen.Unquote.test} would only be visible to the student in evaluated form.
+
+\skipM With that a stable basis for reporting is provided, because it avoids
+reliance on ad-hoc parsing of framework error strings and instead operates on
+the structured representation of the asserted claim. If the quotation does not
+match the expected equality pattern, the mechanism cannot reliably derive
+\emph{expected} and \emph{actual} values at this point of implementation. In
+that case, Assertify falls back to reporting the captured expression and a
+generic failure message. This limitation is deliberate: extending support to
+arbitrary assertion forms is possible, but requires separate, assertion-specific
+deconstruction rules (e.g., inequalities, exception checks, boolean predicates).
+
+
+\begin{algorithm}
+\caption{Assertify.Test}
+\begin{algorithmic}[0]
+    \Function{Test}{\texttt{expr: Expr<bool>, ?message: string}}
+        \If{\texttt{message} $=$ \texttt{null}}
+            \State\texttt{message} $\gets$ \texttt{defaultMsg}
+        \EndIf
+        \Try
+            \If{$\llbracket$ expr $\rrbracket$}
+                \State\Return\texttt{success}
+            \Else
+                \State\Return\Call{ConstructErrorMsg}{\texttt{expr}, \texttt{message}}
+            \EndIf
+        \With
+            \State\Return\Call{DefaultErrorMsg}{\texttt{expr}, \texttt{message}}
+            % \Comment{\texttt{Failed to compute $\llbracket$ expr $\rrbracket$ or}}
+            % \Comment{\texttt{to extract a left/right hand side}}
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}
+\caption{Checkify.Check}
+\begin{algorithmic}[0]
+    \Function{Check}{\texttt{expr: Expr, check: Expr -> 'Testable}}
+        \State \texttt{capture runner}
+        \Try
+            \State\texttt{FsCheck.Check (check expr)}
+            \Comment{\texttt{Successful test}}
+            \State\Return\texttt{success}
+        \With{Hallo}
+        \Try{\texttt{add 1 2}}
+            \State\texttt{Test 1 2 3}
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+
+%===================================================================================================
+%TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+%===================================================================================================
+
+
+% Concrete implementation details?
+
+\vfill
+\pagebreak
+
+\improve
+\pagebreak
+
+
+%
+\[
+\textit{actualValue} = \lbrack \textit{actualExpr} \rbrack
+\qquad\text{and}\qquad
+\textit{expectedValue} = \lbrack \textit{expectedExpr} \rbrack
+\]
+%
+where $\lbrack \cdot \rbrack$ denotes evaluation of a quotation. In the
+implementation, evaluation is performed using the quotation evaluation facilities
+provided by the \fs runtime and by Swensen.Unquote.
+
+\skipM A practical complication is that evaluation may itself fail. This happens,
+for example, when the student implementation throws an exception, when a branch
+contains a remaining placeholder such as \fsharp|failwith "TODO"|, or when a
+quoted expression cannot be evaluated due to missing runtime context. For novice
+feedback, a raw evaluation exception would reintroduce the problem of
+unstructured output. Assertify therefore treats evaluation failure as a first-class
+case and produces a controlled placeholder (e.g., ``non-evaluatable'') rather than
+propagating the exception as the primary message. The full technical details of
+these fallbacks are discussed later with the concrete helper functions.
+
+%===============================================================================
+\subsubsection{Example-based tests: closed expressions} %++++++++++++++++++++++++
+\label{sec:value-extraction-example}
+%===============================================================================
+
+In example-based unit tests, the quoted claim is typically \emph{closed}: all
+inputs are written explicitly in the test case (e.g., \fsharp|digitSum 123N = 6N|).
+This means that value extraction can proceed immediately after capture:
+deconstruct the equality, evaluate both sides, and render the tested expression.
+
+\skipM For reporting, Assertify distinguishes two closely related representations:
+(i) a direct rendering of the left-hand side as the tested expression (to answer
+``what was executed?'') and (ii) the evaluated values of both sides (to answer
+``what was expected and what was produced?''). In this setting, no additional
+context is required beyond the captured quotation itself.
+
+%===============================================================================
+\subsubsection{Property-based tests: open expressions and captured inputs} %++++++
+\label{sec:value-extraction-property}
+%===============================================================================
+
+Property-based tests differ in one crucial aspect: the claim is generally
+\emph{open} because it depends on generated inputs. Instead of quoting a closed
+boolean, a property-based test typically captures a quoted lambda expression,
+such as \fsharp|<@ fun n -> sortedDigits n = sortedDigitsSolution n @>|. The
+quotation therefore describes the \emph{shape} of the claim, but evaluation and
+rendering require concrete input values.
+
+\skipM FsCheck provides these values only when a counterexample is found. In
+addition, FsCheck may \emph{shrink} a failing input to a simpler one. For the
+purposes of novice-oriented feedback, the most relevant inputs are therefore the
+final counterexample values after shrinking, because they are the smallest (and
+usually easiest to reason about) values that still falsify the property.
+
+%===============================================================================
+\subsubsection{Runner-assisted extraction with \texttt{CaptureRunner}} %+++++++++
+\label{sec:runner-assisted-extraction}
+%===============================================================================
+
+To make counterexample inputs available to the reporting layer, Checkify wraps
+the configured FsCheck runner with a custom runner (\texttt{CaptureRunner}). The
+runner intercepts the test result at the end of execution. When FsCheck reports a
+failure, the runner stores both the original failing arguments and the final
+shrunk arguments.
+
+\skipM The stored inputs are then used in two places:
+
+\begin{enumerate}
+    \item \textbf{Instantiation for rendering.} The open quotation (a lambda) is
+    instantiated by substituting the captured counterexample values for its
+    parameters. This yields a quotation that corresponds to the concrete failing
+    call, which can be rendered as the \emph{tested expression} shown to the
+    student.
+
+    \item \textbf{Instantiation for evaluation.} The same substitution step
+    yields a concrete equality claim whose left and right subexpressions can be
+    deconstructed and evaluated to obtain \emph{actual} and \emph{expected}.
+\end{enumerate}
+
+\skipM In Checkify, this instantiation is implemented as iterative application of
+arguments to a quoted lambda, using quotation substitution. The application
+function traverses nested lambdas and replaces parameter occurrences with
+\fsharp|Expr.Value| nodes constructed from the captured objects. This keeps the
+mechanism uniform across different arities and preserves the key invariant:
+\emph{the displayed tested expression corresponds to the failing counterexample
+that FsCheck reports}.
+
+%===============================================================================
+\subsubsection{Reduction traces: diagnostic benefit vs.\ oracle leakage} %++++++++
+\label{sec:reduction-traces}
+%===============================================================================
+
+Some quotation-based tools provide additional context by showing a reduction
+trace, i.e., intermediate simplifications of an expression until a final form is
+reached. This can make the connection between a complex claim and its final
+mismatch more explicit, particularly for novices who struggle to mentally execute
+expressions.
+
+\skipM At the same time, reduction traces can reveal how an expected value was
+constructed (for instance by exposing the full right-hand side computation),
+which may disclose test-oracle information. Since Assertify targets an
+exercise-oriented setting, it treats such detail as optional and subject to
+verbosity control rather than as a mandatory default. This makes it possible to
+trade diagnostic transparency against pedagogical constraints depending on the
+context in which the feedback is used.
+
+\begin{lstlisting}[caption={Example of a reduction trace (adapted from the Unquote user guide)},label={lst:unquote-trace}]
+Test failed:
+
+(1 + 2) / 3 = 2
+3 / 3 = 2
+1 = 2
+false
+\end{lstlisting}
+
+%===============================================================================
+\subsubsection{Summary} %+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\label{sec:mechanisms-summary}
+%===============================================================================
+
+Expression capture and value extraction are the technical prerequisites for
+producing structured test feedback in the form of \emph{tested expression},
+\emph{expected value}, and \emph{actual value}. Quotations enable the capture of
+asserted claims as structured data; quotation patterns allow the system to
+identify and deconstruct equality-shaped claims; and evaluation of the resulting
+subexpressions yields the runtime values required for reporting.
+
+\skipM For property-based testing, quotations alone are not sufficient because
+claims are open with respect to generated inputs. Checkify therefore integrates
+at the runner level: \texttt{CaptureRunner} records the original and shrunk
+counterexample arguments so that the captured quotation can be instantiated,
+rendered, and evaluated in the concrete context of the failing assignment. The
+implementation details of these helper functions and their formatting choices are
+covered later in this chapter.
 
 
 %===================================================================================================

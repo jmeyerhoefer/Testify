@@ -33,12 +33,8 @@
 %===========================================================
 
 
-\newcommand{\thesisLANGUAGE}{ENGLISH}
-\newcommand{\thesisLanguage}{English}
-\newcommand{\thesislanguage}{english}
-\newcommand{\thesisLANG}{ENG}
-\newcommand{\thesisLang}{Eng}
 \newcommand{\thesislang}{eng}
+% \newcommand{\thesislang}{de}
 \date{\today} %\date{31. Februar 3000}
 
 
@@ -163,6 +159,30 @@
 \NewDocumentCommand\finalizeItem{s}{\item[\finalizeSym]}
 \NewDocumentCommand\doneItem{s}{\item[\doneSym]}
 \NewDocumentCommand\noteItem{}{\item[\noteSym]}
+
+
+%===========================================================
+% COLUMN TYPE ++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+
+
+%===========================================================
+% COLUMN TYPE ++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newcommand*\elide{\textup{[\,\dots]}}
+
+
+%===========================================================
+% COLORBOX +++++++++++++++++++++++++++++++++++++++++++++++++
+%===========================================================
+
+
+\newcommand{\hlbox}[2][metroRed]{\colorbox{#1!40}{#2}}
 
 
 %===================================================================================================

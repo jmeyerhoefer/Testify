@@ -1,0 +1,18 @@
+%===================================================================================================
+% MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
+
+
+\renewcommand{\theFancyVerbLine}{
+\ttfamily\textcolor{black}{\tiny\arabic{FancyVerbLine}} }
+\setminted{%
+extrakeywordstype={Nat int TestMethod Timeout test printfn failwith LinkedList
+Lambda Call None op_Addition Expr }, extrakeywordsnamespace={Microsoft FSharp
+Quotations Assertify Checkify FsCheck Swensen Unquote Patterns DerivedPatterns ExprShape Var }}
+\newmintinline[fsharp]{fsharp}{ fontsize=\small, style = colorful, mathescape, escapeinside=|| }
+\newmintinline[out]{fsharp}{ fontsize=\small, style=bw }
+
+
+%===================================================================================================
+% EOF ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===================================================================================================
