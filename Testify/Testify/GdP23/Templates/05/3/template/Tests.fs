@@ -12,38 +12,36 @@ module Tests =
     let expressionC x = if (x <> 0N) then false else true
 
     let check1 (expected: 'a -> 'b) (actual: 'a -> 'b) (x: 'a): unit =
-        Assert.AreEqual(expected x, actual x)
+        Assert.AreEqual<'b>(expected x, actual x)
 
     let check2 (expected: 'a -> 'b -> 'c) (actual: 'a -> 'b -> 'c) (x: 'a) (y: 'b): unit =
-        Assert.AreEqual(expected x y, actual x y)
+        Assert.AreEqual<'c>(expected x y, actual x y)
 
     let check3 (expected: 'a -> 'b -> 'c -> 'd) (actual: 'a -> 'b -> 'c -> 'd) (x: 'a) (y: 'b) (z: 'c): unit =
-        Assert.AreEqual(expected x y z, actual x y z)
+        Assert.AreEqual<'d>(expected x y z, actual x y z)
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``Beispiel`` (): unit =
-            Check.QuickThrowOnFailure (check1 expression0 Simplify.simplified0)
+            Check.QuickThrowOnFailure (config, check1 expression0 Simplify.simplified0)
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``Aufgabenteil a)`` (): unit =
-            Check.QuickThrowOnFailure (check2 expressionA Simplify.simplifiedA)
+            Check.QuickThrowOnFailure (config, check2 expressionA Simplify.simplifiedA)
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``Aufgabenteil b)`` (): unit =
-            Check.QuickThrowOnFailure (check1 expressionB Simplify.simplifiedB)
+            Check.QuickThrowOnFailure (config, check1 expressionB Simplify.simplifiedB)
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``Aufgabenteil c)`` (): unit =
-            Check.QuickThrowOnFailure (check1 expressionC Simplify.simplifiedC)
-
-
+            Check.QuickThrowOnFailure (config, check1 expressionC Simplify.simplifiedC)

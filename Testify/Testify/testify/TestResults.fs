@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 open System
@@ -40,7 +40,7 @@ module TestResults =
 
     let private tryFindProjectDirectory () : string option =
         let rec ascend (directory: string) =
-            let projectFile = Path.Combine(directory, "MiniLib.fsproj")
+            let projectFile = Path.Combine(directory, "Testify.fsproj")
 
             if File.Exists projectFile then
                 Some directory

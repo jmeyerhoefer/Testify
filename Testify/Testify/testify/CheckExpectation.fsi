@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 /// <summary>Represents one concrete property test case with the observed tested and reference outcomes.</summary>
 type CheckCase<'Args, 'Actual, 'Expected> =

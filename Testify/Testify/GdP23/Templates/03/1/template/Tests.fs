@@ -1,21 +1,26 @@
 namespace GdP23.S03.A1.Template
 
-module Tests =
 
+module Tests =
     open Microsoft.VisualStudio.TestTools.UnitTesting
     open FsCheck
+    open FsCheck.FSharp
     open Swensen.Unquote
     open Mini
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
+            ArbMap.defaults
+            |> ArbMap.arbitrary<bigint>
             |> Arb.filter (fun i -> i >= 0I)
             |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config =
+            Config.QuickThrowOnFailure
+                .WithEndSize(1000)
+                .WithArbitrary [ typeof<ArbitraryModifiers> ]
 
         // ------------------------------------------------------------------------
         // b)
@@ -29,8 +34,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(30000)>]
         member this.``b) add Zufallstest`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 1000}, fun (x: Nat) ->
-                Assert.AreEqual([1..(int x)] |> List.sum |> Nat.Make, Entwurfsmuster.add x)
+            Check.One(config, fun (x: Nat) ->
+                Assert.AreEqual<Nat>([1..(int x)] |> List.sum |> Nat.Make, Entwurfsmuster.add x)
             )
 
         // ------------------------------------------------------------------------
@@ -53,8 +58,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``c) mod5 Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
-                Assert.AreEqual(
+            Check.One (config, fun (n: Nat) ->
+                Assert.AreEqual<Nat>(
                     n % 5N,
                     Entwurfsmuster.mod5 n
                 )
@@ -72,8 +77,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) mult42 Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
-                Assert.AreEqual(n * 42N, Entwurfsmuster.mult42 n)
+            Check.One (config, fun (n: Nat) ->
+                Assert.AreEqual<Nat>(n * 42N, Entwurfsmuster.mult42 n)
             )
 
             
@@ -89,9 +94,9 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``d) count5 Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
+            Check.One (config, fun (n: Nat) ->
                 let char2int (n: Char) = int n - int '0'
-                Assert.AreEqual(
+                Assert.AreEqual<Nat> (
                     n |> string |> Seq.toList |> List.map char2int |> List.filter (fun x -> x = 5) |> List.length |> Nat.Make,
                     Entwurfsmuster.count5 n
                 )

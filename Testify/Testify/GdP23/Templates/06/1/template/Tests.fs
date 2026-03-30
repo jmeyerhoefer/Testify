@@ -9,21 +9,19 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
-
-    let config = {
-        Config.QuickThrowOnFailure with
-            EndSize = 1000
-            MaxTest = 1000
-        }
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     let ex = [2N; 4N; 3N; 4N; 2N; 1N]
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config =
+            Config.QuickThrowOnFailure
+                .WithEndSize(1000)
+                .WithMaxTest(1000)
+                .WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -84,7 +82,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) collect Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (f: Nat -> List<Nat>) (xs: List<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (f: Nat -> List<Nat>) (xs: List<Nat>) ->
                 Assert.AreEqual(
                     List.collect f xs,
                     Lists.collect f xs

@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 /// <summary>
 /// Describes how a single quoted value should be checked, rendered, and explained when it fails.

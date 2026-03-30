@@ -10,15 +10,14 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
-    let config = {
-        Config.QuickThrowOnFailure with
-            EndSize = 1000
-            MaxTest = 1000
-        }
+    let config =
+        Config.QuickThrowOnFailure
+            .WithEndSize(1000)
+            .WithMaxTest(1000)
 
     let exQueue1 =
         [ {priority=1N; value=4711N}
@@ -41,7 +40,7 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``a) isEmpty Beispiele`` (): unit =
@@ -51,8 +50,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) isEmpty Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: PQ<Nat>) ->
-                Assert.AreEqual(
+            Check.QuickThrowOnFailure(config, fun (xs: PQ<Nat>) ->
+                Assert.AreEqual<bool>(
                     List.isEmpty xs,
                     PriorityQueue.isEmpty xs
                 )
@@ -67,7 +66,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) insert Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (x: QElem<Nat>) (gen: PQ<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (x: QElem<Nat>) (gen: PQ<Nat>) ->
                 let xs = List.sortBy (fun n -> n.priority) gen // enforce PriorityQueue invariant
                 let expected = List.sortBy (fun n -> n.priority) (x::xs)
                 let getKeys = List.map (fun n -> n.priority)
@@ -86,7 +85,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``c) extractMin Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (gen: PQ<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (gen: PQ<Nat>) ->
                 let xs = List.sortBy (fun n -> n.priority) gen
                 let getKeys (r : Option<QElem<'a>> * PQ<'a>): Option<Nat> * List<Nat> =
                     match r with
@@ -116,7 +115,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``d) merge Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (gen1: PQ<Nat>) (gen2: PQ<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (gen1: PQ<Nat>) (gen2: PQ<Nat>) ->
                 let xs = List.sortBy (fun n -> n.priority) gen1
                 let ys = List.sortBy (fun n -> n.priority) gen2
                 let expected = List.sortBy (fun n -> n.priority) (xs @ ys)
@@ -141,7 +140,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``e) deleteNth Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (n: Nat) (gen1: PQ<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (n: Nat) (gen1: PQ<Nat>) ->
                 let xs = List.sortBy (fun n -> n.priority) gen1
                 let expected = List.sortBy (fun n -> n.priority) (listDeleteNth n xs)
                 let getKeys = List.map (fun n -> n.priority)

@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 open System
@@ -6,7 +6,7 @@ open System.Globalization
 open System.Text.RegularExpressions
 
 
-/// <summary>Helpers for building FsCheck configurations used by <c>MiniLib.Testify.Check</c>.</summary>
+/// <summary>Helpers for building FsCheck configurations used by <c>Testify.Check</c>.</summary>
 [<RequireQualifiedAccess>]
 module CheckConfig =
     let private replayPattern =
@@ -44,14 +44,15 @@ module CheckConfig =
                 (fun (FsCheck.NonNegativeInt n) -> SmallNat (Mini.Nat.Make n))
                 (fun (SmallNat n) -> FsCheck.NonNegativeInt (int n))
 
-    /// <summary>Adds MiniLib-specific arbitraries such as <c>Mini.Nat</c> and <c>SmallNat</c> to a config.</summary>
+    /// <summary>Adds Testify-specific arbitraries such as <c>Mini.Nat</c> and <c>SmallNat</c> to a config.</summary>
     let inline addMiniArbs (config: FsCheck.Config) : FsCheck.Config =
         config.WithArbitrary [
             typeof<NatModifier>
             typeof<SmallNatModifier>
         ]
 
-    /// <summary>The default FsCheck configuration used by Testify property checks.</summary>
+    /// <summary><b>Includes Mini.fs</b><br/><br/>
+    /// The default FsCheck configuration used by Testify property checks.</summary>
     let defaultConfig : FsCheck.Config =
         FsCheck.Config.Quick.WithName "Testify Check Config"
         |> addMiniArbs

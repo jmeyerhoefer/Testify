@@ -16,9 +16,9 @@ module TestsMapPartialFunction =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     let rec merge<'k, 'v when 'k: comparison> (m1: Map<'k, 'v>) (m2: Map<'k, 'v>): Map<'k, 'v> =
         Map.fold (fun acc key value -> Map.add key value acc) m1 m2

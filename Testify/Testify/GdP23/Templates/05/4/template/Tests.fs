@@ -20,6 +20,8 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
+        let config = Config.QuickThrowOnFailure.WithEndSize 1000
+
         let one   = [P]
         let two   = [M;P]
         let three = [Z;P]
@@ -71,7 +73,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``c) + d) dec (inc n) = n Zufall`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->
+            Check.One (config, fun (n: List<Ternary>) ->
                 let n = removeLeadingZs n
                 let actual = Ternary.dec (Ternary.inc n)
                 if n <> [] then Assert.AreEqual(n, actual, sprintf "expected dec (inc %A) = %A but got %A" n n actual)
@@ -92,8 +94,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) + e) bedeutung (fromInt n) = n Zufall`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Int) ->
-                Assert.AreEqual(n, Ternary.bedeutung (Ternary.fromInt n))
+            Check.One (config, fun (n: Int) ->
+                Assert.AreEqual<int>(n, Ternary.bedeutung (Ternary.fromInt n))
             )
 
         // ------------------------------------------------------------------------
@@ -108,13 +110,13 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``f) add Zufall (setzt voraus, dass fromInt funktioniert)`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: Int) (n: Int) ->
+            Check.One (config, fun (m: Int) (n: Int) ->
                 Assert.AreEqual(Ternary.fromInt (m+n), Ternary.add (Ternary.fromInt m) (Ternary.fromInt n))
             )
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``f) add kommutativ Zufall`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: List<Ternary>) (n: List<Ternary>) ->
+            Check.One (config, fun (m: List<Ternary>) (n: List<Ternary>) ->
                 let m = removeLeadingZs m
                 let n = removeLeadingZs n
                 Assert.IsTrue(Ternary.add m n = Ternary.add n m, sprintf "Sum of %A and %A does not commute" m n)
@@ -122,7 +124,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``f) add assoziativ Zufall`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (m: List<Ternary>) (n: List<Ternary>) (o: List<Ternary>) ->
+            Check.One (config, fun (m: List<Ternary>) (n: List<Ternary>) (o: List<Ternary>) ->
                 let m = removeLeadingZs m
                 let n = removeLeadingZs n
                 let o = removeLeadingZs o
@@ -141,7 +143,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``g) negative (negative n) = n Zufall`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->
+            Check.One (config, fun (n: List<Ternary>) ->
                 let n = removeLeadingZs n
                 let actual = Ternary.negative (Ternary.negative n)
                 Assert.AreEqual(n, actual, sprintf "Double negation yielded %A instead of %A" actual n)
@@ -150,7 +152,7 @@ module Tests =
         [<TestMethod>] [<Timeout(5000)>]
         member this.``g) add n (negative n) = [] Zufall (setzt voraus, dass add funktioniert)`` (): unit =
             let expected: List<Ternary> = []
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: List<Ternary>) ->
+            Check.One (config, fun (n: List<Ternary>) ->
                 let n = removeLeadingZs n
                 let actual = Ternary.add n (Ternary.negative n)
                 Assert.AreEqual(expected, actual, sprintf "Sum of number %A and its negative yielded %A instead of [] (zero)" n actual)

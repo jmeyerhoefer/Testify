@@ -16,9 +16,9 @@ module TestsMapSortedList =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     let m1: MapSortedList.MapSortedList<Nat, String> = []
     let m2: MapSortedList.MapSortedList<Nat, String> = [(1N, "Lisa"); (4N, "Harry")]
@@ -32,7 +32,7 @@ module TestsMapSortedList =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``a) empty`` (): unit =

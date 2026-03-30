@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 open Microsoft.FSharp.Quotations
 
@@ -18,7 +18,7 @@ module AssertOperators =
     ///
     /// <example id="assert-operators-1">
     /// <code lang="fsharp">
-    /// open MiniLib.Testify.AssertOperators
+    /// open Testify.AssertOperators
     ///
     /// &lt;@ 2 + 3 @&gt; -?&gt; AssertExpectation.equalTo 5
     /// </code>
@@ -81,7 +81,7 @@ module AssertOperators =
     ///
     /// <example id="assert-operators-4">
     /// <code lang="fsharp">
-    /// &lt;@ "MiniLib" @&gt; &amp;?&amp;&gt;
+    /// &lt;@ "Testify" @&gt; &amp;?&amp;&gt;
     ///     [ AssertExpectation.startsWith "Mini"
     ///       AssertExpectation.endsWith "Lib" ]
     /// </code>

@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 open System.Threading.Tasks

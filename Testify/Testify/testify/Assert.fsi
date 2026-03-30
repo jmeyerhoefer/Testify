@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 open System.Threading.Tasks
 open Microsoft.FSharp.Quotations
@@ -75,7 +75,7 @@ module Assert =
     ///
     /// <example id="assert-should-1">
     /// <code lang="fsharp">
-    /// Assert.should (AssertExpectation.equalTo "MiniLib") &lt;@ "Mini" + "Lib" @&gt;
+    /// Assert.should (AssertExpectation.equalTo "Testify") &lt;@ "Mini" + "Lib" @&gt;
     /// </code>
     /// </example>
     val should: expectation: AssertExpectation<'T> -> actual: Expr<'T> -> unit

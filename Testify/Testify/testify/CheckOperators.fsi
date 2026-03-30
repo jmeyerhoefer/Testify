@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 open Microsoft.FSharp.Quotations
 
@@ -8,17 +8,24 @@ module CheckOperators =
     ///
     /// <example id="check-operators-1">
     /// <code lang="fsharp">
-    /// open MiniLib.Testify.CheckOperators
+    /// open Testify.CheckOperators
     ///
     /// &lt;@ List.rev &gt;&gt; List.rev @&gt; |=&gt; id
     /// </code>
     /// </example>
     val inline (|=>) : expr: Expr<'Args -> 'T> -> reference: ('Args -> 'T) -> unit when 'T : equality
 
-    /// <summary>Like <c>|=&gt;</c>, but uses an explicit arbitrary for the generated input domain.</summary>
-    val inline (||=>) :
+    /// <summary>Like <c>|=&gt;</c>, but uses an explicit FsCheck configuration.</summary>
+    val inline (|=>?) :
         expr: Expr<'Args -> 'T> ->
-        reference: ('Args -> 'T) * FsCheck.Arbitrary<'Args> ->
+        config: FsCheck.Config * ('Args -> 'T) ->
+            unit
+                when 'T : equality
+
+    /// <summary>Like <c>|=&gt;</c>, but uses an explicit arbitrary for the generated input domain.</summary>
+    val inline (|=>??) :
+        expr: Expr<'Args -> 'T> ->
+        arb: FsCheck.Arbitrary<'Args> * ('Args -> 'T) ->
             unit
                 when 'T : equality
 
@@ -26,10 +33,10 @@ module CheckOperators =
     ///
     /// <example id="check-operators-2">
     /// <code lang="fsharp">
-    /// &lt;@ List.sort @&gt; |=&gt;? (List.sort, CheckExpectation.equalToReference)
+    /// &lt;@ List.sort @&gt; |=&gt;??? (CheckExpectation.equalToReference, List.sort)
     /// </code>
     /// </example>
-    val inline (|=>?) :
+    val inline (|=>???) :
         expr: Expr<'Args -> 'Actual> ->
-        reference: ('Args -> 'Expected) * CheckExpectation<'Args, 'Actual, 'Expected> ->
+        expectation: CheckExpectation<'Args, 'Actual, 'Expected> * ('Args -> 'Expected) ->
             unit

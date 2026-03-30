@@ -9,13 +9,16 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config =
+            Config.QuickThrowOnFailure
+                .WithEndSize(1000)
+                .WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -31,11 +34,11 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) quersumme Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
+            Check.One (config, fun (n: Nat) ->
                 if n <> 0N then
                     let expected =
                         n.ToString() |> Seq.fold (fun s c -> s + int(string c)) 0 |> Nat.Make
-                    Assert.AreEqual(expected, Leibniz.quersumme n)
+                    Assert.AreEqual<Nat>(expected, Leibniz.quersumme n)
             )
 
         // ------------------------------------------------------------------------
@@ -53,10 +56,10 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) sortedDigits Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 1000}, fun (n: Nat) ->
+            Check.One (config, fun (n: Nat) ->
                 let expected =
                        n.ToString() |> Seq.map (fun c -> int(string c)) |> Seq.pairwise |> Seq.forall (fun (a, b) -> a <= b)
-                Assert.AreEqual(expected, Leibniz.sortedDigits n)
+                Assert.AreEqual<bool>(expected, Leibniz.sortedDigits n)
             )
 
 

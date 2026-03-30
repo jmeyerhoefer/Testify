@@ -10,14 +10,17 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config =
+            Config.QuickThrowOnFailure
+                .WithEndSize(10000)
+                .WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -49,13 +52,13 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``b) isLeapYear Zufallstest`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (y: Nat) ->
+            Check.One(config, fun (y: Nat) ->
                 if y > 0N then
                     let expected = System.DateTime.IsLeapYear(int y)
                     let actual = Dates.isLeapYear y
-                    Assert.AreEqual(expected, actual)
+                    Assert.AreEqual<bool>(expected, actual)
             )
-            
+
 
         // ------------------------------------------------------------------------
         // c)
@@ -75,13 +78,13 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``c) daysInMonth Zufallstest`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (y: Nat) (m: Nat) ->
+            Check.One(config, fun (y: Nat) (m: Nat) ->
                 if y > 0N && m > 0N && m <= 12N then
                     let expected = System.DateTime.DaysInMonth(int y, int m)
                     let actual = Dates.daysInMonth y m
-                    Assert.AreEqual(expected, (int actual))
+                    Assert.AreEqual<int>(expected, (int actual))
             )
-            
+
 
         // ------------------------------------------------------------------------
         // d)
@@ -96,15 +99,15 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``d) nextDate Zufallstest`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (date: Dates.Date) ->
+            Check.One(config, fun (date: Dates.Date) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
                       let expected = dt.AddDays(1)
                       let actual = Dates.nextDate date
-                      Assert.AreEqual(expected.Year, (int actual.year))
-                      Assert.AreEqual(expected.Month, (int actual.month))
-                      Assert.AreEqual(expected.Day, (int actual.day))
-                      Assert.AreEqual(actual.weekday, Dates.nextWeekday date.weekday)
+                      Assert.AreEqual<int>(expected.Year, (int actual.year))
+                      Assert.AreEqual<int>(expected.Month, (int actual.month))
+                      Assert.AreEqual<int>(expected.Day, (int actual.day))
+                      Assert.AreEqual<Dates.Weekday>(actual.weekday, Dates.nextWeekday date.weekday)
             )
 
 
@@ -114,15 +117,16 @@ module Tests =
         [<TestMethod>] [<Timeout(1000)>]
         member this.``e) nextDate Zufallstest`` (): unit =
             let applyNTimes f n x = Seq.init n (fun _ -> f) |> Seq.fold (fun acc fn -> fn acc) x
-            Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (date: Dates.Date) (n: Nat) ->
+            Check.One(config, fun (date: Dates.Date) (n: Nat) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
                       let expected = dt.AddDays((int n))
                       let actual = Dates.nextDateN date n
-                      Assert.AreEqual(expected.Year, (int actual.year))
-                      Assert.AreEqual(expected.Month, (int actual.month))
-                      Assert.AreEqual(expected.Day, (int actual.day))
-                      Assert.AreEqual(actual.weekday, applyNTimes Dates.nextWeekday (int n) date.weekday)
+                      Assert.AreEqual<int>(expected.Year, (int actual.year))
+                      Assert.AreEqual<int>(expected.Month, (int actual.month))
+                      Assert.AreEqual<int>(expected.Day, (int actual.day))
+                      Assert.AreEqual<Dates.Weekday>
+                          (actual.weekday, applyNTimes Dates.nextWeekday (int n) date.weekday)
             )
 
         // ------------------------------------------------------------------------
@@ -137,7 +141,7 @@ module Tests =
         
         [<TestMethod>] [<Timeout(60000)>]
         member this.``bonus) validateWeekday Zufallstest`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 10000}, fun (date: Dates.Date) ->
+            Check.One(config, fun (date: Dates.Date) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
                       let expectedWeekday = 
@@ -150,6 +154,6 @@ module Tests =
                           | System.DayOfWeek.Friday -> Dates.Friday
                           | System.DayOfWeek.Saturday -> Dates.Saturday
                           | _ -> failwithf "Unexpected DayOfWeek value: %A" dt.DayOfWeek
-                      Assert.AreEqual((expectedWeekday = date.weekday), Dates.validateWeekday date)
+                      Assert.AreEqual<bool>((expectedWeekday = date.weekday), Dates.validateWeekday date)
             )
 

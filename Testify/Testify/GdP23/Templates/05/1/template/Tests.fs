@@ -9,21 +9,20 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
-    let config = {
-        Config.QuickThrowOnFailure with
-            EndSize = 1000
-            MaxTest = 1000
-        }
+    let config =
+        Config.QuickThrowOnFailure
+            .WithEndSize(1000)
+            .WithMaxTest(1000)
 
     let ex = [2N; 4N; 3N; 4N; 2N; 1N]
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -35,7 +34,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) plusOne Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: List<Nat>)->
+            Check.QuickThrowOnFailure(config, fun (xs: List<Nat>)->
                 Assert.AreEqual(
                     Lists.plusOne xs,
                     List.map (fun x -> x + 1N) xs
@@ -53,7 +52,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) filter Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (p: Nat -> Bool) (xs: List<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (p: Nat -> Bool) (xs: List<Nat>) ->
                 Assert.AreEqual(
                     List.filter p xs,
                     Lists.filter p xs
@@ -71,7 +70,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``c) concat Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: List<Nat>) (ys: List<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (xs: List<Nat>) (ys: List<Nat>) ->
                 Assert.AreEqual(
                     xs @ ys,
                     Lists.concat xs ys
@@ -89,7 +88,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``d) mirror Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
+            Check.QuickThrowOnFailure(config, fun (xs: List<Nat>) ->
                 Assert.AreEqual(
                     List.rev xs,
                     Lists.mirror xs
@@ -107,8 +106,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``e) sum Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: List<Nat>) ->
-                Assert.AreEqual(
+            Check.QuickThrowOnFailure(config, fun (xs: List<Nat>) ->
+                Assert.AreEqual<Nat> (
                     List.sum xs,
                     Lists.sum xs
                 )

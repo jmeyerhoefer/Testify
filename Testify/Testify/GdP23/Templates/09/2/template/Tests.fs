@@ -16,20 +16,20 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
         static member SafeString() =
             Arb.from<string>
-            |> Arb.filter (not << isNull)
-            |> Arb.convert (String.filter (fun c -> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))) (id)
-            |> Arb.convert (SS) (fun (SS s) -> s)
+            |> FSharp.Arb.filter (not << isNull)
+            |> FSharp.Arb.convert (String.filter (fun c -> (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'))) (id)
+            |> FSharp.Arb.convert (SS) (fun (SS s) -> s)
 
         // Der Kartenschlitten muss bei einer Runde mit einem Spieler maximal 42 Karten enthalten
         static member Schlitten() =
             Gen.listOfLength 42 Arb.generate
-            |> Arb.fromGen
+            |> FSharp.Arb.fromGen
 
     // erstellt aus einer Liste von Karten eine Funktion vom Typ Unit -> Karte,
     // die bei jedem Aufruf die jeweils nächste Karte in der Liste zurückgibt
@@ -50,7 +50,7 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         let ioTimeout = 1000
 

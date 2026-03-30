@@ -4,18 +4,23 @@ module Tests =
 
     open Microsoft.VisualStudio.TestTools.UnitTesting
     open FsCheck
+    open FsCheck.FSharp
     open Swensen.Unquote
     open Mini
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
+            ArbMap.defaults
+            |> ArbMap.arbitrary<bigint>
             |> Arb.filter (fun i -> i >= 0I)
             |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     [<TestClass>]
-    type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+    type Tests () =
+        let config =
+            Config.QuickThrowOnFailure
+                .WithEndSize(100)
+                .WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -29,8 +34,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) mult3 Zufallstest`` (): unit =
-            Check.One ({Config.QuickThrowOnFailure with EndSize = 100}, fun (n: Nat) ->
-                Assert.AreEqual(
+            Check.One (config, fun (n: Nat) ->
+                Assert.AreEqual<Nat>(
                     n * 3N,
                     Peano.mult3 n
                 )
@@ -53,8 +58,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(30000)>]
         member this.``b) divide3`` (): unit =
-            Check.One({Config.QuickThrowOnFailure with EndSize = 100}, fun (x: Nat) ->
-                Assert.AreEqual(Nat.Make ((int x) / 3), Peano.divide3 x)
+            Check.One(config, fun (x: Nat) ->
+                Assert.AreEqual<Nat>(Nat.Make ((int x) / 3), Peano.divide3 x)
             )
 
 

@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 /// <summary>Controls how much detail Testify includes in rendered reports.</summary>

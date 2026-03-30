@@ -12,8 +12,8 @@ module Tests =
     type InvalidHeap<'a> = Invalid of Heap<'a>
 
     // Generatoren für >= und > größere Elemente
-    let generateGE min = Arb.from<'a> |> Arb.toGen |> Gen.filter (fun x -> x >= min)
-    let generateGT min = Arb.from<'a> |> Arb.toGen |> Gen.filter (fun x -> x > min)
+    let generateGE min = Arb.from<'a> |> FSharp.Arb.toGen |> Gen.filter (fun x -> x >= min)
+    let generateGT min = Arb.from<'a> |> FSharp.Arb.toGen |> Gen.filter (fun x -> x > min)
 
     // Generator für gültigen Heap mit gegebener Größe und Wurzel-Element (falls Größe > 0)
     let rec generateValidHeap root size =
@@ -40,9 +40,9 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
         static member ValidHeap<'a when 'a: comparison>() =
             Arb.fromGen << Gen.sized <| fun size ->
@@ -109,7 +109,7 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         let ex1 = Node(Node(Empty,6N,Empty), 2N, Node(Empty,4N,Empty))
         let ex2 = Node(Node(Empty,7N,Empty), 3N, Node(Empty,5N,Empty))

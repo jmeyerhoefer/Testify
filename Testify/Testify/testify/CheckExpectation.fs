@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 type CheckCase<'Args, 'Actual, 'Expected> =

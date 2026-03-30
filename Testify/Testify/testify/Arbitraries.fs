@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 /// <summary>Helpers for assembling custom FsCheck arbitraries used by Testify checks.</summary>

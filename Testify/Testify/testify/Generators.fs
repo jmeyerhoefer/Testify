@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 /// <summary>Helpers for building FsCheck generators used by Testify property checks.</summary>

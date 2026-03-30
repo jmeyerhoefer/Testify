@@ -93,7 +93,7 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         let abstar: Reg<AlphabetAB> = Rep (Cat (Sym A, Sym B))
 

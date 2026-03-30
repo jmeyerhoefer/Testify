@@ -10,9 +10,9 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
-            |> Arb.filter (fun i -> i >= 0I)
-            |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
+            FSharp.ArbMap.defaults |> FSharp.ArbMap.arbitrary<bigint>
+            |> FSharp.Arb.filter (fun i -> i >= 0I)
+            |> FSharp.Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
     let rec toList (xs: Nats): Nat list =
         match xs with
@@ -24,17 +24,16 @@ module Tests =
         | [] -> Nil
         | x::ys -> Cons (x, fromList ys)
 
-    let config = {
-        Config.QuickThrowOnFailure with
-            EndSize = 10000
-            MaxTest = 1000
-        }
+    let config =
+        Config.QuickThrowOnFailure
+            .WithEndSize(10000)
+            .WithMaxTest(1000)
 
     let ex = Cons (2N, Cons (4N, Cons (3N, Cons(4N, Cons(2N, Cons (1N, Nil))))))
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config = Config.QuickThrowOnFailure.WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -47,8 +46,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``a) double Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: Nats) (ys: Nats) ->
-                Assert.AreEqual(
+            Check.QuickThrowOnFailure(config, fun (xs: Nats) (ys: Nats) ->
+                Assert.AreEqual<Nats>(
                     List.map (fun n -> 2N*n) (toList xs) |> fromList,
                     Nats.double xs
                 )
@@ -68,8 +67,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``b) isSorted Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (xs: Nats) ->
-                Assert.AreEqual(
+            Check.QuickThrowOnFailure(config, fun (xs: Nats) ->
+                Assert.AreEqual<bool>(
                     (toList xs |> Seq.pairwise |> Seq.forall (fun (x, y) -> x <= y)),
                     Nats.isSorted xs
                 )
@@ -89,8 +88,8 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``c) filter Zufallstest`` (): unit =
-            Check.QuickThrowOnFailure(fun (p: Nat -> Bool) (xs: Nats) ->
-                Assert.AreEqual(
+            Check.QuickThrowOnFailure(config, fun (p: Nat -> Bool) (xs: Nats) ->
+                Assert.AreEqual<Nats>(
                     List.filter p (toList xs) |> fromList,
                     Nats.filter p xs
                 )

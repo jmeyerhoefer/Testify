@@ -2,25 +2,31 @@
 	<PropertyGroup>
 		<AssemblyName>GdP23</AssemblyName>
 		<RootNamespace>GdP23</RootNamespace>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<OutputType>Exe</OutputType>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>disable</Nullable>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<GenerateProgramFile>false</GenerateProgramFile>
 	</PropertyGroup>
 
+
 	<!-- Mini +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!--	<ItemGroup>-->
+<!--		<Compile Include="..\Mini.fs" />-->
+<!--	</ItemGroup>-->
 	<ItemGroup>
-		<Compile Include="..\Mini.fs" />
+		<ProjectReference Include="..\\Testify.fsproj" />
 	</ItemGroup>
 
 	<!-- Templates ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 	<ItemGroup>
 		<Compile Include="Templates\02\4\template\Zahlen.fs" />
 		<Compile Include="Templates\02\4\template\Tests.fs" />
+		<Compile Include="Templates\02\4\template\TestifyTests.fs" />
 
 		<Compile Include="Templates\03\1\template\Entwurfsmuster.fs" />
 		<Compile Include="Templates\03\1\template\Tests.fs" />
+		<Compile Include="Templates\03\1\template\TestifyTests.fs" />
 
 		<Compile Include="Templates\03\2\template\Peano.fs" />
 		<Compile Include="Templates\03\2\template\Tests.fs" />
@@ -121,17 +127,27 @@
 		<Compile Include="Templates\12\2\template\Tests.fs" />
 	</ItemGroup>
 
+	<!-- Docker +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<ItemGroup>
+		<Content Include="Dockerfile" />
+		<Content Include="docker-compose.yml" />
+	</ItemGroup>
+
 	<!-- Main +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 	<ItemGroup>
-		<Compile Include="Dockerfile" />
 		<Compile Include="Program.fs" />
 	</ItemGroup>
 
+
+	<!-- References +++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
 		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
-		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-		<PackageReference Include="FsCheck" Version="2.16.6" />
-		<PackageReference Include="Unquote" Version="6.1.0" />
+		<PackageReference Include="DEdge.Diffract" Version="0.5.0" />
+		<PackageReference Include="FsCheck" Version="3.3.2" />
+		<PackageReference Include="FSharp.Compiler.Service" Version="43.10.103" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.10.4" />
+		<PackageReference Update="FSharp.Core" Version="10.0.103" />
+		<PackageReference Include="Unquote" Version="7.0.1" />
 	</ItemGroup>
 </Project>

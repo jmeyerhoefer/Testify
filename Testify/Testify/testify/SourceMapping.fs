@@ -1,4 +1,4 @@
-namespace MiniLib.Testify
+namespace Testify
 
 
 open System
@@ -29,7 +29,7 @@ module SourceMapping =
     let private projectDirectoryCache : Lazy<string option> =
         lazy
             let rec ascend (directory: string) =
-                let projectFile = Path.Combine (directory, "MiniLib.fsproj")
+                let projectFile = Path.Combine (directory, "Testify.fsproj")
 
                 if File.Exists projectFile then
                     Some directory
@@ -54,7 +54,7 @@ module SourceMapping =
     let private projectFileCache : Lazy<string option> =
         lazy
             projectDirectoryCache.Value
-            |> Option.map (fun directory -> Path.Combine (directory, "MiniLib.fsproj"))
+            |> Option.map (fun directory -> Path.Combine (directory, "Testify.fsproj"))
 
     let private sourceFilesCache : Lazy<string list option> =
         lazy

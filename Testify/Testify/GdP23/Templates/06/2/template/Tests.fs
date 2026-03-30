@@ -4,6 +4,7 @@ module Tests =
 
     open Microsoft.VisualStudio.TestTools.UnitTesting
     open FsCheck
+    open FsCheck.FSharp
     open Swensen.Unquote
     open Mini
     open TreeTypes
@@ -17,7 +18,7 @@ module Tests =
 
     type ArbitraryModifiers =
         static member Nat() =
-            Arb.from<bigint>
+            ArbMap.defaults |> ArbMap.arbitrary<bigint>
             |> Arb.filter (fun i -> i >= 0I)
             |> Arb.convert (Nat.Make) (fun n -> n.ToBigInteger())
 
@@ -37,11 +38,6 @@ module Tests =
                 Gen.sized (generator 0 50)
             )
 
-    let config = {
-        Config.QuickThrowOnFailure with
-            MaxTest = 1000
-        }
-
     let ex = Node (Node (Leaf, 1N, (Node (Leaf, 2N, Leaf))), 3N, (Node (Leaf, 4N, Leaf)))
 
     let rec inorder<'a> (t: Tree<'a>): List<'a> =
@@ -51,7 +47,10 @@ module Tests =
 
     [<TestClass>]
     type Tests() =
-        do Arb.register<ArbitraryModifiers>() |> ignore
+        let config =
+            Config.QuickThrowOnFailure
+                .WithMaxTest(1000)
+                .WithArbitrary [typeof<ArbitraryModifiers>]
 
         // ------------------------------------------------------------------------
         // a)
@@ -64,7 +63,7 @@ module Tests =
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) countLeaves Zufallstest`` (): unit =
             Check.One(config, fun (TI (t, _, _, n, _, _)) ->
-                Assert.AreEqual(
+                Assert.AreEqual<Nat>(
                     n,
                     Tree.countLeaves t
                 )
@@ -81,7 +80,7 @@ module Tests =
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) height Zufallstest`` (): unit =
             Check.One(config, fun (TI (t, _, _, _, h, _)) ->
-                Assert.AreEqual(
+                Assert.AreEqual<Nat>(
                     h,
                     Tree.height t
                 )
