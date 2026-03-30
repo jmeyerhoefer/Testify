@@ -15,6 +15,14 @@
 \input{preamble/modules/tcb.tex}			% All tcolorboxes (Main code is inside individual file: e.g. 'panel.tex')
 
 
+\makeatletter
+\newcommand{\qatsym}{\mathpalette\qatsym@{}}
+\newcommand{\qatsym@}[2]{\raisebox{-0.2ex}{$#1@$}}
+\makeatother
+
+\newcommand{\Lq}{\mathopen{<\mkern-7mu\mathord{\qatsym}}\,}
+\newcommand{\Rq}{\,\mathclose{\mathord{\qatsym}\mkern-6mu>}}
+
 %===============================================================================
 % MINTED +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================

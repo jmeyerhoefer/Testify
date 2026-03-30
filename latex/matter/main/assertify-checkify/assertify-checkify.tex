@@ -4,6 +4,54 @@
 %===================================================================================================
 
 
+\subsection*{Code under test}
+\begin{align*}
+    \texttt{e in Expr<'T>}
+\end{align*}
+
+\subsection*{Observations}
+\begin{align*}
+    &&\texttt{o}\quad\Coloneqq& \quad\texttt{Ok(v)}&&\\
+    &&|& \quad\texttt{Error(ex)}&&
+\end{align*}
+
+\subsection*{Assertion expectations}
+\begin{align*}
+    &&\phi\quad\Coloneqq& \quad\texttt{EqualTo($v$)}&&\\
+    &&|& \quad\texttt{NotEqualTo($v$)}&&\\
+    &&|& \quad\texttt{LessThan($v$)}&&\\
+    &&|& \quad\texttt{LessThanOrEqualTo($v$)}&&\\
+    &&|& \quad\texttt{GreaterThan($v$)}&&\\
+    &&|& \quad\texttt{GreaterThanOrEqualTo($v$)}&&\\
+    &&|& \quad\texttt{Between($v_1$, $v_2$)}&&\\
+    &&|& \quad\texttt{Throws($\tau$)}&&\\
+    &&|& \quad\texttt{ThrowsAny}&&\\
+    &&|& \quad\texttt{DoesNotThrow}&&\\
+    &&|& \quad\texttt{Satisfy($d$, $p$)}&&\\
+    &&|& \quad\texttt{SatisfyObserved($d$, $q$)}&&\\
+    &&|& \quad\texttt{Not($\phi$)}&&\\
+    &&|& \quad\texttt{Or($\phi_1$, $\phi_2$)}&&\\
+    &&|& \quad\texttt{And($\phi_1$, $\phi_2$)}&&\\
+    &&|& \quad\texttt{All([$\phi_1$, \ldots, $\phi_n$])}&&\\
+    &&|& \quad\texttt{Any([$\phi_1$, \ldots, $\phi_n$])}&&
+\end{align*}
+
+\subsection*{Relational check expectations}
+\begin{align*}
+    &&\psi\quad\Coloneqq& \quad\texttt{EqualToReference}&&\\
+    &&|& \quad\texttt{EqualTo($v$)}&&\\
+    &&|& \quad\texttt{EqualToReferenceBy($p$)}&&\\
+    &&|& \quad\texttt{EqualToReferenceWith($c$)}&&\\
+    &&|& \quad\texttt{ThrowsSameExceptionType}&&\\
+    &&|& \quad\texttt{SatisfyWith($d$, $r$)}&&\\
+    &&|& \quad\texttt{SatisfyObservedWith($d$, $s$)}&&\\
+    &&|& \quad\texttt{Or($\psi_1$, $\psi_2$)}&&\\
+    &&|& \quad\texttt{And($\psi_1$, $\psi_2$)}&&
+\end{align*}
+
+
+\vfill
+\pagebreak
 \improve
 
 

@@ -53,8 +53,52 @@ TODO
 
 
 %===============================================================================
-\vfill\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\vfill\pagebreak
 \mainmatter %+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\chapter*{Notes} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+%===============================================================================
+
+\begin{align*}
+    \Lq\texttt{actual} &= \texttt{expected}\Rq\\
+    \Lq\texttt{actual}\Rq &= \texttt{expected}
+\end{align*}
+\begin{align*}
+    \Lq\texttt{actual}\Rq &< \texttt{expected}\\
+    \Lq\texttt{actual}\Rq &\leqslant \texttt{expected}\\
+    \Lq\texttt{actual}\Rq &> \texttt{expected}\\
+    \Lq\texttt{actual}\Rq &\geqslant \texttt{expected}
+\end{align*}
+\begin{align*}
+    \Lq\texttt{actual}\Rq &\texttt{ throws}\\
+    \Lq\texttt{actual}\Rq &\texttt{ throwsAny}\\
+    \Lq\texttt{actual}\Rq &\texttt{ isTrue}\\
+    \Lq\texttt{actual}\Rq &\texttt{ isFalse}
+\end{align*}
+\[\boxed{
+    \Lq\texttt{actual}\Rq \texttt{ \textcolor{red}{Expectation?} [refValue]}
+}\]
+
+\vfill
+\begin{align*}
+    \Lq\texttt{fun tuppledArgs -> actual tupledArgs} &= \texttt{expected tupledArgs}\Rq\\
+    \Lq\texttt{fun tuppledArgs -> actual tupledArgs}\Rq &= \texttt{expected tupledArgs}
+\end{align*}
+
+\begin{gather*}
+    \Lq \texttt{fun tuppledArgs -> actual tupledArgs}\Rq\\
+    =\\
+    \texttt{fun tuppledArgs -> expected tupledArgs}
+\end{gather*}
+
+\begin{gather*}
+        \Lq \texttt{fun tuppledArgs -> actual tupledArgs}\Rq\\
+        \texttt{\textcolor{red}{Expectation?}}\\
+        \texttt{fun tupledArgs -> expected tupledArgs}
+\end{gather*}%
+
+%===============================================================================
+\vfill %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\pagebreak %++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 \chapter{Introduction} %++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 %===============================================================================
 %===========================================================

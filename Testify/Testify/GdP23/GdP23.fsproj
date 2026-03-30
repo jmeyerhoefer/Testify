@@ -1,0 +1,137 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>GdP23</AssemblyName>
+		<RootNamespace>GdP23</RootNamespace>
+		<TargetFramework>net8.0</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<!-- Mini +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<ItemGroup>
+		<Compile Include="..\Mini.fs" />
+	</ItemGroup>
+
+	<!-- Templates ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<ItemGroup>
+		<Compile Include="Templates\02\4\template\Zahlen.fs" />
+		<Compile Include="Templates\02\4\template\Tests.fs" />
+
+		<Compile Include="Templates\03\1\template\Entwurfsmuster.fs" />
+		<Compile Include="Templates\03\1\template\Tests.fs" />
+
+		<Compile Include="Templates\03\2\template\Peano.fs" />
+		<Compile Include="Templates\03\2\template\Tests.fs" />
+
+		<Compile Include="Templates\03\3\template\Leibniz.fs" />
+		<Compile Include="Templates\03\3\template\Tests.fs" />
+
+		<Compile Include="Templates\04\2\template\Dates.fs" />
+		<Compile Include="Templates\04\2\template\Tests.fs" />
+
+		<Compile Include="Templates\04\3\template\NatsType.fs" />
+		<Compile Include="Templates\04\3\template\Nats.fs" />
+		<Compile Include="Templates\04\3\template\Tests.fs" />
+
+		<Compile Include="Templates\05\1\template\Lists.fs" />
+		<Compile Include="Templates\05\1\template\Tests.fs" />
+
+		<Compile Include="Templates\05\2\template\PriorityQueueTypes.fs" />
+		<Compile Include="Templates\05\2\template\PriorityQueue.fs" />
+		<Compile Include="Templates\05\2\template\Tests.fs" />
+
+		<Compile Include="Templates\05\3\template\Simplify.fs" />
+		<Compile Include="Templates\05\3\template\Tests.fs" />
+
+		<Compile Include="Templates\05\4\template\Types.fs" />
+		<Compile Include="Templates\05\4\template\Ternary.fs" />
+		<Compile Include="Templates\05\4\template\Tests.fs" />
+
+		<Compile Include="Templates\06\1\template\Lists.fs" />
+		<Compile Include="Templates\06\1\template\Tests.fs" />
+
+		<Compile Include="Templates\06\2\template\TreeTypes.fs" />
+		<Compile Include="Templates\06\2\template\Tree.fs" />
+		<Compile Include="Templates\06\2\template\Tests.fs" />
+
+		<Compile Include="Templates\06\3\template\HeapType.fs" />
+		<Compile Include="Templates\06\3\template\Heaps.fs" />
+		<Compile Include="Templates\06\3\template\Tests.fs" />
+
+		<Compile Include="Templates\06\4\template\Types.fs" />
+		<Compile Include="Templates\06\4\template\Turtle.fs" />
+		<Compile Include="Templates\06\4\template\Draw.fs" />
+		<Compile Include="Templates\06\4\template\Tests.fs" />
+
+		<Compile Include="Templates\07\2\template\MapSortedList.fs" />
+		<Compile Include="Templates\07\2\template\TestsMapSortedList.fs" />
+
+		<Compile Include="Templates\07\3\template\MapPartialFunction.fs" />
+		<Compile Include="Templates\07\3\template\TestsMapPartialFunction.fs" />
+
+		<Compile Include="Templates\08\1\template\Types.fs" />
+		<Compile Include="Templates\08\1\template\RegExp.fs" />
+		<Compile Include="Templates\08\1\template\Tests.fs" />
+
+		<Compile Include="Templates\08\2\template\Datatypes.fs" />
+
+		<Compile Include="Templates\08\3\template\Types.fs" />
+		<Compile Include="Templates\08\3\template\RegExp.fs" />
+		<Compile Include="Templates\08\3\template\Tests.fs" />
+
+		<Compile Include="Templates\09\1\template\TestUtilsIO.fs" />
+		<Compile Include="Templates\09\1\template\Program.fs" />
+		<Compile Include="Templates\09\1\template\Main.fs" />
+		<Compile Include="Templates\09\1\template\Tests.fs" />
+
+		<Compile Include="Templates\09\2\template\Types.fs" />
+		<Compile Include="Templates\09\2\template\TestUtilsIO.fs" />
+		<Compile Include="Templates\09\2\template\BlackJack.fs" />
+		<Compile Include="Templates\09\2\template\Main.fs" />
+		<Compile Include="Templates\09\2\template\Tests.fs" />
+
+		<Compile Include="Templates\09\3\template\Model.fs" />
+		<Compile Include="Templates\09\3\template\Helpers.fs" />
+		<Compile Include="Templates\09\3\template\Program.fs" />
+		<Compile Include="Templates\09\3\template\Main.fs" />
+		<Compile Include="Templates\09\3\template\Tests.fs" />
+
+		<Compile Include="Templates\10\2\template\Counters.fs" />
+		<Compile Include="Templates\10\2\template\Tests.fs" />
+
+		<Compile Include="Templates\10\4\template\Types.fs" />
+		<Compile Include="Templates\10\4\template\Lists.fs" />
+		<Compile Include="Templates\10\4\template\Tests.fs" />
+
+		<Compile Include="Templates\11\1\template\Types.fs" />
+		<Compile Include="Templates\11\1\template\Find.fs" />
+		<Compile Include="Templates\11\1\template\Tests.fs" />
+
+		<Compile Include="Templates\11\2\template\Types.fs" />
+		<Compile Include="Templates\11\2\template\ArrayMap.fs" />
+		<Compile Include="Templates\11\2\template\Tests.fs" />
+
+		<Compile Include="Templates\11\4\template\Arrays.fs" />
+		<Compile Include="Templates\11\4\template\Tests.fs" />
+
+		<Compile Include="Templates\12\2\template\QueuesTypes.fs" />
+		<Compile Include="Templates\12\2\template\Queues.fs" />
+		<Compile Include="Templates\12\2\template\Tests.fs" />
+	</ItemGroup>
+
+	<!-- Main +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	<ItemGroup>
+		<Compile Include="Dockerfile" />
+		<Compile Include="Program.fs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+		<PackageReference Include="FsCheck" Version="2.16.6" />
+		<PackageReference Include="Unquote" Version="6.1.0" />
+	</ItemGroup>
+</Project>

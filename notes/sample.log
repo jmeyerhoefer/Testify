@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.11)  6 MAR 2026 17:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2026.3.8)  27 MAR 2026 10:20
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -610,25 +610,34 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip66
 ) (D:\Programs\MiKTeX\tex/generic/babel\babel.sty
-Package: babel 2025/02/02 v25.3 The multilingual framework for pdfLaTeX, LuaLaTeX and XeLaTeX
+Package: babel 2026/02/14 v26.3 The multilingual framework for LuaLaTeX, pdfLaTeX and XeLaTeX
 \babel@savecnt=\count311
 \U@D=\dimen284
 \l@unhyphenated=\language79
  (D:\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read3
 \bbl@dirlevel=\count312
+Package babel Info: Configuration files are deprecated, as
+(babel)             they can break document portability.
+(babel)             Reported on input line 4206.
 
 *************************************
 * Local config file bblopts.cfg used
 *
 (D:\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
 File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of babel
-) (D:\Programs\MiKTeX\tex/latex/babel-german\ngerman.ldf
+) (D:\Programs\MiKTeX\tex/generic/babel/locale/invalid\babel-ngerman.tex) (D:\Programs\MiKTeX\tex/generic/babel/locale/en\babel-english.tex)
+Package babel Info: Importing font and identification data for ngerman
+(babel)             from babel-de.ini. Reported on input line 4330.
+ (D:\Programs\MiKTeX\tex/latex/babel-german\ngerman.ldf
 Language: ngerman 2024/12/10 v2.15 German support for babel (post-1996 orthography)
  (D:\Programs\MiKTeX\tex/latex/babel-german\ngermanb.ldf
 Language: ngermanb 2024/12/10 v2.15 German support for babel (post-1996 orthography)
 Package babel Info: Making " an active character on input line 122.
-)) (D:\Programs\MiKTeX\tex/latex/babel-english\english.ldf
+))
+Package babel Info: Importing font and identification data for english
+(babel)             from babel-en.ini. Reported on input line 4330.
+ (D:\Programs\MiKTeX\tex/latex/babel-english\english.ldf
 Language: english 2017/06/06 v3.3r English support from the babel system
 Package babel Info: Hyphen rules for 'canadian' set to \l@english
 (babel)             (\language0). Reported on input line 102.
@@ -636,13 +645,7 @@ Package babel Info: Hyphen rules for 'australian' set to \l@ukenglish
 (babel)             (\language73). Reported on input line 105.
 Package babel Info: Hyphen rules for 'newzealand' set to \l@ukenglish
 (babel)             (\language73). Reported on input line 108.
-)) (D:\Programs\MiKTeX\tex/generic/babel/locale/en\babel-english.tex
-Package babel Info: Importing font and identification data for english
-(babel)             from babel-en.ini. Reported on input line 11.
-) (D:\Programs\MiKTeX\tex/generic/babel/locale/de\babel-ngerman.tex
-Package babel Info: Importing font and identification data for ngerman
-(babel)             from babel-de.ini. Reported on input line 11.
-) (D:\Programs\MiKTeX\tex/latex/blindtext\blindtext.sty
+)) (D:\Programs\MiKTeX\tex/latex/blindtext\blindtext.sty
 Package: blindtext 2012/01/06 V2.0 blindtext-Package
  (D:\Programs\MiKTeX\tex/latex/tools\xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
@@ -1142,7 +1145,7 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 ) (D:\Programs\MiKTeX\tex/latex/lstaddons\lstautogobble.sty
 Package: lstautogobble 2012/05/03 v0.1 Implements 'autogobble' option for 'listings'
 \lstag@spacecount=\count418
-) (D:\Programs\MiKTeX\tex/latex/l3packages/xparse\xparse.sty (D:\Programs\MiKTeX\tex/latex/l3kernel-dev\expl3.sty
+) (D:\Programs\MiKTeX\tex/latex/l3packages/xparse\xparse.sty (D:\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
 Package: expl3 2025-01-18 L3 programming layer (loader) 
  (D:\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
@@ -1407,42 +1410,50 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 {C:/Users/jakob/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free3.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free2.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free0.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5free1.enc}]
 
 [2]
-chapter 1.
 LaTeX Font Info:    Font shape `T1/lmss/b/n' in size <20.74> not available
 (Font)              Font shape `T1/lmss/bx/n' tried instead on input line 58.
-
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 64.
+ (D:\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+)
 
 [1
 
 
 
 
-]
+{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc}{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc}]
 
-[2]
+[2
+
+
+]
+chapter 1.
+
+
+[3]
+
+[4]
 chapter 2.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[3
+[5
 
 
 ]
 
-[4
+[6
 
 
 ]
 chapter 3.
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 239.
-(D:\Programs\MiKTeX\tex/latex/lm\t1lmtt.fd
-File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
 
-[5]
-LaTeX Font Info:    Trying to load font information for TS1+lmss on input line 252.
+
+[7]
+LaTeX Font Info:    Trying to load font information for TS1+lmss on input line 296.
  (D:\Programs\MiKTeX\tex/latex/lm\ts1lmss.fd
 File: ts1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -1450,14 +1461,14 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[6{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]
+[8{D:/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc}]
 chapter 4.
 
 Underfull \vbox (badness 1205) has occurred while \output is active []
 
 
 
-[7
+[9
 
 
 ]
@@ -1465,24 +1476,24 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[8]
+[10]
 chapter 5.
 
 
-[9
+[11
 
 
 ]
 
-[10
+[12
 
 
 ]
 chapter 6.
 
 
-[11]
-runsystem(latexminted cleantemp  --timestamp 20260306170019 5E8FF9BF55BA3508199D22E984129BE6)...executed.
+[13]
+runsystem(latexminted cleantemp  --timestamp 20260327102042 5E8FF9BF55BA3508199D22E984129BE6)...executed.
 
  (sample.aux)
  ***********
@@ -1493,17 +1504,17 @@ Package rerunfilecheck Info: File `sample.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 59000 strings out of 473530
- 1335738 string characters out of 5727300
- 2153853 words of memory out of 5000000
- 81286 multiletter control sequences out of 15000+600000
- 590335 words of font info for 66 fonts, out of 8000000 for 9000
+ 59056 strings out of 473530
+ 1336646 string characters out of 5727301
+ 2156215 words of memory out of 5000000
+ 81336 multiletter control sequences out of 15000+600000
+ 596519 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  120i,20n,113p,10949b,965s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<D:/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmss10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmsso10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb>
-Output written on sample.pdf (13 pages, 203991 bytes).
+<D:/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmss10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmssbx10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmsso10.pfb><D:/Programs/MiKTeX/fonts/type1/public/lm/lmtt10.pfb><D:/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on sample.pdf (15 pages, 226752 bytes).
 PDF statistics:
- 256 PDF objects out of 1000 (max. 8388607)
- 46 named destinations out of 1000 (max. 500000)
+ 283 PDF objects out of 1000 (max. 8388607)
+ 49 named destinations out of 1000 (max. 500000)
  341 words of extra memory for PDF output out of 10000 (max. 10000000)
 
