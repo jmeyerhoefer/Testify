@@ -525,6 +525,11 @@ module private CheckCore =
 /// Property-style testing helpers that compare quoted implementations against reference functions.
 /// </summary>
 module Check =
+    type Collector<'Args, 'Actual, 'Expected> =
+        private {
+            Results: ResizeArray<CheckResult<'Args, 'Actual, 'Expected>>
+        }
+
     let private configured (config: FsCheck.Config) : FsCheck.Config =
         CheckConfig.addMiniArbs config
 
@@ -598,9 +603,9 @@ module Check =
     /// Runs a property-style check with the default configuration and the default arbitrary for the input type.
     /// </summary>
     let check
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -614,9 +619,9 @@ module Check =
     /// <summary>Runs a property-style check with an explicit FsCheck configuration.</summary>
     let checkWith
         (config: FsCheck.Config)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         let config = configured config
 
@@ -629,9 +634,9 @@ module Check =
 
     let checkUsing
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         CheckCore.run
             CheckConfig.defaultConfig
@@ -643,9 +648,9 @@ module Check =
     let checkUsingWith
         (config: FsCheck.Config)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         CheckCore.run
             (configured config)
@@ -656,9 +661,9 @@ module Check =
 
     let checkGroupedUsing
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -673,9 +678,9 @@ module Check =
     let checkGroupedUsingWith
         (config: FsCheck.Config)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         let config = configured config
 
@@ -690,9 +695,9 @@ module Check =
     let checkGroupedUsingBoth
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedUsingWithResolvedConfig
             CheckConfig.defaultConfig
@@ -706,9 +711,9 @@ module Check =
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedUsingWithResolvedConfig
             (configured config)
@@ -720,9 +725,9 @@ module Check =
 
     let checkGroupedDependingOn
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -737,9 +742,9 @@ module Check =
     let checkGroupedDependingOnWith
         (config: FsCheck.Config)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         let config = configured config
 
@@ -754,9 +759,9 @@ module Check =
     let checkGroupedDependingOnUsing
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedDependingOnWithResolvedConfig
             CheckConfig.defaultConfig
@@ -770,9 +775,9 @@ module Check =
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedDependingOnWithResolvedConfig
             (configured config)
@@ -783,9 +788,9 @@ module Check =
             expectation
 
     let check2
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -799,9 +804,9 @@ module Check =
 
     let check2With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
         let config = configured config
 
@@ -815,9 +820,9 @@ module Check =
 
     let check2Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -832,9 +837,9 @@ module Check =
     let check2UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
         let config = configured config
 
@@ -847,9 +852,9 @@ module Check =
             expectation
 
     let check3
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -864,9 +869,9 @@ module Check =
 
     let check3With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
         let config = configured config
 
@@ -881,9 +886,9 @@ module Check =
 
     let check3Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
         let config = CheckConfig.defaultConfig
 
@@ -899,9 +904,9 @@ module Check =
     let check3UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
         let config = configured config
 
@@ -916,235 +921,286 @@ module Check =
 
     /// <summary>Checks that a quoted function matches the reference implementation.</summary>
     let checkEqual
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
         check
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualWith
         (config: FsCheck.Config)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
         checkWith
             config
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualUsing
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        checkUsing arbitrary actual reference CheckExpectation.equalToReference
+        checkUsing arbitrary CheckExpectation.equalToReference reference actual
 
     let checkEqualUsingWith
         (config: FsCheck.Config)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        checkUsingWith config arbitrary actual reference CheckExpectation.equalToReference
+        checkUsingWith config arbitrary CheckExpectation.equalToReference reference actual
 
-    let checkEqualGroupedUsing
+    let checkEqualGroupedUsing<'Group1, 'Group2, 'T when 'T: equality>
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
-        checkGroupedUsing arbitrary2 actual reference CheckExpectation.equalToReference
+        checkGroupedUsing arbitrary2 CheckExpectation.equalToReference reference actual
 
-    let checkEqualGroupedUsingWith
+    let checkEqualGroupedUsingWith<'Group1, 'Group2, 'T when 'T: equality>
         (config: FsCheck.Config)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
-        checkGroupedUsingWith config arbitrary2 actual reference CheckExpectation.equalToReference
+        checkGroupedUsingWith config arbitrary2 CheckExpectation.equalToReference reference actual
 
     let checkEqualGroupedUsingBoth
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedUsingBoth
             arbitrary1
             arbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualGroupedUsingBothWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedUsingBothWith
             config
             arbitrary1
             arbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualGroupedDependingOn
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedDependingOn
             provideArbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualGroupedDependingOnWith
         (config: FsCheck.Config)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedDependingOnWith
             config
             provideArbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualGroupedDependingOnUsing
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedDependingOnUsing
             arbitrary1
             provideArbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqualGroupedDependingOnUsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : CheckResult<'Group1 * 'Group2, 'T, 'T> =
         checkGroupedDependingOnUsingWith
             config
             arbitrary1
             provideArbitrary2
-            actual
-            reference
             CheckExpectation.equalToReference
+            reference
+            actual
 
     let checkEqual2
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2, 'T, 'T> =
-        check2 actual reference CheckExpectation.equalToReference
+        check2 CheckExpectation.equalToReference reference actual
 
     let checkEqual2With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2, 'T, 'T> =
-        check2With config actual reference CheckExpectation.equalToReference
+        check2With config CheckExpectation.equalToReference reference actual
 
     let checkEqual2Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2, 'T, 'T> =
-        check2Using arbitrary1 actual reference CheckExpectation.equalToReference
+        check2Using arbitrary1 CheckExpectation.equalToReference reference actual
 
     let checkEqual2UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2, 'T, 'T> =
-        check2UsingWith config arbitrary1 actual reference CheckExpectation.equalToReference
+        check2UsingWith config arbitrary1 CheckExpectation.equalToReference reference actual
 
     let checkEqual3
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'T, 'T> =
-        check3 actual reference CheckExpectation.equalToReference
+        check3 CheckExpectation.equalToReference reference actual
 
     let checkEqual3With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'T, 'T> =
-        check3With config actual reference CheckExpectation.equalToReference
+        check3With config CheckExpectation.equalToReference reference actual
 
     let checkEqual3Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'T, 'T> =
-        check3Using arbitrary1 actual reference CheckExpectation.equalToReference
+        check3Using arbitrary1 CheckExpectation.equalToReference reference actual
 
     let checkEqual3UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'T, 'T> =
-        check3UsingWith config arbitrary1 actual reference CheckExpectation.equalToReference
+        check3UsingWith config arbitrary1 CheckExpectation.equalToReference reference actual
 
     let checkEqualBy<'Args, 'T, 'Key when 'T: equality and 'Key: equality>
         (projection: 'T -> 'Key)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        check actual reference (CheckExpectation.equalToReferenceBy projection)
+        check (CheckExpectation.equalToReferenceBy projection) reference actual
 
     let checkEqualUsingBy<'Args, 'T, 'Key when 'T: equality and 'Key: equality>
         (projection: 'T -> 'Key)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        checkUsing arbitrary actual reference (CheckExpectation.equalToReferenceBy projection)
+        checkUsing arbitrary (CheckExpectation.equalToReferenceBy projection) reference actual
 
     let checkEqualWithDiff<'Args, 'T when 'T: equality>
         (diffOptions: DiffOptions)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        check actual reference (CheckExpectation.equalToReferenceWithDiff diffOptions)
+        check (CheckExpectation.equalToReferenceWithDiff diffOptions) reference actual
 
     let checkEqualUsingWithDiff<'Args, 'T when 'T: equality>
         (diffOptions: DiffOptions)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        checkUsing arbitrary actual reference (CheckExpectation.equalToReferenceWithDiff diffOptions)
+        checkUsing arbitrary (CheckExpectation.equalToReferenceWithDiff diffOptions) reference actual
 
     let checkEqualUsingComparer
         (comparer: 'T -> 'T -> bool)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        check actual reference (CheckExpectation.equalToReferenceWith comparer)
+        check (CheckExpectation.equalToReferenceWith comparer) reference actual
 
     let checkEqualUsingComparerUsing
         (comparer: 'T -> 'T -> bool)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : CheckResult<'Args, 'T, 'T> =
-        checkUsing arbitrary actual reference (CheckExpectation.equalToReferenceWith comparer)
+        checkUsing arbitrary (CheckExpectation.equalToReferenceWith comparer) reference actual
+
+    let private constantReference<'Args, 'T> (expected: 'T) : 'Args -> 'T =
+        fun _ -> expected
+
+    let checkBeTrue
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        check (CheckExpectation.equalTo true) (constantReference true) actual
+
+    let checkBeTrueWith
+        (config: FsCheck.Config)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkWith config (CheckExpectation.equalTo true) (constantReference true) actual
+
+    let checkBeTrueUsing
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkUsing arbitrary (CheckExpectation.equalTo true) (constantReference true) actual
+
+    let checkBeTrueUsingWith
+        (config: FsCheck.Config)
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkUsingWith config arbitrary (CheckExpectation.equalTo true) (constantReference true) actual
+
+    let checkBeFalse
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        check (CheckExpectation.equalTo false) (constantReference false) actual
+
+    let checkBeFalseWith
+        (config: FsCheck.Config)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkWith config (CheckExpectation.equalTo false) (constantReference false) actual
+
+    let checkBeFalseUsing
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkUsing arbitrary (CheckExpectation.equalTo false) (constantReference false) actual
+
+    let checkBeFalseUsingWith
+        (config: FsCheck.Config)
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : CheckResult<'Args, bool, bool> =
+        checkUsingWith config arbitrary (CheckExpectation.equalTo false) (constantReference false) actual
 
     /// <summary>Converts a check result into a structured Testify failure report when it did not pass.</summary>
     let toFailureReport
@@ -1261,443 +1317,581 @@ module Check =
 
             failwith (toDisplayString result)
 
+    [<RequireQualifiedAccess>]
+    module Collect =
+        let create () : Collector<'Args, 'Actual, 'Expected> =
+            { Results = ResizeArray () }
+
+        let add
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+            (reference: 'Args -> 'Expected)
+            (actual: Expr<'Args -> 'Actual>)
+            : CheckResult<'Args, 'Actual, 'Expected> =
+            let result = check expectation reference actual
+            collector.Results.Add result
+            result
+
+        let addWith
+            (config: FsCheck.Config)
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+            (reference: 'Args -> 'Expected)
+            (actual: Expr<'Args -> 'Actual>)
+            : CheckResult<'Args, 'Actual, 'Expected> =
+            let result = checkWith config expectation reference actual
+            collector.Results.Add result
+            result
+
+        let addUsing
+            (arbitrary: FsCheck.Arbitrary<'Args>)
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+            (reference: 'Args -> 'Expected)
+            (actual: Expr<'Args -> 'Actual>)
+            : CheckResult<'Args, 'Actual, 'Expected> =
+            let result = checkUsing arbitrary expectation reference actual
+            collector.Results.Add result
+            result
+
+        let addUsingWith
+            (config: FsCheck.Config)
+            (arbitrary: FsCheck.Arbitrary<'Args>)
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+            (reference: 'Args -> 'Expected)
+            (actual: Expr<'Args -> 'Actual>)
+            : CheckResult<'Args, 'Actual, 'Expected> =
+            let result = checkUsingWith config arbitrary expectation reference actual
+            collector.Results.Add result
+            result
+
+        let toResultList
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            : CheckResult<'Args, 'Actual, 'Expected> list =
+            collector.Results
+            |> Seq.toList
+
+        let assertAll
+            (collector: Collector<'Args, 'Actual, 'Expected>)
+            : unit =
+            let failures =
+                collector.Results
+                |> Seq.filter (function
+                    | Passed -> false
+                    | Failed _
+                    | Exhausted _
+                    | Errored _ -> true)
+                |> Seq.toList
+
+            if not failures.IsEmpty then
+                failures
+                |> List.iter (fun result ->
+                    result
+                    |> toFailureReport
+                    |> Option.iter TestExecution.recordFailureReport)
+
+                let message =
+                    failures
+                    |> List.map toDisplayString
+                    |> String.concat "\n\n---\n\n"
+
+                failwith
+                    $"Collected {failures.Length} property failure(s).\n\n{message}"
+
     /// <summary>Raises an exception when a property-style check fails.</summary>
     let should
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : unit =
-        check actual reference expectation
+        check expectation reference actual
         |> assertPassed
 
     let shouldWith
         (config: FsCheck.Config)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : unit =
-        checkWith config actual reference expectation
+        checkWith config expectation reference actual
         |> assertPassed
 
     let shouldUsing
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : unit =
-        checkUsing arbitrary actual reference expectation
+        checkUsing arbitrary expectation reference actual
         |> assertPassed
 
     let shouldUsingWith
         (config: FsCheck.Config)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'Actual>)
-        (reference: 'Args -> 'Expected)
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
+        (reference: 'Args -> 'Expected)
+        (actual: Expr<'Args -> 'Actual>)
         : unit =
-        checkUsingWith config arbitrary actual reference expectation
+        checkUsingWith config arbitrary expectation reference actual
         |> assertPassed
 
     let shouldGroupedUsing
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
-        checkGroupedUsing arbitrary2 actual reference expectation
+        checkGroupedUsing arbitrary2 expectation reference actual
         |> assertPassed
 
     let shouldGroupedUsingWith
         (config: FsCheck.Config)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
-        checkGroupedUsingWith config arbitrary2 actual reference expectation
+        checkGroupedUsingWith config arbitrary2 expectation reference actual
         |> assertPassed
 
     let shouldGroupedUsingBoth
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
         checkGroupedUsingBoth
             arbitrary1
             arbitrary2
-            actual
-            reference
             expectation
+            reference
+            actual
         |> assertPassed
 
     let shouldGroupedUsingBothWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
         checkGroupedUsingBothWith
             config
             arbitrary1
             arbitrary2
-            actual
-            reference
             expectation
+            reference
+            actual
         |> assertPassed
 
     let shouldGroupedDependingOn
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
-        checkGroupedDependingOn provideArbitrary2 actual reference expectation
+        checkGroupedDependingOn provideArbitrary2 expectation reference actual
         |> assertPassed
 
     let shouldGroupedDependingOnWith
         (config: FsCheck.Config)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
         checkGroupedDependingOnWith
             config
             provideArbitrary2
-            actual
-            reference
             expectation
+            reference
+            actual
         |> assertPassed
 
     let shouldGroupedDependingOnUsing
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
         checkGroupedDependingOnUsing
             arbitrary1
             provideArbitrary2
-            actual
-            reference
             expectation
+            reference
+            actual
         |> assertPassed
 
     let shouldGroupedDependingOnUsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
-        (reference: 'Group1 -> 'Group2 -> 'Expected)
         (expectation: CheckExpectation<'Group1 * 'Group2, 'Actual, 'Expected>)
+        (reference: 'Group1 -> 'Group2 -> 'Expected)
+        (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : unit =
         checkGroupedDependingOnUsingWith
             config
             arbitrary1
             provideArbitrary2
-            actual
-            reference
             expectation
+            reference
+            actual
         |> assertPassed
 
     let should2
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : unit =
-        check2 actual reference expectation
+        check2 expectation reference actual
         |> assertPassed
 
     let should2With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : unit =
-        check2With config actual reference expectation
+        check2With config expectation reference actual
         |> assertPassed
 
     let should2Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : unit =
-        check2Using arbitrary1 actual reference expectation
+        check2Using arbitrary1 expectation reference actual
         |> assertPassed
 
     let should2UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : unit =
-        check2UsingWith config arbitrary1 actual reference expectation
+        check2UsingWith config arbitrary1 expectation reference actual
         |> assertPassed
 
     let should3
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : unit =
-        check3 actual reference expectation
+        check3 expectation reference actual
         |> assertPassed
 
     let should3With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : unit =
-        check3With config actual reference expectation
+        check3With config expectation reference actual
         |> assertPassed
 
     let should3Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : unit =
-        check3Using arbitrary1 actual reference expectation
+        check3Using arbitrary1 expectation reference actual
         |> assertPassed
 
     let should3UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
-        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (expectation: CheckExpectation<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected>)
+        (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : unit =
-        check3UsingWith config arbitrary1 actual reference expectation
+        check3UsingWith config arbitrary1 expectation reference actual
+        |> assertPassed
+
+    let shouldBeTrue
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeTrue actual
+        |> assertPassed
+
+    let shouldBeTrueWith
+        (config: FsCheck.Config)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeTrueWith config actual
+        |> assertPassed
+
+    let shouldBeTrueUsing
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeTrueUsing arbitrary actual
+        |> assertPassed
+
+    let shouldBeTrueUsingWith
+        (config: FsCheck.Config)
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeTrueUsingWith config arbitrary actual
+        |> assertPassed
+
+    let shouldBeFalse
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeFalse actual
+        |> assertPassed
+
+    let shouldBeFalseWith
+        (config: FsCheck.Config)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeFalseWith config actual
+        |> assertPassed
+
+    let shouldBeFalseUsing
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeFalseUsing arbitrary actual
+        |> assertPassed
+
+    let shouldBeFalseUsingWith
+        (config: FsCheck.Config)
+        (arbitrary: FsCheck.Arbitrary<'Args>)
+        (actual: Expr<'Args -> bool>)
+        : unit =
+        checkBeFalseUsingWith config arbitrary actual
         |> assertPassed
 
     /// <summary>Raises an exception when a reference-equality property check fails.</summary>
     let shouldEqual
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqual actual reference
+        checkEqual reference actual
         |> assertPassed
 
     let shouldEqualUsing
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsing arbitrary actual reference
+        checkEqualUsing arbitrary reference actual
         |> assertPassed
 
     let shouldEqualWith
         (config: FsCheck.Config)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualWith config actual reference
+        checkEqualWith config reference actual
         |> assertPassed
 
     let shouldEqualUsingWith
         (config: FsCheck.Config)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsingWith config arbitrary actual reference
+        checkEqualUsingWith config arbitrary reference actual
         |> assertPassed
 
-    let shouldEqualGroupedUsing
+    let shouldEqualGroupedUsing<'Group1, 'Group2, 'T when 'T: equality>
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedUsing arbitrary2 actual reference
+        checkEqualGroupedUsing arbitrary2 reference actual
         |> assertPassed
 
-    let shouldEqualGroupedUsingWith
+    let shouldEqualGroupedUsingWith<'Group1, 'Group2, 'T when 'T: equality>
         (config: FsCheck.Config)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedUsingWith config arbitrary2 actual reference
+        checkEqualGroupedUsingWith config arbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedUsingBoth
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedUsingBoth arbitrary1 arbitrary2 actual reference
+        checkEqualGroupedUsingBoth arbitrary1 arbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedUsingBothWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (arbitrary2: FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedUsingBothWith config arbitrary1 arbitrary2 actual reference
+        checkEqualGroupedUsingBothWith config arbitrary1 arbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedDependingOn
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedDependingOn provideArbitrary2 actual reference
+        checkEqualGroupedDependingOn provideArbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedDependingOnWith
         (config: FsCheck.Config)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedDependingOnWith config provideArbitrary2 actual reference
+        checkEqualGroupedDependingOnWith config provideArbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedDependingOnUsing
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
-        checkEqualGroupedDependingOnUsing arbitrary1 provideArbitrary2 actual reference
+        checkEqualGroupedDependingOnUsing arbitrary1 provideArbitrary2 reference actual
         |> assertPassed
 
     let shouldEqualGroupedDependingOnUsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Group1>)
         (provideArbitrary2: 'Group1 -> FsCheck.Arbitrary<'Group2>)
-        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         (reference: 'Group1 -> 'Group2 -> 'T)
+        (actual: Expr<'Group1 -> 'Group2 -> 'T>)
         : unit =
         checkEqualGroupedDependingOnUsingWith
             config
             arbitrary1
             provideArbitrary2
-            actual
             reference
+            actual
         |> assertPassed
 
     let shouldEqual2
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : unit =
-        checkEqual2 actual reference
+        checkEqual2 reference actual
         |> assertPassed
 
     let shouldEqual2With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : unit =
-        checkEqual2With config actual reference
+        checkEqual2With config reference actual
         |> assertPassed
 
     let shouldEqual2Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : unit =
-        checkEqual2Using arbitrary1 actual reference
+        checkEqual2Using arbitrary1 reference actual
         |> assertPassed
 
     let shouldEqual2UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'T>)
         : unit =
-        checkEqual2UsingWith config arbitrary1 actual reference
+        checkEqual2UsingWith config arbitrary1 reference actual
         |> assertPassed
 
     let shouldEqual3
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : unit =
-        checkEqual3 actual reference
+        checkEqual3 reference actual
         |> assertPassed
 
     let shouldEqual3With
         (config: FsCheck.Config)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : unit =
-        checkEqual3With config actual reference
+        checkEqual3With config reference actual
         |> assertPassed
 
     let shouldEqual3Using
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : unit =
-        checkEqual3Using arbitrary1 actual reference
+        checkEqual3Using arbitrary1 reference actual
         |> assertPassed
 
     let shouldEqual3UsingWith
         (config: FsCheck.Config)
         (arbitrary1: FsCheck.Arbitrary<'Arg1>)
-        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'T)
+        (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'T>)
         : unit =
-        checkEqual3UsingWith config arbitrary1 actual reference
+        checkEqual3UsingWith config arbitrary1 reference actual
         |> assertPassed
 
     let shouldEqualBy<'Args, 'T, 'Key when 'T: equality and 'Key: equality>
         (projection: 'T -> 'Key)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualBy projection actual reference
+        checkEqualBy projection reference actual
         |> assertPassed
 
     let shouldEqualUsingBy<'Args, 'T, 'Key when 'T: equality and 'Key: equality>
         (projection: 'T -> 'Key)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsingBy projection arbitrary actual reference
+        checkEqualUsingBy projection arbitrary reference actual
         |> assertPassed
 
     let shouldEqualWithDiff<'Args, 'T when 'T: equality>
         (diffOptions: DiffOptions)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualWithDiff diffOptions actual reference
+        checkEqualWithDiff diffOptions reference actual
         |> assertPassed
 
     let shouldEqualUsingWithDiff<'Args, 'T when 'T: equality>
         (diffOptions: DiffOptions)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsingWithDiff diffOptions arbitrary actual reference
+        checkEqualUsingWithDiff diffOptions arbitrary reference actual
         |> assertPassed
 
     let shouldEqualUsingComparer
         (comparer: 'T -> 'T -> bool)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsingComparer comparer actual reference
+        checkEqualUsingComparer comparer reference actual
         |> assertPassed
 
     let shouldEqualUsingComparerUsing
         (comparer: 'T -> 'T -> bool)
         (arbitrary: FsCheck.Arbitrary<'Args>)
-        (actual: Expr<'Args -> 'T>)
         (reference: 'Args -> 'T)
+        (actual: Expr<'Args -> 'T>)
         : unit =
-        checkEqualUsingComparerUsing comparer arbitrary actual reference
+        checkEqualUsingComparerUsing comparer arbitrary reference actual
         |> assertPassed

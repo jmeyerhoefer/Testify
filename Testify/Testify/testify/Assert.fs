@@ -26,6 +26,11 @@ type AssertResult =
 
 [<RequireQualifiedAccess>]
 module Assert =
+    type Collector =
+        private {
+            Results: ResizeArray<AssertResult>
+        }
+
     let private tryFindFallbackExceptionLocation
         (observed: Observed<'T>)
         : Diagnostics.SourceLocation option =
@@ -170,6 +175,61 @@ module Assert =
             |> Option.iter TestExecution.recordFailureReport
 
             failwith (toDisplayString result)
+
+    [<RequireQualifiedAccess>]
+    module Collect =
+        let create () : Collector =
+            { Results = ResizeArray () }
+
+        let add
+            (collector: Collector)
+            (expectation: AssertExpectation<'T>)
+            (actual: Expr<'T>)
+            : AssertResult =
+            let result = check expectation actual
+            collector.Results.Add result
+            result
+
+        let addNamed
+            (collector: Collector)
+            (test: string)
+            (expectation: AssertExpectation<'T>)
+            (actual: Expr<'T>)
+            : AssertResult =
+            let result = checkNamed test expectation actual
+            collector.Results.Add result
+            result
+
+        let toResultList
+            (collector: Collector)
+            : AssertResult list =
+            collector.Results
+            |> Seq.toList
+
+        let assertAll
+            (collector: Collector)
+            : unit =
+            let failures =
+                collector.Results
+                |> Seq.filter (function
+                    | Passed -> false
+                    | Failed _ -> true)
+                |> Seq.toList
+
+            if not failures.IsEmpty then
+                failures
+                |> List.iter (fun result ->
+                    result
+                    |> toFailureReport
+                    |> Option.iter TestExecution.recordFailureReport)
+
+                let message =
+                    failures
+                    |> List.map toDisplayString
+                    |> String.concat "\n\n---\n\n"
+
+                failwith
+                    $"Collected {failures.Length} assertion failure(s).\n\n{message}"
 
     /// <summary>Runs an assertion and raises an exception when it fails.</summary>
     let should

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="Testify.ApiTests">
+    <resource name="FSharpSignatureData.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedData.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpSignatureDataB.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedDataB.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpOptimizationData.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedData.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpOptimizationDataB.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedDataB.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpOptimizationInfo.Testify.ApiTests" action="remove"></resource>
+    <resource name="FSharpSignatureInfo.Testify.ApiTests" action="remove"></resource>
+  </assembly>
+</linker>

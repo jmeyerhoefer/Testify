@@ -1,5 +1,7 @@
 namespace Testify
 
+open Microsoft.FSharp.Quotations
+
 
 module AssertOperators =
     let inline (<|>)
@@ -14,8 +16,12 @@ module AssertOperators =
         : ^T =
         ((^T or ^T) : (static member AndAlso: ^T * ^T -> ^T) (a, b))
 
-    let inline (-?>) expr expectation =
+    let inline (|>?) expr expectation =
         Assert.should expectation expr
+
+    let inline (>>?) (expr: Expr<'T>) (expectation: AssertExpectation<'T>) : Expr<'T> =
+        Assert.should expectation expr
+        expr
 
     let inline (<?) expr value =
         Assert.should (AssertExpectation.lessThan value) expr
@@ -47,14 +53,8 @@ module AssertOperators =
     let inline (!?) expr =
         Assert.should (AssertExpectation.equalTo false) expr
 
-    let inline (|?|) expr (expectA, expectB) =
-        expr -?> (expectA <|> expectB)
-
-    let inline (&?&) expr (expectA, expectB) =
-        expr -?> (expectA <&> expectB)
-
-    let inline (|?|>) expr expectations =
+    let inline (||?) expr expectations =
         Assert.should (AssertExpectation.any expectations) expr
 
-    let inline (&?&>) expr expectations =
+    let inline (&&?) expr expectations =
         Assert.should (AssertExpectation.all expectations) expr

@@ -9,11 +9,6 @@
 		<GenerateProgramFile>false</GenerateProgramFile>
 	</PropertyGroup>
 
-
-	<!-- Mini +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!--	<ItemGroup>-->
-<!--		<Compile Include="..\Mini.fs" />-->
-<!--	</ItemGroup>-->
 	<ItemGroup>
 		<ProjectReference Include="..\\Testify.fsproj" />
 	</ItemGroup>
@@ -30,12 +25,15 @@
 
 		<Compile Include="Templates\03\2\template\Peano.fs" />
 		<Compile Include="Templates\03\2\template\Tests.fs" />
+		<Compile Include="Templates\03\2\template\TestifyTests.fs" />
 
 		<Compile Include="Templates\03\3\template\Leibniz.fs" />
 		<Compile Include="Templates\03\3\template\Tests.fs" />
+		<Compile Include="Templates\03\3\template\TestifyTests.fs" />
 
 		<Compile Include="Templates\04\2\template\Dates.fs" />
 		<Compile Include="Templates\04\2\template\Tests.fs" />
+		<Compile Include="Templates\04\2\template\TestifyTests.fs" />
 
 		<Compile Include="Templates\04\3\template\NatsType.fs" />
 		<Compile Include="Templates\04\3\template\Nats.fs" />
@@ -80,8 +78,6 @@
 		<Compile Include="Templates\08\1\template\Types.fs" />
 		<Compile Include="Templates\08\1\template\RegExp.fs" />
 		<Compile Include="Templates\08\1\template\Tests.fs" />
-
-		<Compile Include="Templates\08\2\template\Datatypes.fs" />
 
 		<Compile Include="Templates\08\3\template\Types.fs" />
 		<Compile Include="Templates\08\3\template\RegExp.fs" />
