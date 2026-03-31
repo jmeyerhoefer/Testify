@@ -3,6 +3,6 @@
 /GdP23/bin
 /GdP23/obj
 
-/bin
-/obj
-/.idea
+bin/
+obj/
+.idea/
