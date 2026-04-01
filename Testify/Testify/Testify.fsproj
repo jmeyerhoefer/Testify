@@ -17,33 +17,33 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Include="testify\Render.fs" />
-		<Compile Include="testify\Common.fs" />
-		<Compile Include="testify\Diff.fs" />
-		<Compile Include="testify\Expressions.fs" />
-		<Compile Include="testify\Diagnostics.fs" />
-		<Compile Include="testify\SourceMapping.fs" />
-		<Compile Include="testify\TestifySettings.fs" />
-		<Compile Include="testify\Reporting.fs" />
-		<Compile Include="testify\TestExecution.fs" />
-		<Compile Include="testify\TestResults.fs" />
-		<Compile Include="testify\AssertExpectation.fsi" />
-		<Compile Include="testify\AssertExpectation.fs" />
-		<Compile Include="testify\AssertAsync.fs" />
-		<Compile Include="testify\Assert.fsi" />
-		<Compile Include="testify\Assert.fs" />
-		<Compile Include="testify\AssertOperators.fsi" />
-		<Compile Include="testify\AssertOperators.fs" />
-		<Compile Include="testify\CheckExpectation.fsi" />
-		<Compile Include="testify\CheckExpectation.fs" />
-		<Compile Include="testify\CheckConfig.fs" />
-		<Compile Include="testify\Check.fsi" />
-		<Compile Include="testify\Check.fs" />
-		<Compile Include="testify\CheckOperators.fsi" />
-		<Compile Include="testify\CheckOperators.fs" />
-		<Compile Include="testify\Generators.fs" />
-		<Compile Include="testify\Arbitraries.fs" />
-		<Compile Include="testify\Attributes.fs" />
+		<Compile Include="Testify\Core\Render.fs" />
+		<Compile Include="Testify\Core\Common.fs" />
+		<Compile Include="Testify\Core\Diff.fs" />
+		<Compile Include="Testify\Core\Expressions.fs" />
+		<Compile Include="Testify\Core\Diagnostics.fs" />
+		<Compile Include="Testify\Core\SourceMapping.fs" />
+		<Compile Include="Testify\Runtime\TestifySettings.fs" />
+		<Compile Include="Testify\Runtime\Reporting.fs" />
+		<Compile Include="Testify\Runtime\TestExecution.fs" />
+		<Compile Include="Testify\Runtime\TestResults.fs" />
+		<Compile Include="Testify\Runtime\Attributes.fs" />
+		<Compile Include="Testify\Assert\AssertExpectation.fsi" />
+		<Compile Include="Testify\Assert\AssertExpectation.fs" />
+		<Compile Include="Testify\Assert\AssertAsync.fs" />
+		<Compile Include="Testify\Assert\Assert.fsi" />
+		<Compile Include="Testify\Assert\Assert.fs" />
+		<Compile Include="Testify\Assert\AssertOperators.fsi" />
+		<Compile Include="Testify\Assert\AssertOperators.fs" />
+		<Compile Include="Testify\Check\CheckExpectation.fsi" />
+		<Compile Include="Testify\Check\CheckExpectation.fs" />
+		<Compile Include="Testify\Check\CheckConfig.fs" />
+		<Compile Include="Testify\Check\Check.fsi" />
+		<Compile Include="Testify\Check\Check.fs" />
+		<Compile Include="Testify\Check\CheckOperators.fsi" />
+		<Compile Include="Testify\Check\CheckOperators.fs" />
+		<Compile Include="Testify\Check\Generators.fs" />
+		<Compile Include="Testify\Check\Arbitraries.fs" />
 		<Content Include=".gitignore" />
 	</ItemGroup>
 
