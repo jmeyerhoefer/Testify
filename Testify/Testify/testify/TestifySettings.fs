@@ -1,5 +1,7 @@
 namespace Testify
 
+open System
+
 
 /// <summary>Controls how much detail Testify includes in rendered reports.</summary>
 type Verbosity =
@@ -19,7 +21,7 @@ type TestifyReportOptions =
     }
     static member Default =
         {
-            Verbosity = Verbosity.Detailed
+            Verbosity = Verbosity.Normal
             IncludeCodeContext = false
             MaxValueLines = 12
         }
@@ -55,6 +57,31 @@ module TestifyReportOptions =
 
 /// <summary>Global process-wide settings that affect Testify result persistence and rendering defaults.</summary>
 type TestifySettings private () =
-    static member val OverwriteExistingResults = true with get, set
-    static member val internal ResultRootOverride : string option = None with get, set
+    static let mutable overwriteExistingResults = true
+    static let mutable resultRootOverride: string option = None
+
+    static member OverwriteExistingResults
+        with get() =
+            match Environment.GetEnvironmentVariable("TESTIFY_OVERWRITE_EXISTING_RESULTS") with
+            | null
+            | "" -> overwriteExistingResults
+            | value ->
+                match Boolean.TryParse value with
+                | true, parsed -> parsed
+                | _ -> overwriteExistingResults
+        and set value =
+            overwriteExistingResults <- value
+
+    static member ResultRootOverride
+        with get() =
+            match resultRootOverride with
+            | Some _ as value -> value
+            | None ->
+                match Environment.GetEnvironmentVariable("TESTIFY_RESULT_ROOT") with
+                | null
+                | "" -> None
+                | value -> Some value
+        and set value =
+            resultRootOverride <- value
+
     static member val DefaultReportOptions = TestifyReportOptions.Default with get, set

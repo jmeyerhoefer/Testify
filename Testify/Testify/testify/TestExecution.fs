@@ -19,7 +19,7 @@ type TestExecutionState =
 
 [<RequireQualifiedAccess>]
 module TestExecution =
-    let private current = AsyncLocal<TestExecutionState option>()
+    let private current = AsyncLocal<TestExecutionState option> ()
 
     let private updateCurrentState
         (update: TestExecutionState -> unit)

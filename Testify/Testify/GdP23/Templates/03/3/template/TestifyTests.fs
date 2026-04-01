@@ -14,7 +14,7 @@ module TestifyTests =
         // a)
 
         [< TestifyMethod; Timeout 1000 >]
-        member _.``#testify-assert a) quersumme Beispiele`` () : unit =
+        member _.``a) quersumme Beispiele`` () : unit =
             <@ Leibniz.quersumme 123N @> =? 6N
             <@ Leibniz.quersumme 1234N @> =? 10N
             <@ Leibniz.quersumme 42N @> =? 6N
@@ -23,7 +23,7 @@ module TestifyTests =
             <@ Leibniz.quersumme 4711N @> =? 13N
 
         [< TestifyMethod; Timeout 5000 >]
-        member _.``#testify-check a) quersumme Zufallstest`` () : unit =
+        member _.``a) quersumme Zufallstest`` () : unit =
             let posNat =
                 Arbitraries.from<Nat>
                 |> Arbitraries.filter (fun n -> n > 0N)
@@ -38,7 +38,7 @@ module TestifyTests =
         // b)
 
         [< TestifyMethod; Timeout 1000 >]
-        member _.``#testify-assert b) sortedDigits Beispiele`` () : unit =
+        member _.``b) sortedDigits Beispiele`` () : unit =
             (?) <@ Leibniz.sortedDigits 0N @>
             (?) <@ Leibniz.sortedDigits 5N @>
             (?) <@ Leibniz.sortedDigits 159N @>
@@ -48,7 +48,7 @@ module TestifyTests =
             (!?) <@ Leibniz.sortedDigits 1101N @>
 
         [< TestifyMethod; Timeout 5000 >]
-        member _.``#testify-check b) sortedDigits Zufallstest`` () : unit =
+        member _.``b) sortedDigits Zufallstest`` () : unit =
             <@ fun (n: Nat) -> Leibniz.sortedDigits n @>
             |=>? (config, fun n ->
                 n.ToString ()

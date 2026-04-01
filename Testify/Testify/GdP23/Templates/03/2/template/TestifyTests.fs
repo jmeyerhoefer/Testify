@@ -14,14 +14,14 @@ module TestifyTests =
         // a)
 
         [< TestifyMethod; Timeout 1000 >]
-        member _.``#testify-assert a) mult3 Beispiele`` () : unit =
+        member _.``a) mult3 Beispiele`` () : unit =
             <@ Peano.mult3 0N @> =? 0N
             <@ Peano.mult3 1N @> =? 3N
             <@ Peano.mult3 2N @> =? 6N
             <@ Peano.mult3 5N @> =? 15N
 
         [< TestifyMethod; Timeout 5000 >]
-        member _.``#testify-check a) mult3 Zufallstest`` () : unit =
+        member _.``a) mult3 Zufallstest`` () : unit =
             <@ fun (n: Nat) -> Peano.mult3 n @>
             |=>? (config, fun n -> n * 3N)
 
@@ -29,7 +29,7 @@ module TestifyTests =
         // b)
 
         [< TestifyMethod; Timeout 1000 >]
-        member _.``#testify-assert b) divide3 Beispiele`` () : unit =
+        member _.``b) divide3 Beispiele`` () : unit =
             <@ Peano.divide3 0N @> =? 0N
             <@ Peano.divide3 1N @> =? 0N
             <@ Peano.divide3 2N @> =? 0N
@@ -41,7 +41,7 @@ module TestifyTests =
             <@ Peano.divide3 11N @> =? 3N
 
         [< TestifyMethod; Timeout 30000 >]
-        member _.``#testify-check b) divide3`` () : unit =
+        member _.``b) divide3`` () : unit =
             <@ fun (x: Nat) -> Peano.divide3 x @>
             |=>? (config, fun x -> Nat.Make ((int x) / 3))
 
