@@ -7,6 +7,7 @@ module TaskPipeline =
     open System.Diagnostics
     open System.Globalization
     open System.IO
+    open System.Security.Cryptography
     open System.Threading
     open System.Text
     open System.Text.Json
@@ -123,6 +124,61 @@ module TaskPipeline =
         |> Seq.distinct
         |> Seq.toList
 
+    let private loadTemplateNamespace (path: string) : string =
+        File.ReadLines(path)
+        |> Seq.tryPick (fun line ->
+            let trimmed = line.Trim()
+
+            if trimmed.StartsWith("namespace ", StringComparison.Ordinal) then
+                Some(trimmed.Substring("namespace ".Length).Trim())
+            else
+                None)
+        |> Option.defaultWith (fun () -> failwith $"Could not find namespace declaration in '%s{path}'.")
+
+    let private loadPropertyMethodNames (path: string) : string list =
+        let propertyMarkers =
+            [
+                "Check.One"
+                "|=>"
+                "||=>"
+                "shouldBeTrueUsing"
+                "shouldBeFalseUsing"
+            ]
+
+        let flushBlock
+            (currentName: string option)
+            (currentLines: ResizeArray<string>)
+            (propertyMethods: ResizeArray<string>)
+            =
+            match currentName with
+            | Some methodName ->
+                let body = String.concat Environment.NewLine currentLines
+
+                if propertyMarkers |> List.exists body.Contains then
+                    propertyMethods.Add methodName
+            | None -> ()
+
+        let propertyMethods = ResizeArray<string>()
+        let currentLines = ResizeArray<string>()
+        let mutable currentName: string option = None
+
+        for line in File.ReadLines(path) do
+            let matchResult = methodNamePattern.Match(line)
+
+            if matchResult.Success then
+                flushBlock currentName currentLines propertyMethods
+                currentName <- Some matchResult.Groups["name"].Value
+                currentLines.Clear()
+                currentLines.Add line
+            elif currentName.IsSome then
+                currentLines.Add line
+
+        flushBlock currentName currentLines propertyMethods
+
+        propertyMethods
+        |> Seq.distinct
+        |> Seq.toList
+
     let private getPrimarySourceFileName (solutionDirectory: string) : string =
         let sourceFiles =
             Directory.GetFiles(solutionDirectory, "*.fs", SearchOption.TopDirectoryOnly)
@@ -136,18 +192,23 @@ module TaskPipeline =
     let private createTaskInfo (sheetId: string, assignmentId: string, projectFileName: string) : TaskInfo =
         let templateDirectory = Path.Combine(TemplatesRoot, sheetId, assignmentId, "template")
         let solutionDirectory = Path.Combine(TemplatesRoot, sheetId, assignmentId, "_solution")
+        let testsPath = Path.Combine(templateDirectory, "Tests.fs")
+        let testifyTestsPath = Path.Combine(templateDirectory, "TestifyTests.fs")
 
         {
             SheetId = sheetId
             AssignmentId = assignmentId
             ProjectFileName = projectFileName
+            TemplateNamespace = loadTemplateNamespace testsPath
             TemplateDirectory = templateDirectory
             SolutionDirectory = solutionDirectory
             UploadsSheetDirectory = Path.Combine(UploadsRoot, sheetId)
             ResultsRootDirectory = DockerResultsRoot
             PrimarySourceFileName = getPrimarySourceFileName solutionDirectory
-            ExpectedOriginalMethods = loadMethodNames(Path.Combine(templateDirectory, "Tests.fs"))
-            ExpectedTestifyMethods = loadMethodNames(Path.Combine(templateDirectory, "TestifyTests.fs"))
+            ExpectedOriginalMethods = loadMethodNames testsPath
+            ExpectedTestifyMethods = loadMethodNames testifyTestsPath
+            ExpectedOriginalPropertyMethods = loadPropertyMethodNames testsPath
+            ExpectedTestifyPropertyMethods = loadPropertyMethodNames testifyTestsPath
         }
 
     let loadTaskInfos () : TaskInfo list =
@@ -331,13 +392,73 @@ module TaskPipeline =
             relativePath = ".gitignore"
             || relativePath = "Mini.fs"
             || relativePath = "Testify.fsproj"
-            || relativePath.StartsWith("testify\\", StringComparison.OrdinalIgnoreCase)
-            || relativePath.StartsWith("testify/", StringComparison.OrdinalIgnoreCase))
+            || relativePath.StartsWith("Testify\\", StringComparison.OrdinalIgnoreCase)
+            || relativePath.StartsWith("Testify/", StringComparison.OrdinalIgnoreCase))
 
     let private isProtectedHarnessName (taskInfo: TaskInfo) (logicalName: string) : bool =
         logicalName = "Tests.fs"
         || logicalName = "TestifyTests.fs"
         || logicalName = taskInfo.ProjectFileName
+
+    let private ensureNonZero (value: uint64) : uint64 =
+        if value = 0UL then 1UL else value
+
+    let private ensureOddNonZero (value: uint64) : uint64 =
+        let nonZero = ensureNonZero value
+        nonZero ||| 1UL
+
+    let private readUInt64LittleEndian (bytes: byte[]) (offset: int) : uint64 =
+        [ 0 .. 7 ]
+        |> List.fold (fun state index -> state ||| ((uint64 bytes[offset + index]) <<< (8 * index))) 0UL
+
+    let private createReplayEntry (snapshot: SnapshotInfo) (methodName: string) : ReplayEntry =
+        let identity =
+            String.concat
+                "|"
+                [
+                    snapshot.Task.SheetId
+                    snapshot.Task.AssignmentId
+                    snapshot.GroupIdTeamId
+                    snapshot.Timestamp
+                    methodName
+                ]
+
+        let hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes identity)
+        let seed = readUInt64LittleEndian hashBytes 0 |> ensureNonZero
+        let gamma = readUInt64LittleEndian hashBytes 8 |> ensureOddNonZero
+
+        {
+            MethodName = methodName
+            ReplayText = $"Rnd={seed},{gamma}; Size=None"
+        }
+
+    let private generateReplayCatalogContents (snapshot: SnapshotInfo) (entries: ReplayEntry list) : string =
+        let matchCases =
+            match entries with
+            | [] -> "        | _ -> None"
+            | values ->
+                values
+                |> List.map (fun entry ->
+                    let methodLiteral = sprintf "%A" entry.MethodName
+                    let replayLiteral = sprintf "%A" entry.ReplayText
+
+                    $"""        | {methodLiteral} ->
+            Testify.CheckConfig.tryParseReplay {replayLiteral}""")
+                |> String.concat Environment.NewLine
+
+        $"""namespace {snapshot.Task.TemplateNamespace}
+
+module ReplayCatalog =
+    let tryGetReplay (methodName: string) : FsCheck.Replay option =
+        match methodName with
+{matchCases}
+        | _ -> None
+
+    let applyReplay (methodName: string) (config: FsCheck.Config) : FsCheck.Config =
+        match tryGetReplay methodName with
+        | Some replay -> config.WithReplay(Some replay)
+        | None -> config
+"""
 
     let private generateProjectFileContents (taskInfo: TaskInfo) (workspaceDirectory: string) : string =
         let sourceFiles =
@@ -396,6 +517,7 @@ module TaskPipeline =
             Path.Combine(WorkspacesRoot, snapshot.Task.SheetId, snapshot.GroupIdTeamId, snapshot.Task.AssignmentId, snapshot.Timestamp)
 
         let projectFilePath = Path.Combine(workspaceDirectory, snapshot.Task.ProjectFileName)
+        let replayCatalogPath = Path.Combine(workspaceDirectory, "ReplayCatalog.fs")
 
         if force then
             ensureCleanDirectory resultDirectory
@@ -426,6 +548,21 @@ module TaskPipeline =
                 File.Copy(file.PhysicalPath, destinationPath, true)
                 includedUploads.Add({ LogicalName = file.LogicalName; SourcePath = file.PhysicalPath; RelativePath = file.LogicalName })
 
+        let replayEntries =
+            snapshot.Task.PairedPropertyMethodNames
+            |> List.map (createReplayEntry snapshot)
+
+        File.WriteAllText(replayCatalogPath, generateReplayCatalogContents snapshot replayEntries, Encoding.UTF8)
+        File.WriteAllText(projectFilePath, generateProjectFileContents snapshot.Task workspaceDirectory, Encoding.UTF8)
+
+        writeJson
+            (Path.Combine(resultDirectory, "replays.json"))
+            {| entries =
+                   replayEntries
+                   |> List.map (fun entry ->
+                       {| methodName = entry.MethodName
+                          replay = entry.ReplayText |}) |}
+
         let workspaceFiles =
             Directory.GetFiles(workspaceDirectory, "*", SearchOption.AllDirectories)
             |> Array.map (fun filePath -> Path.GetRelativePath(workspaceDirectory, filePath))
@@ -437,6 +574,8 @@ module TaskPipeline =
                 Snapshot = snapshot
                 WorkspaceDirectory = workspaceDirectory
                 ProjectFilePath = projectFilePath
+                ReplayCatalogPath = replayCatalogPath
+                ReplayEntries = replayEntries
                 IncludedUploads = includedUploads |> Seq.toList
                 IgnoredHarnessFiles = ignoredHarnessFiles |> Seq.toList
                 WorkspaceFiles = workspaceFiles
@@ -453,6 +592,12 @@ module TaskPipeline =
                projectFileName = snapshot.Task.ProjectFileName
                workspaceDirectory = workspaceDirectory
                projectFilePath = projectFilePath
+               replayCatalogPath = replayCatalogPath
+               replayEntries =
+                   manifest.ReplayEntries
+                   |> List.map (fun entry ->
+                       {| methodName = entry.MethodName
+                          replay = entry.ReplayText |})
                includedUploads =
                    manifest.IncludedUploads
                    |> List.map (fun file ->

@@ -1843,20 +1843,6 @@ Hint: Replace TODO placeholder
 Expected: 0N
 Actual: Exception: TODO
 Because: Tested code threw Exception: TODO but the reference returned 0N.","0.0010141","0.0045271"
-"02","4","05_10","20231113240410","a) Avg3 Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0268722","0.1678721"
-"02","4","05_10","20231113240410","a) Beispiel 1","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0014562","0.2554115"
-"02","4","05_10","20231113240410","a) Beispiel 2","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0004112","0.002202"
-"02","4","05_10","20231113240410","a) Beispiel 3","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002014","0.0009667"
-"02","4","05_10","20231113240410","a) Beispiel 4","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0001779","0.0014153"
-"02","4","05_10","20231113240410","b) Beispiel 1","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0003338","0.0016266"
-"02","4","05_10","20231113240410","b) Beispiel 2","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002951","0.001149"
-"02","4","05_10","20231113240410","b) Beispiel 3","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002802","0.0010063"
-"02","4","05_10","20231113240410","b) Maximum Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0021187","0.055394"
-"02","4","05_10","20231113240410","c) Beispiel 1","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002827","0.0012226"
-"02","4","05_10","20231113240410","c) Beispiel 2","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002731","0.0008632"
-"02","4","05_10","20231113240410","c) Beispiel 3","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.000268","0.000974"
-"02","4","05_10","20231113240410","c) Beispiel 4","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0002802","0.0014196"
-"02","4","05_10","20231113240410","c) ceil10 Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0012052","0.0320985"
 "02","4","05_13","20231109190846","a) Avg3 Zufallstest","True","True","paired","Failed","Failed","Logic differs from reference","","","","","","Test method GdP23.S02.A4.Template.Tests+Tests.a) Avg3 Zufallstest threw exception: 
 System.Exception: Falsifiable, after 1 test (8 shrinks) (1486531286446113445,12098072533414545005). 
 Last step was invoked with size of 101 and seed of (14134986850399156520,17237959641000690245):
@@ -4316,8 +4302,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to 0N
 Actual: Exception: TODO
 Because: Expression raised an exception before producing a value: Exception: TODO","0.0026177","0.002178"
-"03","3","08_5","20231121231529","a) quersumme Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0377138","0.2494776"
-"03","3","08_5","20231121231529","a) quersumme Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.024413","0.1498867"
 "03","3","08_5","20231121231529","b) sortedDigits Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S03.A3.Template.Tests+Tests.b) sortedDigits Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -4846,8 +4830,6 @@ Structural diff:
 
 Expect = true
 Actual = false","0.0080943","0.0189133"
-"03","3","09_11","20231121231020","a) quersumme Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.037186","0.2543224"
-"03","3","09_11","20231121231020","a) quersumme Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0245732","0.1521279"
 "03","3","09_11","20231121231020","b) sortedDigits Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S03.A3.Template.Tests+Tests.b) sortedDigits Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -5194,8 +5176,6 @@ Because: Tested code threw Exception: TODO but the reference returned true.","0.
 "03","2","09_20","20231122245852","a) mult3 Zufallstest","False","True","build-failed","","","","FS0588","The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.","/workspace/Peano.fs","11","12","","","","","","","",""
 "03","2","09_20","20231122245852","b) divide3","False","True","build-failed","","","","FS0588","The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.","/workspace/Peano.fs","11","12","","","","","","","",""
 "03","2","09_20","20231122245852","b) divide3 Beispiele","False","True","build-failed","","","","FS0588","The block following this 'let' is unfinished. Every code block is an expression and must have a result. 'let' cannot be the final code element in a block. Consider giving this block an explicit result.","/workspace/Peano.fs","11","12","","","","","","","",""
-"03","3","10_14","20231121112300","a) quersumme Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0386702","0.2583996"
-"03","3","10_14","20231121112300","a) quersumme Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0274748","0.1469114"
 "03","3","10_14","20231121112300","b) sortedDigits Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S03.A3.Template.Tests+Tests.b) sortedDigits Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -5758,8 +5738,6 @@ Hint: Replace TODO placeholder
 Expected: true
 Actual: Exception: todo
 Because: Tested code threw Exception: todo but the reference returned true.","0.0019549","0.0158107"
-"03","3","11_6","20231121203925","a) quersumme Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.038585","0.2515437"
-"03","3","11_6","20231121203925","a) quersumme Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0268251","0.1482713"
 "03","3","11_6","20231121203925","b) sortedDigits Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S03.A3.Template.Tests+Tests.b) sortedDigits Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -5871,7 +5849,6 @@ Structural diff:
 
 Expect = false
 Actual = true","0.0171623","0.0292173"
-"04","2","01_6","20240201173432","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0370908","0.273537"
 "04","2","01_6","20240201173432","b) isLeapYear Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.b) isLeapYear Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -5908,7 +5885,6 @@ Structural diff:
 
 Expect = false
 Actual = true","0.0103151","0.1172"
-"04","2","01_6","20240201173432","b) isLeapYear Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0237755","0.0911224"
 "04","2","01_6","20240201173432","bonus) Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.bonus) Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -6729,7 +6705,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to 31N
 Actual: Exception: TODO
 Because: Expression raised an exception before producing a value: Exception: TODO","0.0026267","0.0033032"
-"04","2","02_2","20231126190640","c) daysInMonth Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0124032","0.1667176"
 "04","2","02_2","20231126190640","d) nextDate Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.d) nextDate Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -6896,9 +6871,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to true
 Actual: Exception: TODO
 Because: Tested code threw Exception: TODO instead of returning true. The reference returned true.","0.0670923","0.2924046"
-"04","2","03_13","20231127242740","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0370744","0.2746034"
-"04","2","03_13","20231127242740","b) isLeapYear Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.003206","0.0111852"
-"04","2","03_13","20231127242740","b) isLeapYear Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0271578","0.1510521"
 "04","2","03_13","20231127242740","bonus) Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.bonus) Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7033,8 +7005,6 @@ System.Exception: TODO
    at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
    at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)
 ","","0.0231122","0.7448309"
-"04","2","03_13","20231127242740","c) daysInMonth Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0034074","0.0051269"
-"04","2","03_13","20231127242740","c) daysInMonth Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0026106","0.1606524"
 "04","2","03_13","20231127242740","d) nextDate Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.d) nextDate Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7288,7 +7258,6 @@ Because: Tested code threw Exception: TODO instead of returning true. The refere
 "04","2","04_19","20231127244303","d) nextDate Beispiele","False","True","build-failed","","","","FS0010","Unexpected keyword 'else' in expression. Expected incomplete structured construct at or before this point or other token.","/workspace/Dates.fs","25","72","","","","","","","",""
 "04","2","04_19","20231127244303","d) nextDate Zufallstest","False","True","build-failed","","","","FS0010","Unexpected keyword 'else' in expression. Expected incomplete structured construct at or before this point or other token.","/workspace/Dates.fs","25","72","","","","","","","",""
 "04","2","04_19","20231127244303","e) nextDate Zufallstest","False","True","build-failed","","","","FS0010","Unexpected keyword 'else' in expression. Expected incomplete structured construct at or before this point or other token.","/workspace/Dates.fs","25","72","","","","","","","",""
-"04","2","05_14","20231127214853","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0384875","0.2592108"
 "04","2","05_14","20231127214853","b) isLeapYear Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.b) isLeapYear Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7679,7 +7648,6 @@ Expected: be equal to { year = 2023N
   weekday = Wednesday }
 Actual: Exception: TODO
 Because: Expression raised an exception before producing a value: Exception: TODO","0.0031076","0.0112428"
-"04","2","05_14","20231127214853","d) nextDate Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0619116","0.5341341"
 "04","2","05_14","20231127214853","e) nextDate Zufallstest","True","True","paired","Passed","Failed","Replace TODO placeholder","","","","","","Ok, passed 100 tests.","[EqualTo] Failed property case: if 1N > 0N && 1N > 0N && 1N <= 12N && 1N > 0N && 1N <= 31N then Dates.nextDateN { year = 1N
   month = 1N
   day = 1N
@@ -7695,9 +7663,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to true
 Actual: Exception: TODO
 Because: Tested code threw Exception: TODO instead of returning true. The reference returned true.","0.0625616","0.3672871"
-"04","2","07_3","20231127185130","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0378838","0.2666616"
-"04","2","07_3","20231127185130","b) isLeapYear Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0029701","0.0108156"
-"04","2","07_3","20231127185130","b) isLeapYear Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0261623","0.1474989"
 "04","2","07_3","20231127185130","bonus) Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.bonus) Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7772,12 +7737,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to true
 Actual: Exception: TODO
 Because: Tested code threw Exception: TODO instead of returning true. The reference returned true.","0.0615937","0.3727819"
-"04","2","07_3","20231127185130","c) daysInMonth Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0060423","0.0048423"
-"04","2","07_3","20231127185130","c) daysInMonth Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0095144","0.1603422"
-"04","2","07_3","20231127185130","d) nextDate Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0066276","0.0081781"
-"04","2","07_3","20231127185130","d) nextDate Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0745485","0.5279284"
-"04","2","07_3","20231127185130","e) nextDate Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0667758","0.6182853"
-"04","2","09_1","20231128205545","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0483766","0.2652199"
 "04","2","09_1","20231128205545","b) isLeapYear Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.b) isLeapYear Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7814,7 +7773,6 @@ Structural diff:
 
 Expect = false
 Actual = true","0.0111547","0.1170344"
-"04","2","09_1","20231128205545","b) isLeapYear Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0258445","0.0923071"
 "04","2","09_1","20231128205545","bonus) Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.bonus) Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -7995,7 +7953,6 @@ Because: Expected 28N but got 31N.
 Structural diff:
 n Expect = 28
   Actual = 31","0.0048203","0.0569281"
-"04","2","09_1","20231128205545","c) daysInMonth Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0027145","0.188699"
 "04","2","09_1","20231128205545","d) nextDate Beispiele","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.d) nextDate Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -8235,7 +8192,6 @@ System.Exception: TODO
 "04","2","09_12","20231129245843","d) nextDate Beispiele","False","True","build-failed","","","","FS0010","Unexpected symbol '|' in binding","/workspace/Dates2.fs","44","5","","","","","","","",""
 "04","2","09_12","20231129245843","d) nextDate Zufallstest","False","True","build-failed","","","","FS0010","Unexpected symbol '|' in binding","/workspace/Dates2.fs","44","5","","","","","","","",""
 "04","2","09_12","20231129245843","e) nextDate Zufallstest","False","True","build-failed","","","","FS0010","Unexpected symbol '|' in binding","/workspace/Dates2.fs","44","5","","","","","","","",""
-"04","2","10_19","20231128211536","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0375154","0.2635836"
 "04","2","10_19","20231128211536","b) isLeapYear Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.b) isLeapYear Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -8619,7 +8575,6 @@ Expected: be equal to { year = 2023N
   weekday = Wednesday }
 Actual: Exception: TODO
 Because: Expression raised an exception before producing a value: Exception: TODO","0.0029938","0.0110322"
-"04","2","10_19","20231128211536","d) nextDate Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0665173","0.506935"
 "04","2","10_19","20231128211536","e) nextDate Zufallstest","True","True","paired","Failed","Failed","Replace TODO placeholder","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.e) nextDate Zufallstest threw exception: 
 System.Exception: Falsifiable, after 1 test (15 shrinks) (11064599610353822157,12888499165859902623). 
 Last step was invoked with size of 101 and seed of (14532275493416900428,756404947677423905):
@@ -8712,9 +8667,6 @@ Hint: Replace TODO placeholder
 Expected: be equal to true
 Actual: Exception: TODO
 Because: Tested code threw Exception: TODO instead of returning true. The reference returned true.","0.0333183","0.4192091"
-"04","2","10_20","20231129244628","a) nextWeekday Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0427945","0.2665108"
-"04","2","10_20","20231129244628","b) isLeapYear Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0029603","0.0127383"
-"04","2","10_20","20231129244628","b) isLeapYear Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0229055","0.1451614"
 "04","2","10_20","20231129244628","bonus) Beispiele","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.bonus) Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -8751,7 +8703,6 @@ Structural diff:
 
 Expect = true
 Actual = false","0.0020132","0.0034103"
-"04","2","10_20","20231129244628","bonus) validateWeekday Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0635967","0.7732669"
 "04","2","10_20","20231129244628","c) daysInMonth Beispiele","True","True","paired","Failed","Failed","None","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.c) daysInMonth Beispiele threw exception: 
 Swensen.Unquote.AssertionFailedException: Test failed:
 
@@ -8787,9 +8738,6 @@ Because: Expected 31N but got 28N.
 Structural diff:
 n Expect = 31
   Actual = 28","0.0105442","0.1003543"
-"04","2","10_20","20231129244628","c) daysInMonth Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0035711","0.1576089"
-"04","2","10_20","20231129244628","d) nextDate Beispiele","True","True","paired","Passed","Passed","","","","","","","","","","","","","0.0042303","0.0084409"
-"04","2","10_20","20231129244628","d) nextDate Zufallstest","True","True","paired","Passed","Passed","","","","","","","Ok, passed 100 tests.","","","","Ok, passed 100 tests.","","0.0624992","0.4841541"
 "04","2","10_20","20231129244628","e) nextDate Zufallstest","True","True","paired","Failed","Failed","Check boolean condition","","","","","","Test method GdP23.S04.A2.Template.Tests+Tests.e) nextDate Zufallstest threw exception: 
 System.Exception: Falsifiable, after 2 tests (9 shrinks) (5448155283455880898,572120334588969721). 
 Last step was invoked with size of 201 and seed of (4676835402413892320,15950590754785758295).

@@ -8,7 +8,10 @@ module TestifyTests =
 
     [< TestifyClass >]
     type TestifyTests () =
-        let config = CheckConfig.defaultConfig.WithEndSize 1000
+        let config =
+            CheckConfig.defaultConfig
+                .WithEndSize(1000)
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -25,11 +28,11 @@ module TestifyTests =
         [< TestifyMethod; Timeout 5000 >]
         member _.``a) quersumme Zufallstest`` () : unit =
             let posNat =
-                Arbitraries.from<Nat>
+                Arbitraries.fromConfig<Nat> config
                 |> Arbitraries.filter (fun n -> n > 0N)
 
             <@ fun (n: Nat) -> Leibniz.quersumme n @>
-            ||=>? (Some config, Some posNat, None, fun n ->
+            ||=>? (Some (configFor "a) quersumme Zufallstest"), Some posNat, None, fun n ->
                 n.ToString ()
                 |> Seq.fold (fun s c -> s + int (string c)) 0
                 |> Nat.Make)
@@ -50,7 +53,7 @@ module TestifyTests =
         [< TestifyMethod; Timeout 5000 >]
         member _.``b) sortedDigits Zufallstest`` () : unit =
             <@ fun (n: Nat) -> Leibniz.sortedDigits n @>
-            |=>? (config, fun n ->
+            |=>? (configFor "b) sortedDigits Zufallstest", fun n ->
                 n.ToString ()
                 |> Seq.map (fun c -> int (string c))
                 |> Seq.pairwise

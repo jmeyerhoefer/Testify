@@ -8,7 +8,10 @@ module TestifyTests =
 
     [< TestifyClass >]
     type TestifyTests () =
-        let config = CheckConfig.defaultConfig.WithEndSize 100
+        let config =
+            CheckConfig.defaultConfig
+                .WithEndSize(100)
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -23,7 +26,7 @@ module TestifyTests =
         [< TestifyMethod; Timeout 5000 >]
         member _.``a) mult3 Zufallstest`` () : unit =
             <@ fun (n: Nat) -> Peano.mult3 n @>
-            |=>? (config, fun n -> n * 3N)
+            |=>? (configFor "a) mult3 Zufallstest", fun n -> n * 3N)
 
         // ------------------------------------------------------------------------
         // b)
@@ -43,6 +46,6 @@ module TestifyTests =
         [< TestifyMethod; Timeout 30000 >]
         member _.``b) divide3`` () : unit =
             <@ fun (x: Nat) -> Peano.divide3 x @>
-            |=>? (config, fun x -> Nat.Make ((int x) / 3))
+            |=>? (configFor "b) divide3", fun x -> Nat.Make ((int x) / 3))
 
 

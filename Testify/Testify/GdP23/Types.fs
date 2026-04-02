@@ -53,6 +53,7 @@ type TaskInfo =
         SheetId: string
         AssignmentId: string
         ProjectFileName: string
+        TemplateNamespace: string
         TemplateDirectory: string
         SolutionDirectory: string
         UploadsSheetDirectory: string
@@ -60,6 +61,8 @@ type TaskInfo =
         PrimarySourceFileName: string
         ExpectedOriginalMethods: string list
         ExpectedTestifyMethods: string list
+        ExpectedOriginalPropertyMethods: string list
+        ExpectedTestifyPropertyMethods: string list
     }
     member self.SubmissionsDirectory(groupIdTeamId: string) : string =
         Path.Combine(self.UploadsSheetDirectory, groupIdTeamId, self.AssignmentId)
@@ -73,6 +76,13 @@ type TaskInfo =
         |> List.sort
 
     member self.DisplayName: string = $"{self.SheetId}/{self.AssignmentId}"
+
+    member self.PairedPropertyMethodNames: string list =
+        Set.intersect
+            (self.ExpectedOriginalPropertyMethods |> Set.ofList)
+            (self.ExpectedTestifyPropertyMethods |> Set.ofList)
+        |> Set.toList
+        |> List.sort
 
 type SnapshotFile =
     {
@@ -105,11 +115,19 @@ type HarnessConflict =
         SourcePath: string
     }
 
+type ReplayEntry =
+    {
+        MethodName: string
+        ReplayText: string
+    }
+
 type WorkspaceManifest =
     {
         Snapshot: SnapshotInfo
         WorkspaceDirectory: string
         ProjectFilePath: string
+        ReplayCatalogPath: string
+        ReplayEntries: ReplayEntry list
         IncludedUploads: MaterializedUpload list
         IgnoredHarnessFiles: HarnessConflict list
         WorkspaceFiles: string list
@@ -130,6 +148,7 @@ type ParsedTestResult =
         MethodName: string
         Outcome: string
         Output: string option
+        Hint: string option
         FailureSummary: string option
         DurationSeconds: float option
     }
@@ -145,11 +164,17 @@ type PairedMethodResult =
         TestifyOutcome: string option
         OriginalOutput: string option
         TestifyOutput: string option
+        TestifyHint: string option
         OriginalFailureSummary: string option
         TestifyFailureSummary: string option
         OriginalDuration: float option
         TestifyDuration: float option
         BuildSucceeded: bool
+        BuildErrorCode: string option
+        BuildErrorMessage: string option
+        BuildErrorFile: string option
+        BuildErrorLine: int option
+        BuildErrorColumn: int option
         PairStatus: string
         SourceFilePresent: bool
     }
@@ -161,6 +186,11 @@ type SnapshotComparison =
         GroupIdTeamId: string
         Timestamp: string
         BuildSucceeded: bool
+        BuildErrorCode: string option
+        BuildErrorMessage: string option
+        BuildErrorFile: string option
+        BuildErrorLine: int option
+        BuildErrorColumn: int option
         SourceFilePresent: bool
         Rows: PairedMethodResult list
     }

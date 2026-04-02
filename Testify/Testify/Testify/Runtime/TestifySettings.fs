@@ -16,13 +16,11 @@ type Verbosity =
 type TestifyReportOptions =
     {
         Verbosity: Verbosity
-        IncludeCodeContext: bool
         MaxValueLines: int
     }
     static member Default =
         {
             Verbosity = Verbosity.Normal
-            IncludeCodeContext = false
             MaxValueLines = 12
         }
 

@@ -7,38 +7,24 @@ module TestifyTests =
     open Testify.AssertOperators
     open Testify.CheckOperators
 
-
     [< TestifyClass  >]
     type TestifyTests () =
-        let config = CheckConfig.defaultConfig.WithEndSize 10000
+        let config =
+            CheckConfig.defaultConfig
+                .WithEndSize(10000)
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
         let isValidDay (day: Nat) : bool = 0N < day && day <= 31N
         let isValidMonth (month: Nat) : bool = 0N < month && month <= 12N
         let isPositive (year: Nat) : bool = 0N < year
         let isValidDate (date: Dates.Date) : bool =
             isValidDay date.day && isValidMonth date.month && isPositive date.year
-        let validDate =
-             Arbitraries.from<Dates.Date>
-             |> Arbitraries.filter isValidDate
+        let rawDate =
+             Arbitraries.fromConfig<Dates.Date> config
+        let rawNat =
+             Arbitraries.fromConfig<Nat> config
         let posNat =
-             Arbitraries.from<Nat>
+             rawNat
              |> Arbitraries.filter isPositive
-        let toWeekday (dayOfWeek: System.DayOfWeek) : Dates.Weekday =
-            match dayOfWeek with
-            | System.DayOfWeek.Monday -> Dates.Monday
-            | System.DayOfWeek.Tuesday -> Dates.Tuesday
-            | System.DayOfWeek.Wednesday -> Dates.Wednesday
-            | System.DayOfWeek.Thursday -> Dates.Thursday
-            | System.DayOfWeek.Friday -> Dates.Friday
-            | System.DayOfWeek.Saturday -> Dates.Saturday
-            | System.DayOfWeek.Sunday -> Dates.Sunday
-            | unknown -> failwith $"Unknown weekday: {unknown}"
-        let toDate (date: System.DateTime) : Dates.Date =
-            {
-                year = Nat.Make date.Year
-                month = Nat.Make date.Month
-                day = Nat.Make date.Day
-                weekday = toWeekday date.DayOfWeek
-            }
 
         // ------------------------------------------------------------------------
         // a)
@@ -70,7 +56,7 @@ module TestifyTests =
         [< TestifyMethod; Timeout 1000 >]
         member _.``b) isLeapYear Zufallstest`` () : unit =
             <@ fun (y: Nat) -> Dates.isLeapYear y @>
-            ||=>? (Some config, Some posNat, None, fun y -> System.DateTime.IsLeapYear (int y))
+            ||=>? (Some (configFor "b) isLeapYear Zufallstest"), Some posNat, None, fun y -> System.DateTime.IsLeapYear (int y))
 
 
         // ------------------------------------------------------------------------
@@ -91,12 +77,14 @@ module TestifyTests =
 
         [< TestifyMethod; Timeout 1000 >]
         member _.``c) daysInMonth Zufallstest`` () : unit =
-            let validYearAndMonth =
-                posNat <.> (Arbitraries.from<Nat> |> Arbitraries.filter isValidMonth)
-
-            <@ fun (y: Nat, m: Nat) -> Dates.daysInMonth y m @>
-            ||=>? (Some config, Some validYearAndMonth, None, fun (y, m) ->
-                   System.DateTime.DaysInMonth (int y, int m) |> Nat.Make)
+            Check.shouldBeTrueUsingWith
+                (configFor "c) daysInMonth Zufallstest")
+                (rawNat <.> rawNat)
+                <@ fun (y: Nat, m: Nat) ->
+                    if y > 0N && m > 0N && m <= 12N then
+                        Dates.daysInMonth y m = Nat.Make (System.DateTime.DaysInMonth(int y, int m))
+                    else
+                        true @>
 
 
         // ------------------------------------------------------------------------
@@ -118,23 +106,52 @@ module TestifyTests =
         // TODO
         [< TestifyMethod; Timeout 1000 >]
         member _.``d) nextDate Zufallstest`` () : unit =
-            <@ fun (date: Dates.Date) -> Dates.nextDate date @>
-            ||=>? (Some config, Some validDate, None, fun d ->
-                System.DateTime (int d.year, int d.month, int d.day)
-                |> _.AddDays(1)
-                |> toDate)
+            Check.shouldBeTrueUsingWith
+                (configFor "d) nextDate Zufallstest")
+                rawDate
+                <@ fun (date: Dates.Date) ->
+                    if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
+                        let next = System.DateTime(int date.year, int date.month, int date.day).AddDays(1)
+                        let expected =
+                            {
+                                Dates.year = Nat.Make next.Year
+                                Dates.month = Nat.Make next.Month
+                                Dates.day = Nat.Make next.Day
+                                Dates.weekday = Dates.nextWeekday date.weekday
+                            }
+
+                        Dates.nextDate date = expected
+                    else
+                        true @>
 
         // ------------------------------------------------------------------------
         // e)
 
         [< TestifyMethod; Timeout 1000 >]
         member _.``e) nextDate Zufallstest`` () : unit =
-            let applyNTimes f n x = Seq.init n (fun _ -> f) |> Seq.fold (fun acc fn -> fn acc) x
-            <@ fun (date: Dates.Date, n: Nat) -> Dates.nextDateN date n @>
-            ||=>? (Some config, Some (validDate <.> posNat), None, fun (d, n) ->
-                System.DateTime (int d.year, int d.month, int d.day)
-                |> _.AddDays(int n)
-                |> toDate)
+            Check.shouldBeTrueUsingWith
+                (configFor "e) nextDate Zufallstest")
+                (rawDate <.> rawNat)
+                <@ fun (date: Dates.Date, n: Nat) ->
+                    if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
+                        let next = System.DateTime(int date.year, int date.month, int date.day).AddDays(int n)
+                        let expectedWeekday =
+                            let steps = (int n) % 7
+                            Seq.init steps (fun _ -> Dates.nextWeekday)
+                            |> Seq.fold (fun weekday nextWeekday -> nextWeekday weekday) date.weekday
+
+                        let expected =
+                            {
+                                Dates.year = Nat.Make next.Year
+                                Dates.month = Nat.Make next.Month
+                                Dates.day = Nat.Make next.Day
+                                Dates.weekday = expectedWeekday
+                            }
+
+                        Dates.nextDateN date n = expected
+                    else
+                        true @>
+
 
         // ------------------------------------------------------------------------
         // bonus)
@@ -148,13 +165,24 @@ module TestifyTests =
         // TODO
         [< TestifyMethod; Timeout 60000 >]
         member _.``bonus) validateWeekday Zufallstest`` () : unit =
-            let validDateWithWeekday =
-                validDate
-                |> FsCheck.FSharp.Arb.mapFilter (fun (d: Dates.Date) ->
-                    let dt = System.DateTime (int d.year, int d.month, int d.day)
-                    { d with weekday = toWeekday dt.DayOfWeek })
-                    (fun _ -> true)
+            Check.shouldBeTrueUsingWith
+                (configFor "bonus) validateWeekday Zufallstest")
+                rawDate
+                <@ fun (date: Dates.Date) ->
+                    if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
+                        let dt = System.DateTime (int date.year, int date.month, int date.day)
+                        let expectedWeekday =
+                            match dt.DayOfWeek with
+                            | System.DayOfWeek.Sunday -> Dates.Sunday
+                            | System.DayOfWeek.Monday -> Dates.Monday
+                            | System.DayOfWeek.Tuesday -> Dates.Tuesday
+                            | System.DayOfWeek.Wednesday -> Dates.Wednesday
+                            | System.DayOfWeek.Thursday -> Dates.Thursday
+                            | System.DayOfWeek.Friday -> Dates.Friday
+                            | System.DayOfWeek.Saturday -> Dates.Saturday
+                            | _ -> failwithf "Unexpected DayOfWeek value: %A" dt.DayOfWeek
 
-            <@ fun (date: Dates.Date) -> Dates.validateWeekday date @>
-            |> Check.shouldBeTrueUsingWith config validDateWithWeekday
+                        Dates.validateWeekday date = (expectedWeekday = date.weekday)
+                    else
+                        true @>
 

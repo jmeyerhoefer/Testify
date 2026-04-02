@@ -4,6 +4,18 @@ open Microsoft.FSharp.Quotations
 
 
 module CheckOperators =
+    let inline (<|>)
+        (a: ^T)
+        (b: ^T)
+        : ^T =
+        ((^T or ^T) : (static member OrElse: ^T * ^T -> ^T) (a, b))
+
+    let inline (<&>)
+        (a: ^T)
+        (b: ^T)
+        : ^T =
+        ((^T or ^T) : (static member AndAlso: ^T * ^T -> ^T) (a, b))
+
     let inline (|=>) expr reference =
         Check.shouldEqual reference expr
 

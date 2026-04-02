@@ -16,7 +16,6 @@ type TestifyMethodAttribute() =
     inherit TestMethodAttribute()
 
     member val Verbosity = Verbosity.Default with get, set
-    member val IncludeCodeContext = false with get, set
     member val MaxValueLines = 0 with get, set
 
     member private this.CreateReportOptions() : TestifyReportOptions =
@@ -37,7 +36,6 @@ type TestifyMethodAttribute() =
         {
             defaults with
                 Verbosity = verbosity
-                IncludeCodeContext = defaults.IncludeCodeContext || this.IncludeCodeContext
                 MaxValueLines = maxValueLines
         }
 
@@ -45,7 +43,6 @@ type TestifyMethodAttribute() =
         TestExecution.beginTest
             testMethod.TestClassName
             testMethod.TestMethodName
-            testMethod.MethodInfo
             (this.CreateReportOptions ())
 
         let results =

@@ -1,7 +1,6 @@
 namespace Testify
 
 
-open System.Reflection
 open System.Threading
 
 
@@ -10,7 +9,6 @@ type TestExecutionState =
         TestName: string
         TestClassName: string
         MethodIdentity: string
-        TestMethodSourceLocation: Diagnostics.SourceLocation option
         mutable FirstTestedSourceLocation: Diagnostics.SourceLocation option
         ReportOptions: TestifyReportOptions
         mutable LastFailureReport: TestifyFailureReport option
@@ -31,14 +29,12 @@ module TestExecution =
     let createState
         (testClassName: string)
         (testName: string)
-        (methodInfo: MethodInfo)
         (reportOptions: TestifyReportOptions)
         : TestExecutionState =
         {
             TestName = testName
             TestClassName = testClassName
             MethodIdentity = $"{testClassName}.{testName}"
-            TestMethodSourceLocation = SourceMapping.tryFindSourceLocationFromMethodInfo methodInfo
             FirstTestedSourceLocation = None
             ReportOptions = TestifyReportOptions.normalize reportOptions
             LastFailureReport = None
@@ -47,10 +43,9 @@ module TestExecution =
     let beginTest
         (testClassName: string)
         (testName: string)
-        (methodInfo: MethodInfo)
         (reportOptions: TestifyReportOptions)
         : unit =
-        current.Value <- Some (createState testClassName testName methodInfo reportOptions)
+        current.Value <- Some (createState testClassName testName reportOptions)
 
     let currentState () : TestExecutionState option =
         current.Value

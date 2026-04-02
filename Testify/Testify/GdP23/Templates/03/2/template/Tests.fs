@@ -21,6 +21,7 @@ module Tests =
             Config.QuickThrowOnFailure
                 .WithEndSize(100)
                 .WithArbitrary [typeof<ArbitraryModifiers>]
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -34,7 +35,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) mult3 Zufallstest`` (): unit =
-            Check.One (config, fun (n: Nat) ->
+            Check.One (configFor "a) mult3 Zufallstest", fun (n: Nat) ->
                 Assert.AreEqual<Nat>(
                     n * 3N,
                     Peano.mult3 n
@@ -58,7 +59,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(30000)>]
         member this.``b) divide3`` (): unit =
-            Check.One(config, fun (x: Nat) ->
+            Check.One(configFor "b) divide3", fun (x: Nat) ->
                 Assert.AreEqual<Nat>(Nat.Make ((int x) / 3), Peano.divide3 x)
             )
 

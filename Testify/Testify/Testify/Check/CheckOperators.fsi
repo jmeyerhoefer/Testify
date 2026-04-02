@@ -10,6 +10,31 @@ open Microsoft.FSharp.Quotations
 /// and <c>Check.shouldBeFalse</c> instead of a dedicated operator.
 /// </remarks>
 module CheckOperators =
+    /// <summary>Combines two expectations so that either one may succeed.</summary>
+    /// <param name="a">The first alternative expectation.</param>
+    /// <param name="b">The second alternative expectation.</param>
+    /// <returns>An expectation that succeeds when either input expectation succeeds.</returns>
+    val inline (<|>) :
+        a: ^T -> b: ^T -> ^T
+        when ^T: (static member OrElse: ^T * ^T -> ^T)
+
+    /// <summary>Combines two expectations so that both must succeed.</summary>
+    /// <param name="a">The first required expectation.</param>
+    /// <param name="b">The second required expectation.</param>
+    /// <returns>An expectation that succeeds only when both input expectations succeed.</returns>
+    /// <example id="check-operators-0">
+    /// <code lang="fsharp">
+    /// open Testify.CheckOperators
+    ///
+    /// let expectation =
+    ///     CheckExpectation.equalToReference
+    ///     <&> CheckExpectation.equalToReference
+    /// </code>
+    /// </example>
+    val inline (<&>) :
+        a: ^T -> b: ^T -> ^T
+        when ^T: (static member AndAlso: ^T * ^T -> ^T)
+
     /// <summary>Checks that a quoted function behaves like the reference implementation.</summary>
     /// <param name="expr">The quoted implementation under test.</param>
     /// <param name="reference">The reference implementation to compare against.</param>

@@ -2,6 +2,7 @@ namespace Testify
 
 
 open System
+open System.Text.RegularExpressions
 
 
 type TestifyFailureKind =
@@ -16,6 +17,7 @@ type TestifyFailureReport =
         Kind: TestifyFailureKind
         Label: string option
         Summary: string
+        Hint: string
         Test: string option
         Expectation: string option
         Expected: string option
@@ -40,6 +42,7 @@ type TestifyFailureReport =
 
 type ReportField =
     | Summary
+    | Hint
     | Expectation
     | Expected
     | Actual
@@ -58,11 +61,31 @@ type ReportField =
     | NumberOfShrinks
     | Replay
     | SourceLocation
-    | CodeContext
 
 
 [<RequireQualifiedAccess>]
 module TestifyReport =
+    let private todoPattern =
+        Regex(@"\bTODO\b", RegexOptions.Compiled ||| RegexOptions.IgnoreCase)
+
+    let private bareIntPattern =
+        Regex(@"(?<![\w])\d+(?![\wN])", RegexOptions.Compiled)
+
+    let private suffixedNatPattern =
+        Regex(@"\b\d+N\b", RegexOptions.Compiled)
+
+    let private natWordPattern =
+        Regex(@"\bNat\b", RegexOptions.Compiled)
+
+    let private numericLiteralNPattern =
+        Regex(@"\bNumericLiteralN\b", RegexOptions.Compiled ||| RegexOptions.IgnoreCase)
+
+    let private contextPrefixPattern =
+        Regex(@"^[> ]\s*\d+:\s*", RegexOptions.Compiled)
+
+    let private weekdayPattern =
+        Regex(@"weekday\s*=\s*([A-Za-z]+)", RegexOptions.Compiled)
+
     let private truncateTextLines
         (maxLines: int)
         (text: string)
@@ -99,6 +122,162 @@ module TestifyReport =
         | [] -> lines
         | values -> lines @ values
 
+    let private containsOrdinalIgnoreCase
+        (needle: string)
+        (value: string)
+        : bool =
+        value.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0
+
+    let private cleanCodeContext
+        (context: string)
+        : string =
+        context
+        |> Render.splitLines
+        |> List.map (fun line -> contextPrefixPattern.Replace(line, ""))
+        |> String.concat "\n"
+
+    let private reportTexts
+        (report: TestifyFailureReport)
+        : string list =
+        [
+            Some report.Summary
+            report.Test
+            report.Expectation
+            report.Expected
+            report.Actual
+            report.ExpectedValue
+            report.ActualValue
+            report.Because
+            report.DetailsText
+            report.DiffText
+            report.OriginalTest
+            report.OriginalExpected
+            report.OriginalActual
+            report.ShrunkTest
+            report.ShrunkExpected
+            report.ShrunkActual
+            report.SourceLocation
+            |> Option.bind (fun location -> location.Context)
+            |> Option.map cleanCodeContext
+        ]
+        |> List.choose id
+
+    let private natHintFragments
+        (report: TestifyFailureReport)
+        : string list =
+        [
+            report.Test
+            report.Expectation
+            report.Expected
+            report.Actual
+            report.ExpectedValue
+            report.ActualValue
+            report.SourceLocation
+            |> Option.bind (fun location -> location.Context)
+            |> Option.map cleanCodeContext
+        ]
+        |> List.choose id
+
+    let private hasNatSignal
+        (text: string)
+        : bool =
+        numericLiteralNPattern.IsMatch text
+        || natWordPattern.IsMatch text
+        || suffixedNatPattern.IsMatch text
+
+    let private hasNearbyNatLiteralPattern
+        (text: string)
+        : bool =
+        let lines = Render.splitLines text
+
+        let windows =
+            if List.isEmpty lines then
+                [ text ]
+            else
+                lines
+                |> List.mapi (fun index _ ->
+                    let startIndex = max 0 (index - 1)
+                    let endIndex = min (lines.Length - 1) (index + 1)
+
+                    [ startIndex .. endIndex ]
+                    |> List.map (fun lineIndex -> lines[lineIndex])
+                    |> String.concat " ")
+
+        windows
+        |> List.exists (fun fragment ->
+            bareIntPattern.IsMatch fragment
+            && hasNatSignal fragment)
+
+    let private tryInferNatSuffixHint
+        (report: TestifyFailureReport)
+        : string option =
+        let fragments = natHintFragments report
+
+        if fragments |> List.exists hasNearbyNatLiteralPattern then
+            Some "Forgot N suffix"
+        else
+            None
+
+    let private tryInferWeekdayHint
+        (texts: string list)
+        : string option =
+        let weekdays =
+            texts
+            |> List.collect (fun text ->
+                weekdayPattern.Matches(text)
+                |> Seq.cast<Match>
+                |> Seq.choose (fun captured ->
+                    if captured.Success && captured.Groups.Count > 1 then
+                        Some captured.Groups[1].Value
+                    else
+                        None)
+                |> Seq.toList)
+            |> List.distinct
+
+        if weekdays.Length >= 2 then
+            Some "Check weekday logic"
+        else
+            None
+
+    let inferHint
+        (report: TestifyFailureReport)
+        : string =
+        let texts = reportTexts report
+
+        if texts |> List.exists todoPattern.IsMatch then
+            "Replace TODO placeholder"
+        elif texts |> List.exists (containsOrdinalIgnoreCase "Expected true but got false") then
+            "Check boolean condition"
+        elif texts |> List.exists (containsOrdinalIgnoreCase "Expected false but got true") then
+            "Check boolean condition"
+        else
+            match tryInferWeekdayHint texts with
+            | Some hint -> hint
+            | None when texts |> List.exists (containsOrdinalIgnoreCase "Expression raised an exception before producing a value") ->
+                "Code throws unexpectedly"
+            | None when texts |> List.exists (containsOrdinalIgnoreCase "Tested code threw") ->
+                "Code throws unexpectedly"
+            | None ->
+                match tryInferNatSuffixHint report with
+                | Some hint -> hint
+                | None when texts |> List.exists (containsOrdinalIgnoreCase "reference returned") ->
+                    "Logic differs from reference"
+                | None ->
+                    "None"
+
+    let withInferredHint
+        (report: TestifyFailureReport)
+        : TestifyFailureReport =
+        let normalizedHint =
+            if String.IsNullOrWhiteSpace report.Hint then
+                inferHint report
+            elif String.Equals(report.Hint, "None", StringComparison.OrdinalIgnoreCase) then
+                inferHint report
+            else
+                report.Hint
+
+        { report with Hint = normalizedHint }
+
     // This is the single edit point for what each verbosity contains.
     let rec fieldsForVerbosity
         (verbosity: Verbosity)
@@ -106,15 +285,18 @@ module TestifyReport =
         match verbosity with
         | Verbosity.Quiet -> set [
             Summary
+            Hint
             Expected
             Actual ]
         | Verbosity.Normal -> set [
             Summary
+            Hint
             Expected
             Actual
             Because ]
         | Verbosity.Detailed -> set [
             Summary
+            Hint
             Expectation
             Expected
             Actual
@@ -135,6 +317,7 @@ module TestifyReport =
             SourceLocation ]
         | Verbosity.Diagnostic -> set [
             Summary
+            Hint
             Expectation
             Expected
             Actual
@@ -152,8 +335,7 @@ module TestifyReport =
             NumberOfTests
             NumberOfShrinks
             Replay
-            SourceLocation
-            CodeContext ]
+            SourceLocation ]
         | _ -> fieldsForVerbosity TestifyReportOptions.Default.Verbosity
 
     let private hasField
@@ -165,12 +347,7 @@ module TestifyReport =
     let private resolveFields
         (options: TestifyReportOptions)
         : Set<ReportField> =
-        let baseFields = fieldsForVerbosity options.Verbosity
-
-        if options.IncludeCodeContext then
-            baseFields.Add CodeContext
-        else
-            baseFields
+        fieldsForVerbosity options.Verbosity
 
     let private appendFieldValue
         (fields: Set<ReportField>)
@@ -186,20 +363,12 @@ module TestifyReport =
             lines
 
     let private formatSourceLocation
-        (options: TestifyReportOptions)
         (fields: Set<ReportField>)
         (location: Diagnostics.SourceLocation)
         : string list =
         [
             if hasField fields SourceLocation then
-                yield $"Location: {Diagnostics.formatLocation location}"
-
-            if hasField fields CodeContext then
-                match location.Context with
-                | Some context ->
-                    yield "Code:"
-                    yield truncateTextLines options.MaxValueLines context
-                | None -> ()
+                yield! Render.splitLines (Diagnostics.formatLocation location)
         ]
 
     let tryExtractDiffText
@@ -235,6 +404,7 @@ module TestifyReport =
             Kind = kind
             Label = label
             Summary = summary
+            Hint = "None"
             Test = None
             Expectation = None
             Expected = None
@@ -260,6 +430,7 @@ module TestifyReport =
         (options: TestifyReportOptions)
         (report: TestifyFailureReport)
         : string =
+        let report = withInferredHint report
         let resolvedOptions = TestifyReportOptions.normalize options
         let fields = resolveFields resolvedOptions
 
@@ -288,6 +459,10 @@ module TestifyReport =
             []
             |> appendFieldValue fields Because "Because" report.Because resolvedOptions.MaxValueLines
 
+        let hintLines =
+            []
+            |> appendFieldValue fields Hint "Hint" (Some report.Hint) resolvedOptions.MaxValueLines
+
         let detailLines =
             []
             |> appendFieldValue fields Details "Details" report.DetailsText resolvedOptions.MaxValueLines
@@ -313,14 +488,15 @@ module TestifyReport =
 
         let locationLines =
             match report.SourceLocation with
-            | Some location when hasField fields SourceLocation || hasField fields CodeContext ->
-                formatSourceLocation resolvedOptions fields location
+            | Some location when hasField fields SourceLocation ->
+                formatSourceLocation fields location
             | _ ->
                 []
 
         [
             report.Summary
         ]
+        |> appendMaybeLines hintLines
         |> appendMaybeLines valueFirstLines
         |> appendMaybeLines detailLines
         |> appendMaybeLines becauseLines

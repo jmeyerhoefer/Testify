@@ -22,7 +22,6 @@
 		<Compile Include="Testify\Core\Diff.fs" />
 		<Compile Include="Testify\Core\Expressions.fs" />
 		<Compile Include="Testify\Core\Diagnostics.fs" />
-		<Compile Include="Testify\Core\SourceMapping.fs" />
 		<Compile Include="Testify\Runtime\TestifySettings.fs" />
 		<Compile Include="Testify\Runtime\Reporting.fs" />
 		<Compile Include="Testify\Runtime\TestExecution.fs" />
@@ -50,7 +49,6 @@
 	<ItemGroup>
 		<PackageReference Include="DEdge.Diffract" Version="0.5.0" />
 		<PackageReference Include="FsCheck" Version="3.3.2" />
-		<PackageReference Include="FSharp.Compiler.Service" Version="43.10.103" />
 		<PackageReference Include="MSTest.TestFramework" Version="3.10.4" />
 		<PackageReference Update="FSharp.Core" Version="10.0.103" />
 		<PackageReference Include="Unquote" Version="7.0.1" />

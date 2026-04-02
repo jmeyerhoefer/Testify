@@ -39,12 +39,9 @@ module Assert =
         | Result.Ok _ -> None
 
     let private tryFindSourceLocation
-        (actual: Expr<'T>)
         (observed: Observed<'T>)
         : Diagnostics.SourceLocation option =
-        SourceMapping.tryFindSourceLocationFromQuotation actual
-        |> Option.orElseWith (fun () -> tryFindFallbackExceptionLocation observed)
-        |> Option.orElseWith Diagnostics.tryFindRelevantCallerLocation
+        tryFindFallbackExceptionLocation observed
 
     let private toFailure
         (test: string)
@@ -70,14 +67,11 @@ module Assert =
         (actual: Expr<'T>)
         : AssertResult =
         let observed = Observed.observe actual
-        let mappedSourceLocation = SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         if expectation.Verify observed then
             Passed
         else
-            let location = tryFindSourceLocation actual observed
+            let location = tryFindSourceLocation observed
             TestExecution.recordTestedSourceLocation location
             let test = Expressions.readable actual
             Failed (toFailure test expectation observed location)
@@ -91,14 +85,11 @@ module Assert =
         (actual: Expr<'T>)
         : AssertResult =
         let observed = Observed.observe actual
-        let mappedSourceLocation = SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         if expectation.Verify observed then
             Passed
         else
-            let location = tryFindSourceLocation actual observed
+            let location = tryFindSourceLocation observed
             TestExecution.recordTestedSourceLocation location
             Failed (toFailure test expectation observed location)
 
@@ -131,7 +122,7 @@ module Assert =
         | Failed failure ->
             let details = TestifyReport.detailsText failure.Details
 
-            Some {
+            {
                 TestifyReport.create
                     AssertionFailure
                     (Some failure.Label)
@@ -145,6 +136,8 @@ module Assert =
                     DiffText = TestifyReport.diffText failure.Because details
                     SourceLocation = failure.SourceLocation
             }
+            |> TestifyReport.withInferredHint
+            |> Some
 
     /// <summary>Renders an assertion result with the supplied reporting options.</summary>
     let toDisplayStringWith

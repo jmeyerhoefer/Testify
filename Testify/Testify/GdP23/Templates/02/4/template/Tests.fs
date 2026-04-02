@@ -22,6 +22,7 @@ module Tests =
             Config.QuickThrowOnFailure
                 .WithEndSize(10000)
                 .WithArbitrary [ typeof<ArbitraryModifiers> ]
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -43,7 +44,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``a) Avg3 Zufallstest`` (): unit =
-            Check.One(config, fun (x: Nat) (y: Nat) (z: Nat) ->
+            Check.One(configFor "a) Avg3 Zufallstest", fun (x: Nat) (y: Nat) (z: Nat) ->
                 let result = Zahlen.avg3 x y z
                 let expected = abs (((int x) + (int y) + (int z)) / 3) |> Nat.Make
                 Assert.AreEqual<Nat> (expected, result)
@@ -65,7 +66,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``b) Maximum Zufallstest`` (): unit =
-            Check.One(config, fun (x: Nat) (y: Nat) (z: Nat) ->
+            Check.One(configFor "b) Maximum Zufallstest", fun (x: Nat) (y: Nat) (z: Nat) ->
                 let result = Zahlen.min3 x y z
                 let expected = List.min [x; y; z]
                 Assert.AreEqual<Nat>(expected, result)
@@ -91,7 +92,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``c) ceil10 Zufallstest`` (): unit =
-            Check.One(config, fun (x: Nat) ->
+            Check.One(configFor "c) ceil10 Zufallstest", fun (x: Nat) ->
                 let result = Zahlen.ceil10 x
                 let expected = if x % 10N = 0N then x else 10 + (10 * (int x / 10)) |> Nat.Make
                 Assert.AreEqual<Nat>(expected, result)

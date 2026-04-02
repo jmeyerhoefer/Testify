@@ -145,6 +145,7 @@ module DataProcessor =
                 if options.Stage = CliStage.Full || options.Stage = CliStage.OnlyNormalize then
                     rewriteAggregateJsonl ()
                     rewriteSelectedCsv snapshots
+                    rewriteSelectedFailuresCsv snapshots
 
                 if options.CleanupAfter && options.Stage <> CliStage.Cleanup then
                     for snapshot in snapshots do

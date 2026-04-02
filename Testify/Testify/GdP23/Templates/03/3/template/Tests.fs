@@ -19,6 +19,7 @@ module Tests =
             Config.QuickThrowOnFailure
                 .WithEndSize(1000)
                 .WithArbitrary [typeof<ArbitraryModifiers>]
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -34,7 +35,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``a) quersumme Zufallstest`` (): unit =
-            Check.One (config, fun (n: Nat) ->
+            Check.One (configFor "a) quersumme Zufallstest", fun (n: Nat) ->
                 if n <> 0N then
                     let expected =
                         n.ToString() |> Seq.fold (fun s c -> s + int(string c)) 0 |> Nat.Make
@@ -56,7 +57,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(5000)>]
         member this.``b) sortedDigits Zufallstest`` (): unit =
-            Check.One (config, fun (n: Nat) ->
+            Check.One (configFor "b) sortedDigits Zufallstest", fun (n: Nat) ->
                 let expected =
                        n.ToString() |> Seq.map (fun c -> int(string c)) |> Seq.pairwise |> Seq.forall (fun (a, b) -> a <= b)
                 Assert.AreEqual<bool>(expected, Leibniz.sortedDigits n)

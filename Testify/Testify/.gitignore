@@ -1,12 +1,11 @@
 /GdP23/Aufgaben
-/GdP23/Uploads
-/GdP23/bin
-/GdP23/obj
 
 bin/
 obj/
 .idea/
 .cache/
+.docker-config/
+.dotnet-home/
 
 # GdP23 generated artifacts
 /GdP23/.cache/
@@ -14,7 +13,9 @@ obj/
 /GdP23/bin/
 /GdP23/obj/
 /GdP23/Smoke/
+/GdP23/Uploads/
 /GdP23/DockerResults/**
 !/GdP23/DockerResults/
 !/GdP23/DockerResults/selected-comparisons.csv
+!/GdP23/DockerResults/selected-failures-only.csv
 !/GdP23/DockerResults/comparisons.jsonl

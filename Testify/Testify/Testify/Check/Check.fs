@@ -218,7 +218,6 @@ module private CheckCore =
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
         (testData: FsCheck.TestData)
         (replay: string option)
-        (mappedSourceLocation: Diagnostics.SourceLocation option)
         (state: RunState<'Args, 'Actual, 'Expected>)
         : CheckFailure<'Args, 'Actual, 'Expected> option =
         match state.OriginalFailureCase, finalFailureCase state with
@@ -235,9 +234,7 @@ module private CheckCore =
                 | Result.Ok _ -> None
 
             let sourceLocation =
-                mappedSourceLocation
-                |> Option.orElse fallbackSourceLocation
-                |> Option.orElseWith Diagnostics.tryFindRelevantCallerLocation
+                fallbackSourceLocation
 
             TestExecution.recordTestedSourceLocation sourceLocation
 
@@ -285,7 +282,6 @@ module private CheckCore =
 
     let finalize
         (expectation: CheckExpectation<'Args, 'Actual, 'Expected>)
-        (mappedSourceLocation: Diagnostics.SourceLocation option)
         (state: RunState<'Args, 'Actual, 'Expected>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         match state.UnexpectedError, state.Finished with
@@ -300,7 +296,7 @@ module private CheckCore =
         | None, Some (FsCheck.TestResult.Failed (testData, _, _, _, rnd, _, size)) ->
             let replayText = Some (formatReplay { Rnd = rnd; Size = Some size })
 
-            match toFailure expectation testData replayText mappedSourceLocation state with
+            match toFailure expectation testData replayText state with
             | Some failure -> Failed failure
             | None ->
                 Errored
@@ -318,10 +314,6 @@ module private CheckCore =
         let state = createRunState<'Args, 'Actual, 'Expected> ()
         let runner = createRunner state
         let resolvedConfig = config.WithRunner runner
-        let mappedSourceLocation =
-            SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         let property =
             FsCheck.FSharp.Prop.forAll arbitrary (fun args ->
@@ -342,7 +334,7 @@ module private CheckCore =
 
         try
             FsCheck.Check.One (resolvedConfig, property)
-            finalize expectation mappedSourceLocation state
+            finalize expectation state
         with ex ->
             Errored $"Check runner threw {Render.formatException ex}."
 
@@ -357,10 +349,6 @@ module private CheckCore =
         let state = createRunState<'Arg1 * 'Arg2, 'Actual, 'Expected> ()
         let runner = createRunner state
         let resolvedConfig = config.WithRunner runner
-        let mappedSourceLocation =
-            SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         let property =
             FsCheck.FSharp.Prop.forAll arbitrary1 (fun arg1 ->
@@ -382,7 +370,7 @@ module private CheckCore =
 
         try
             FsCheck.Check.One (resolvedConfig, property)
-            finalize expectation mappedSourceLocation state
+            finalize expectation state
         with ex ->
             Errored $"Check runner threw {Render.formatException ex}."
 
@@ -400,10 +388,6 @@ module private CheckCore =
 
         let runner = createRunner state
         let resolvedConfig = config.WithRunner runner
-        let mappedSourceLocation =
-            SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         let property =
             FsCheck.FSharp.Prop.forAll arbitrary1 (fun arg1 ->
@@ -427,7 +411,7 @@ module private CheckCore =
 
         try
             FsCheck.Check.One (resolvedConfig, property)
-            finalize expectation mappedSourceLocation state
+            finalize expectation state
         with ex ->
             Errored $"Check runner threw {Render.formatException ex}."
 
@@ -442,10 +426,6 @@ module private CheckCore =
         let state = createRunState<'Group1 * 'Group2, 'Actual, 'Expected> ()
         let runner = createRunner state
         let resolvedConfig = config.WithRunner runner
-        let mappedSourceLocation =
-            SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         let property =
             FsCheck.FSharp.Prop.forAll arbitrary1 (fun group1 ->
@@ -468,7 +448,7 @@ module private CheckCore =
 
         try
             FsCheck.Check.One (resolvedConfig, property)
-            finalize expectation mappedSourceLocation state
+            finalize expectation state
         with ex ->
             Errored $"Check runner threw {Render.formatException ex}."
 
@@ -483,10 +463,6 @@ module private CheckCore =
         let state = createRunState<'Group1 * 'Group2, 'Actual, 'Expected> ()
         let runner = createRunner state
         let resolvedConfig = config.WithRunner runner
-        let mappedSourceLocation =
-            SourceMapping.tryFindSourceLocationFromQuotation actual
-
-        TestExecution.recordTestedSourceLocation mappedSourceLocation
 
         let property =
             FsCheck.FSharp.Prop.forAll arbitrary1 (fun group1 ->
@@ -515,7 +491,7 @@ module private CheckCore =
 
         try
             FsCheck.Check.One (resolvedConfig, property)
-            finalize expectation mappedSourceLocation state
+            finalize expectation state
         with ex ->
             Errored $"Check runner threw {Render.formatException ex}."
 
@@ -1210,21 +1186,25 @@ module Check =
         | Passed ->
             None
         | Exhausted message ->
-            Some {
+            {
                 TestifyReport.create
                     PropertyExhausted
                     (Some "PropertyExhausted")
                     "[PropertyExhausted] Property testing stopped before reaching enough successful test cases." with
                     Because = Some message
             }
+            |> TestifyReport.withInferredHint
+            |> Some
         | Errored message ->
-            Some {
+            {
                 TestifyReport.create
                     PropertyError
                     (Some "PropertyError")
                     "[PropertyError] Property testing failed unexpectedly." with
                     Because = Some message
             }
+            |> TestifyReport.withInferredHint
+            |> Some
         | Failed failure ->
             let originalActual = Observed.format failure.Original.ActualObserved
             let originalExpected = Observed.format failure.Original.ExpectedObserved
@@ -1236,7 +1216,7 @@ module Check =
 
             let details = TestifyReport.detailsText failure.Details
 
-            Some {
+            {
                 TestifyReport.create
                     PropertyFailure
                     (Some failure.Label)
@@ -1273,6 +1253,8 @@ module Check =
                     Replay = failure.Replay
                     SourceLocation = failure.SourceLocation
             }
+            |> TestifyReport.withInferredHint
+            |> Some
 
     /// <summary>Renders a check result with the supplied reporting options.</summary>
     let toDisplayStringWith

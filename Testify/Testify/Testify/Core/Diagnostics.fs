@@ -4,7 +4,7 @@ namespace Testify
 [<RequireQualifiedAccess>]
 module Diagnostics =
     open System
-    open System.Reflection
+    open System.IO
 
     type SourceLocation =
         {
@@ -14,12 +14,51 @@ module Diagnostics =
             Context: string option
         }
 
+    let private fileNameOrFallback
+        (filePath: string)
+        : string =
+        match Path.GetFileName filePath with
+        | null -> filePath
+        | fileName when String.IsNullOrWhiteSpace fileName -> filePath
+        | fileName -> fileName
+
     let formatLocation
         (location: SourceLocation)
         : string =
-        match location.Column with
-        | Some column -> $"{location.FilePath}:{location.Line}:{column}"
-        | None -> $"{location.FilePath}:{location.Line}"
+        [
+            $"Location: {fileNameOrFallback location.FilePath}"
+            $"Line: {location.Line}"
+
+            match location.Column with
+            | Some column -> $"Approximate character: {column}"
+            | None -> ()
+        ]
+        |> String.concat Environment.NewLine
+
+    let tryReadContext
+        (filePath: string)
+        (line: int)
+        (radius: int)
+        : string option =
+        if not (File.Exists filePath) || line <= 0 || radius < 0 then
+            None
+        else
+            let lines = File.ReadAllLines filePath
+
+            if lines.Length = 0 then
+                None
+            else
+                let startLine = max 1 (line - radius)
+                let endLine = min lines.Length (line + radius)
+
+                [
+                    for currentLine in startLine .. endLine do
+                        let marker = if currentLine = line then ">" else " "
+                        let content = lines[currentLine - 1]
+                        yield $"{marker} {currentLine, 4}: {content}"
+                ]
+                |> String.concat Environment.NewLine
+                |> Some
 
     let getStacktrace (ex: exn) : System.Diagnostics.StackTrace =
         System.Diagnostics.StackTrace (ex, true)
@@ -64,36 +103,6 @@ module Diagnostics =
                     && not (normalized.Contains "\\testify\\")
                     && not (containsAny ignoredRuntimePathFragments normalized)
 
-    let private isRelevantCallSiteFile (filePath: string | null) : bool =
-        match filePath with
-        | null -> false
-        | filePath ->
-            if String.IsNullOrWhiteSpace filePath then
-                false
-            else
-                let normalized = normalizeFilePath filePath
-                not (normalized.Contains "\\testify\\")
-                    && not (containsAny ignoredRuntimePathFragments normalized)
-
-    let tryReadContext (filePath: string) (line: int) (radius: int) : string option =
-        if not (System.IO.File.Exists filePath) || line <= 0 || radius < 0 then
-            None
-        else
-            let lines = System.IO.File.ReadAllLines filePath
-            if lines.Length = 0 then None
-            else
-                let startLine = max 1 (line - radius)
-                let endLine = min lines.Length (line + radius)
-
-                [|
-                    for currentLine in startLine .. endLine do
-                        let marker = if currentLine = line then ">" else " "
-                        let content = lines[currentLine - 1]
-                        yield $"{marker} {currentLine, 4}: {content}"
-                |]
-                |> String.concat System.Environment.NewLine
-                |> Some
-
     let private tryFrameToSourceLocationWhen
         (isRelevantFile: string | null -> bool)
         (frame: System.Diagnostics.StackFrame)
@@ -115,7 +124,7 @@ module Diagnostics =
                     FilePath = filePath
                     Line = line
                     Column = column
-                    Context = tryReadContext filePath line 5
+                    Context = tryReadContext filePath line 4
                 }
 
     let tryFrameToSourceLocation (frame: System.Diagnostics.StackFrame) : SourceLocation option =
@@ -124,11 +133,3 @@ module Diagnostics =
     let tryFindRelevantExceptionLocation (ex: exn) : SourceLocation option =
         tryGetFrames ex
         |> Option.bind (Array.tryPick tryFrameToSourceLocation)
-
-    let tryFindRelevantCallerLocation () : SourceLocation option =
-        let stacktrace = System.Diagnostics.StackTrace(true)
-        let frames = stacktrace.GetFrames ()
-
-        match box frames with
-        | null -> None
-        | _ -> frames |> Array.tryPick (tryFrameToSourceLocationWhen isRelevantCallSiteFile)

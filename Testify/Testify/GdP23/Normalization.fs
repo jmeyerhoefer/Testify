@@ -7,6 +7,7 @@ module Normalization =
     open System.IO
     open System.Text
     open System.Text.Json
+    open System.Text.RegularExpressions
     open System.Xml.Linq
     open TaskPipeline
 
@@ -35,6 +36,81 @@ module Normalization =
             | true, duration -> Some duration.TotalSeconds
             | _ -> None
         | None -> None
+
+    type private BuildErrorInfo =
+        {
+            Code: string
+            Message: string
+            File: string option
+            Line: int option
+            Column: int option
+        }
+
+    let private hintFromOutputPattern =
+        Regex(@"(?:^|\r?\n)Hint:\s*(.+?)(?:\r?\n|$)", RegexOptions.Compiled)
+
+    let private buildErrorWithLocationPattern =
+        Regex(
+            @"^(?<file>.+?)\((?<line>\d+)(?:,(?<column>\d+))?\):\s*error\s+(?<code>FS\d+):\s*(?<message>.*?)(?:\s+\[[^\]]+\])?$",
+            RegexOptions.Compiled)
+
+    let private buildErrorWithoutLocationPattern =
+        Regex(
+            @"^(?:\w+\s*:\s*)?error\s+(?<code>FS\d+):\s*(?<message>.*?)(?:\s+\[[^\]]+\])?$",
+            RegexOptions.Compiled)
+
+    let private tryExtractHintFromOutput (output: string) : string option =
+        let matchResult = hintFromOutputPattern.Match output
+
+        if matchResult.Success && matchResult.Groups.Count > 1 then
+            let hint = matchResult.Groups[1].Value.Trim()
+            if String.IsNullOrWhiteSpace hint then None else Some hint
+        else
+            None
+
+    let private sanitizeBuildErrorText (value: string) : string =
+        value.Replace('\u001d', ' ').Replace('\u001c', ' ').Replace('\u001e', ' ').Trim()
+
+    let private sanitizeBuildErrorFile (value: string) : string =
+        let trimmed = sanitizeBuildErrorText value
+        Regex.Replace(trimmed, @"^\d+>", String.Empty)
+
+    let private tryParseBuildErrorLine (line: string) : BuildErrorInfo option =
+        let trimmed = line.Trim()
+        let withLocation = buildErrorWithLocationPattern.Match trimmed
+
+        if withLocation.Success then
+            Some {
+                Code = withLocation.Groups["code"].Value
+                Message = sanitizeBuildErrorText withLocation.Groups["message"].Value
+                File = Some(sanitizeBuildErrorFile withLocation.Groups["file"].Value)
+                Line = Some(Int32.Parse(withLocation.Groups["line"].Value, CultureInfo.InvariantCulture))
+                Column =
+                    if withLocation.Groups["column"].Success then
+                        Some(Int32.Parse(withLocation.Groups["column"].Value, CultureInfo.InvariantCulture))
+                    else
+                        None
+            }
+        else
+            let withoutLocation = buildErrorWithoutLocationPattern.Match trimmed
+
+            if withoutLocation.Success then
+                Some {
+                    Code = withoutLocation.Groups["code"].Value
+                    Message = sanitizeBuildErrorText withoutLocation.Groups["message"].Value
+                    File = None
+                    Line = None
+                    Column = None
+                }
+            else
+                None
+
+    let private tryParsePrimaryBuildError (path: string) : BuildErrorInfo option =
+        if not (File.Exists path) then
+            None
+        else
+            File.ReadLines path
+            |> Seq.tryPick tryParseBuildErrorLine
 
     let private parseTrxResults (path: string) : ParsedTestResult list =
         if not (File.Exists path) then
@@ -109,6 +185,7 @@ module Normalization =
                     MethodName = testName
                     Outcome = resultElement.Attribute(XName.Get "outcome").Value
                     Output = output
+                    Hint = output |> Option.bind tryExtractHintFromOutput
                     FailureSummary = failureSummary
                     DurationSeconds =
                         resultElement.Attribute(XName.Get "duration")
@@ -138,76 +215,11 @@ module Normalization =
                             MethodName = methodName
                             Outcome = tryGetChildValue root "Outcome" |> Option.defaultValue "Unknown"
                             Output = tryGetChildValue root "Output"
+                            Hint = tryGetChildValue root "Hint"
                             FailureSummary = tryGetChildValue root "MessageSummary"
                             DurationSeconds = None
                         }))
             |> dict
-
-    let private parseHistoricalOriginalResults (snapshot: SnapshotInfo) : IDictionary<string, ParsedTestResult> =
-        let parseTest (testElement: JsonElement) : (string * ParsedTestResult) option =
-            let tryGetString (propertyName: string) =
-                let mutable value = Unchecked.defaultof<JsonElement>
-
-                if testElement.TryGetProperty(propertyName, &value) && value.ValueKind <> JsonValueKind.Null then
-                    Some(value.GetString())
-                else
-                    None
-                |> Option.bind (fun value ->
-                    if String.IsNullOrWhiteSpace value then
-                        None
-                    else
-                        Some value)
-
-            let tryGetBool (propertyName: string) =
-                let mutable value = Unchecked.defaultof<JsonElement>
-
-                if testElement.TryGetProperty(propertyName, &value) then
-                    match value.ValueKind with
-                    | JsonValueKind.True -> Some true
-                    | JsonValueKind.False -> Some false
-                    | _ -> None
-                else
-                    None
-
-            match tryGetString "name" with
-            | None -> None
-            | Some methodName ->
-                let failureSummary = tryGetString "error"
-                let output =
-                    [ tryGetString "output"; failureSummary ]
-                    |> List.choose id
-                    |> function
-                        | [] -> None
-                        | values -> Some(String.Join(Environment.NewLine + Environment.NewLine, values))
-
-                Some(
-                    methodName,
-                    {
-                        SuiteName = "Original"
-                        MethodName = methodName
-                        Outcome =
-                            match tryGetBool "success" with
-                            | Some true -> "Passed"
-                            | Some false -> "Failed"
-                            | None -> "Unknown"
-                        Output = output
-                        FailureSummary = failureSummary
-                        DurationSeconds = None
-                    })
-
-        snapshot.HistoricalRecord
-        |> Option.bind (fun record -> record.ResultJson)
-        |> Option.map (fun rawJson ->
-            use document = JsonDocument.Parse(rawJson)
-            let mutable testsElement = Unchecked.defaultof<JsonElement>
-
-            if document.RootElement.TryGetProperty("tests", &testsElement) && testsElement.ValueKind = JsonValueKind.Array then
-                testsElement.EnumerateArray()
-                |> Seq.choose parseTest
-                |> dict
-            else
-                dict [])
-        |> Option.defaultValue (dict [])
 
     let normalizeSnapshot (snapshot: SnapshotInfo) (artifacts: RawRunArtifacts) : SnapshotComparison =
         let buildSucceeded =
@@ -222,42 +234,14 @@ module Normalization =
                     false
             | None -> false
 
+        let primaryBuildError = tryParsePrimaryBuildError artifacts.BuildLogPath
+
         let parsedTrxResults = parseTrxResults artifacts.TestResultsPath
-        let historicalOriginalResults = parseHistoricalOriginalResults snapshot
 
         let originalResultsFromTrx =
             parsedTrxResults
             |> List.filter (fun result -> result.SuiteName = "Original")
             |> List.map (fun result -> result.MethodName, result)
-            |> dict
-
-        let mergedOriginalResults =
-            Set.union (originalResultsFromTrx.Keys |> Set.ofSeq) (historicalOriginalResults.Keys |> Set.ofSeq)
-            |> Seq.map (fun methodName ->
-                let fromTrx =
-                    match originalResultsFromTrx.TryGetValue methodName with
-                    | true, value -> Some value
-                    | false, _ -> None
-
-                let fromHistorical =
-                    match historicalOriginalResults.TryGetValue methodName with
-                    | true, value -> Some value
-                    | false, _ -> None
-
-                let merged =
-                    match fromHistorical, fromTrx with
-                    | Some historical, Some trx ->
-                        {
-                            historical with
-                                Output = historical.Output |> Option.orElse trx.Output
-                                FailureSummary = historical.FailureSummary |> Option.orElse trx.FailureSummary
-                                DurationSeconds = trx.DurationSeconds
-                        }
-                    | Some historical, None -> historical
-                    | None, Some trx -> trx
-                    | None, None -> failwith "Unreachable merged original result case."
-
-                methodName, merged)
             |> dict
 
         let testifyResultsFromTrx =
@@ -287,6 +271,7 @@ module Normalization =
                         {
                             trx with
                                 Output = xml.Output |> Option.orElse trx.Output
+                                Hint = xml.Hint |> Option.orElse trx.Hint
                                 FailureSummary = xml.FailureSummary |> Option.orElse trx.FailureSummary
                                 Outcome =
                                     if String.Equals(trx.Outcome, "Unknown", StringComparison.OrdinalIgnoreCase) then
@@ -304,7 +289,7 @@ module Normalization =
         let methodNames =
             Set.union
                 (snapshot.Task.AllExpectedMethodNames |> Set.ofList)
-                (Set.union (mergedOriginalResults.Keys |> Set.ofSeq) (mergedTestifyResults.Keys |> Set.ofSeq))
+                (Set.union (originalResultsFromTrx.Keys |> Set.ofSeq) (mergedTestifyResults.Keys |> Set.ofSeq))
             |> Set.toList
             |> List.sort
 
@@ -312,7 +297,7 @@ module Normalization =
             methodNames
             |> List.map (fun methodName ->
                 let originalResult =
-                    match mergedOriginalResults.TryGetValue methodName with
+                    match originalResultsFromTrx.TryGetValue methodName with
                     | true, value -> Some value
                     | false, _ -> None
 
@@ -341,11 +326,17 @@ module Normalization =
                     TestifyOutcome = testifyResult |> Option.map (fun result -> result.Outcome)
                     OriginalOutput = originalResult |> Option.bind (fun result -> result.Output)
                     TestifyOutput = testifyResult |> Option.bind (fun result -> result.Output)
+                    TestifyHint = testifyResult |> Option.bind (fun result -> result.Hint)
                     OriginalFailureSummary = originalResult |> Option.bind (fun result -> result.FailureSummary)
                     TestifyFailureSummary = testifyResult |> Option.bind (fun result -> result.FailureSummary)
                     OriginalDuration = originalResult |> Option.bind (fun result -> result.DurationSeconds)
                     TestifyDuration = testifyResult |> Option.bind (fun result -> result.DurationSeconds)
                     BuildSucceeded = buildSucceeded
+                    BuildErrorCode = primaryBuildError |> Option.map (fun error -> error.Code)
+                    BuildErrorMessage = primaryBuildError |> Option.map (fun error -> error.Message)
+                    BuildErrorFile = primaryBuildError |> Option.bind (fun error -> error.File)
+                    BuildErrorLine = primaryBuildError |> Option.bind (fun error -> error.Line)
+                    BuildErrorColumn = primaryBuildError |> Option.bind (fun error -> error.Column)
                     PairStatus = pairStatus
                     SourceFilePresent = snapshot.SourceFilePresent
                 })
@@ -357,6 +348,11 @@ module Normalization =
                 GroupIdTeamId = snapshot.GroupIdTeamId
                 Timestamp = snapshot.Timestamp
                 BuildSucceeded = buildSucceeded
+                BuildErrorCode = primaryBuildError |> Option.map (fun error -> error.Code)
+                BuildErrorMessage = primaryBuildError |> Option.map (fun error -> error.Message)
+                BuildErrorFile = primaryBuildError |> Option.bind (fun error -> error.File)
+                BuildErrorLine = primaryBuildError |> Option.bind (fun error -> error.Line)
+                BuildErrorColumn = primaryBuildError |> Option.bind (fun error -> error.Column)
                 SourceFilePresent = snapshot.SourceFilePresent
                 Rows = rows
             }
@@ -368,6 +364,11 @@ module Normalization =
                groupIdTeamId = comparison.GroupIdTeamId
                timestamp = comparison.Timestamp
                buildSucceeded = comparison.BuildSucceeded
+               buildErrorCode = comparison.BuildErrorCode
+               buildErrorMessage = comparison.BuildErrorMessage
+               buildErrorFile = comparison.BuildErrorFile
+               buildErrorLine = comparison.BuildErrorLine
+               buildErrorColumn = comparison.BuildErrorColumn
                sourceFilePresent = comparison.SourceFilePresent
                rows =
                    comparison.Rows
@@ -381,11 +382,17 @@ module Normalization =
                           testifyOutcome = row.TestifyOutcome
                           originalOutput = row.OriginalOutput
                           testifyOutput = row.TestifyOutput
+                          testifyHint = row.TestifyHint
                           originalFailureSummary = row.OriginalFailureSummary
                           testifyFailureSummary = row.TestifyFailureSummary
                           originalDuration = row.OriginalDuration
                           testifyDuration = row.TestifyDuration
                           buildSucceeded = row.BuildSucceeded
+                          buildErrorCode = row.BuildErrorCode
+                          buildErrorMessage = row.BuildErrorMessage
+                          buildErrorFile = row.BuildErrorFile
+                          buildErrorLine = row.BuildErrorLine
+                          buildErrorColumn = row.BuildErrorColumn
                           pairStatus = row.PairStatus
                           sourceFilePresent = row.SourceFilePresent |}) |}
 
@@ -437,35 +444,41 @@ module Normalization =
         let raw = value |> Option.defaultValue String.Empty
         "\"" + raw.Replace("\"", "\"\"") + "\""
 
-    let rewriteSelectedCsv (snapshots: SnapshotInfo list) : unit =
-        TaskPipeline.ensureDirectory DockerResultsRoot
+    let private selectedCsvHeader : string =
+        [
+            "sheetId"
+            "assignmentId"
+            "groupIdTeamId"
+            "timestamp"
+            "methodName"
+            "buildSucceeded"
+            "sourceFilePresent"
+            "pairStatus"
+            "originalOutcome"
+            "testifyOutcome"
+            "testifyHint"
+            "buildErrorCode"
+            "buildErrorMessage"
+            "buildErrorFile"
+            "buildErrorLine"
+            "buildErrorColumn"
+            "originalMessage"
+            "testifyMessage"
+            "originalFailureSummary"
+            "testifyFailureSummary"
+            "originalOutput"
+            "testifyOutput"
+            "originalDuration"
+            "testifyDuration"
+        ]
+        |> String.concat ","
 
-        let outputPath = Path.Combine(DockerResultsRoot, "selected-comparisons.csv")
-        let header =
-            [
-                "sheetId"
-                "assignmentId"
-                "groupIdTeamId"
-                "timestamp"
-                "methodName"
-                "buildSucceeded"
-                "sourceFilePresent"
-                "pairStatus"
-                "originalOutcome"
-                "testifyOutcome"
-                "originalMessage"
-                "testifyMessage"
-                "originalFailureSummary"
-                "testifyFailureSummary"
-                "originalOutput"
-                "testifyOutput"
-                "originalDuration"
-                "testifyDuration"
-            ]
-            |> String.concat ","
-
-        use writer = new StreamWriter(outputPath, false, Encoding.UTF8)
-        writer.WriteLine header
+    let private writeSelectedCsvRows
+        (writer: StreamWriter)
+        (includeRow: JsonElement -> bool)
+        (snapshots: SnapshotInfo list)
+        : unit =
+        writer.WriteLine selectedCsvHeader
 
         for snapshot in snapshots do
             let comparisonPath = Path.Combine(snapshot.ResultDirectory, "comparison.json")
@@ -477,33 +490,65 @@ module Normalization =
 
                 if document.RootElement.TryGetProperty("rows", &rowsElement) && rowsElement.ValueKind = JsonValueKind.Array then
                     for row in rowsElement.EnumerateArray() do
-                        let originalFailureSummary = tryGetJsonString row "originalFailureSummary"
-                        let testifyFailureSummary = tryGetJsonString row "testifyFailureSummary"
-                        let originalOutput = tryGetJsonString row "originalOutput"
-                        let testifyOutput = tryGetJsonString row "testifyOutput"
-                        let originalMessage = originalFailureSummary |> Option.orElse originalOutput
-                        let testifyMessage = testifyFailureSummary |> Option.orElse testifyOutput
+                        if includeRow row then
+                            let originalFailureSummary = tryGetJsonString row "originalFailureSummary"
+                            let testifyFailureSummary = tryGetJsonString row "testifyFailureSummary"
+                            let originalOutput = tryGetJsonString row "originalOutput"
+                            let testifyOutput = tryGetJsonString row "testifyOutput"
+                            let originalMessage = originalFailureSummary |> Option.orElse originalOutput
+                            let testifyMessage = testifyFailureSummary |> Option.orElse testifyOutput
 
-                        [
-                            tryGetJsonString row "sheetId"
-                            tryGetJsonString row "assignmentId"
-                            tryGetJsonString row "groupIdTeamId"
-                            tryGetJsonString row "timestamp"
-                            tryGetJsonString row "methodName"
-                            tryGetJsonString row "buildSucceeded"
-                            tryGetJsonString row "sourceFilePresent"
-                            tryGetJsonString row "pairStatus"
-                            tryGetJsonString row "originalOutcome"
-                            tryGetJsonString row "testifyOutcome"
-                            originalMessage
-                            testifyMessage
-                            originalFailureSummary
-                            testifyFailureSummary
-                            originalOutput
-                            testifyOutput
-                            tryGetJsonString row "originalDuration"
-                            tryGetJsonString row "testifyDuration"
-                        ]
-                        |> List.map escapeCsvValue
-                        |> String.concat ","
-                        |> writer.WriteLine
+                            [
+                                tryGetJsonString row "sheetId"
+                                tryGetJsonString row "assignmentId"
+                                tryGetJsonString row "groupIdTeamId"
+                                tryGetJsonString row "timestamp"
+                                tryGetJsonString row "methodName"
+                                tryGetJsonString row "buildSucceeded"
+                                tryGetJsonString row "sourceFilePresent"
+                                tryGetJsonString row "pairStatus"
+                                tryGetJsonString row "originalOutcome"
+                                tryGetJsonString row "testifyOutcome"
+                                tryGetJsonString row "testifyHint"
+                                tryGetJsonString row "buildErrorCode"
+                                tryGetJsonString row "buildErrorMessage"
+                                tryGetJsonString row "buildErrorFile"
+                                tryGetJsonString row "buildErrorLine"
+                                tryGetJsonString row "buildErrorColumn"
+                                originalMessage
+                                testifyMessage
+                                originalFailureSummary
+                                testifyFailureSummary
+                                originalOutput
+                                testifyOutput
+                                tryGetJsonString row "originalDuration"
+                                tryGetJsonString row "testifyDuration"
+                            ]
+                            |> List.map escapeCsvValue
+                            |> String.concat ","
+                            |> writer.WriteLine
+
+    let private isFailureRow (row: JsonElement) : bool =
+        let pairStatus = tryGetJsonString row "pairStatus" |> Option.defaultValue String.Empty
+        let originalOutcome = tryGetJsonString row "originalOutcome" |> Option.defaultValue String.Empty
+        let testifyOutcome = tryGetJsonString row "testifyOutcome" |> Option.defaultValue String.Empty
+
+        pairStatus = "build-failed"
+        || (not (String.Equals(originalOutcome, "Passed", StringComparison.OrdinalIgnoreCase))
+            && not (String.IsNullOrWhiteSpace originalOutcome))
+        || (not (String.Equals(testifyOutcome, "Passed", StringComparison.OrdinalIgnoreCase))
+            && not (String.IsNullOrWhiteSpace testifyOutcome))
+
+    let rewriteSelectedCsv (snapshots: SnapshotInfo list) : unit =
+        TaskPipeline.ensureDirectory DockerResultsRoot
+
+        let outputPath = Path.Combine(DockerResultsRoot, "selected-comparisons.csv")
+        use writer = new StreamWriter(outputPath, false, Encoding.UTF8)
+        writeSelectedCsvRows writer (fun _ -> true) snapshots
+
+    let rewriteSelectedFailuresCsv (snapshots: SnapshotInfo list) : unit =
+        TaskPipeline.ensureDirectory DockerResultsRoot
+
+        let outputPath = Path.Combine(DockerResultsRoot, "selected-failures-only.csv")
+        use writer = new StreamWriter(outputPath, false, Encoding.UTF8)
+        writeSelectedCsvRows writer isFailureRow snapshots

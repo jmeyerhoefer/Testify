@@ -20,15 +20,7 @@ type PersistedTestResult =
 [<RequireQualifiedAccess>]
 module TestResults =
     let private taskPathPattern =
-        Regex(@"[\\/]kdp25[\\/](\d{2})[\\/](\d+)[\\/](template|_solution)(?:[\\/]|$)", RegexOptions.Compiled)
-
-    let private tryGetDirectoryName
-        (filePath: string)
-        : string option =
-        match Path.GetDirectoryName filePath with
-        | null -> None
-        | directory when String.IsNullOrWhiteSpace directory -> None
-        | directory -> Some directory
+        Regex(@"[\\/](\d{2})[\\/](\d+)[\\/](template|_solution)(?:[\\/]|$)", RegexOptions.Compiled)
 
     let private nonEmptyText
         (text: string | null)
@@ -88,18 +80,9 @@ module TestResults =
         match TestifySettings.ResultRootOverride with
         | Some overrideRoot -> Path.Combine(overrideRoot, "misc")
         | None ->
-            match state.TestMethodSourceLocation with
-            | Some location ->
-                match tryGetDirectoryName location.FilePath with
-                | Some directory -> Path.Combine(directory, "TestResults", "misc")
-                | None ->
-                    match tryFindProjectDirectory () with
-                    | Some projectDirectory -> Path.Combine(projectDirectory, "TestResults", "misc")
-                    | None -> Path.Combine(Directory.GetCurrentDirectory(), "TestResults", "misc")
-            | None ->
-                match tryFindProjectDirectory () with
-                | Some projectDirectory -> Path.Combine(projectDirectory, "TestResults", "misc")
-                | None -> Path.Combine(Directory.GetCurrentDirectory(), "TestResults", "misc")
+            match tryFindProjectDirectory () with
+            | Some projectDirectory -> Path.Combine(projectDirectory, "TestResults", "misc")
+            | None -> Path.Combine(Directory.GetCurrentDirectory(), "TestResults", "misc")
 
     let private getBaseDirectory
         (state: TestExecutionState)
@@ -192,14 +175,15 @@ module TestResults =
 
         [
             yield XElement(XName.Get "Verbosity", string reportOptions.Verbosity)
-            yield XElement(XName.Get "IncludeCodeContext", reportOptions.IncludeCodeContext)
             yield XElement(XName.Get "MaxValueLines", reportOptions.MaxValueLines)
 
             match state.LastFailureReport with
             | None -> ()
             | Some report ->
+                let report = TestifyReport.withInferredHint report
                 yield XElement(XName.Get "FailureKind", string report.Kind)
                 yield XElement(XName.Get "MessageSummary", report.Summary)
+                yield XElement(XName.Get "Hint", report.Hint)
 
                 match report.Test with
                 | Some test -> yield XElement(XName.Get "TestExpression", test)
@@ -276,10 +260,6 @@ module TestResults =
                 match report.SourceLocation with
                 | Some location ->
                     yield XElement(XName.Get "FailureSourceLocation", Diagnostics.formatLocation location)
-
-                    match location.Context with
-                    | Some context -> yield XElement(XName.Get "CodeContext", context)
-                    | None -> ()
                 | None -> ()
         ]
 
@@ -307,9 +287,6 @@ module TestResults =
             let testedSourceLocation =
                 state.FirstTestedSourceLocation
                 |> Option.map Diagnostics.formatLocation
-            let testMethodSourceLocation =
-                state.TestMethodSourceLocation
-                |> Option.map Diagnostics.formatLocation
 
             let children =
                 [
@@ -321,10 +298,6 @@ module TestResults =
 
                     match testedSourceLocation with
                     | Some location -> XElement(XName.Get "TestedSourceLocation", location)
-                    | None -> ()
-
-                    match testMethodSourceLocation with
-                    | Some location -> XElement(XName.Get "TestMethodSourceLocation", location)
                     | None -> ()
 
                     yield! failureReportElements state

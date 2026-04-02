@@ -21,6 +21,7 @@ module Tests =
             Config.QuickThrowOnFailure
                 .WithEndSize(10000)
                 .WithArbitrary [typeof<ArbitraryModifiers>]
+        let configFor methodName = ReplayCatalog.applyReplay methodName config
 
         // ------------------------------------------------------------------------
         // a)
@@ -52,7 +53,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``b) isLeapYear Zufallstest`` (): unit =
-            Check.One(config, fun (y: Nat) ->
+            Check.One(configFor "b) isLeapYear Zufallstest", fun (y: Nat) ->
                 if y > 0N then
                     let expected = System.DateTime.IsLeapYear(int y)
                     let actual = Dates.isLeapYear y
@@ -78,7 +79,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``c) daysInMonth Zufallstest`` (): unit =
-            Check.One(config, fun (y: Nat) (m: Nat) ->
+            Check.One(configFor "c) daysInMonth Zufallstest", fun (y: Nat) (m: Nat) ->
                 if y > 0N && m > 0N && m <= 12N then
                     let expected = System.DateTime.DaysInMonth(int y, int m)
                     let actual = Dates.daysInMonth y m
@@ -99,7 +100,7 @@ module Tests =
 
         [<TestMethod>] [<Timeout(1000)>]
         member this.``d) nextDate Zufallstest`` (): unit =
-            Check.One(config, fun (date: Dates.Date) ->
+            Check.One(configFor "d) nextDate Zufallstest", fun (date: Dates.Date) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
                       let expected = dt.AddDays(1)
@@ -117,7 +118,7 @@ module Tests =
         [<TestMethod>] [<Timeout(1000)>]
         member this.``e) nextDate Zufallstest`` (): unit =
             let applyNTimes f n x = Seq.init n (fun _ -> f) |> Seq.fold (fun acc fn -> fn acc) x
-            Check.One(config, fun (date: Dates.Date) (n: Nat) ->
+            Check.One(configFor "e) nextDate Zufallstest", fun (date: Dates.Date) (n: Nat) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
                       let expected = dt.AddDays((int n))
@@ -141,10 +142,10 @@ module Tests =
         
         [<TestMethod>] [<Timeout(60000)>]
         member this.``bonus) validateWeekday Zufallstest`` (): unit =
-            Check.One(config, fun (date: Dates.Date) ->
+            Check.One(configFor "bonus) validateWeekday Zufallstest", fun (date: Dates.Date) ->
                  if date.year > 0N && date.month > 0N && date.month <= 12N && date.day > 0N && date.day <= 31N then
                       let dt = System.DateTime((int date.year), (int date.month), (int date.day))
-                      let expectedWeekday = 
+                      let expectedWeekday =
                           match dt.DayOfWeek with
                           | System.DayOfWeek.Sunday -> Dates.Sunday
                           | System.DayOfWeek.Monday -> Dates.Monday
