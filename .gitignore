@@ -1,0 +1,11 @@
+*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/.gitlab-ci.yml
+!/pipeline/
+!/pipeline/**
+!/Testify/
+!/Testify/**
+!/latex/
+!/latex/**

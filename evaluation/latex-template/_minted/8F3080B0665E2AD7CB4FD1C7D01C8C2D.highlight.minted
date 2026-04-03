@@ -1,5 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{f}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{n}{b}\PYG{+w}{ }\PYG{o}{=}
-\PYG{+w}{	}\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{result}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{a}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{b}
-\PYG{+w}{	}\PYG{n}{result}
-\end{MintedVerbatim}

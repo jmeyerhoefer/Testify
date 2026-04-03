@@ -1,8 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8\relax}]
-\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{rec}\PYG{+w}{ }\PYG{n}{replicateLeibniz}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{x}\PYG{o}{:}\PYG{+w}{ }\PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{n}\PYG{o}{:}\PYG{+w}{ }\PYG{k+kt}{Nat}\PYG{o}{)}\PYG{o}{:}\PYG{+w}{ }\PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{+w}{ }\PYG{k+kt}{list}\PYG{+w}{ }\PYG{o}{=}
-\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0N}\PYG{+w}{ }\PYG{k}{then}\PYG{+w}{ }\PYG{n+nb+bp}{[]}
-\PYG{+w}{    }\PYG{k}{else}
-\PYG{+w}{        }\PYG{k}{let}\PYG{+w}{ }\PYG{n+nv}{xs}\PYG{o}{:}\PYG{+w}{ }\PYG{k}{\PYGZsq{}}\PYG{n}{a}\PYG{+w}{ }\PYG{k+kt}{list}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{replicateLeibniz}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{n}\PYG{+w}{ }\PYG{o}{/}\PYG{+w}{ }\PYG{l+m+mi}{2N}\PYG{o}{)}
-\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{n}{n}\PYG{+w}{ }\PYG{o}{\PYGZpc{}}\PYG{+w}{ }\PYG{l+m+mi}{2N}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m+mi}{0N}\PYG{+w}{ }\PYG{k}{then}\PYG{+w}{ }\PYG{n}{xs}\PYG{+w}{ }\PYG{o}{@}\PYG{+w}{ }\PYG{n}{xs}
-\PYG{+w}{        }\PYG{k}{else}\PYG{+w}{ }\PYG{n}{x}\PYG{+w}{ }\PYG{o}{::}\PYG{+w}{ }\PYG{o}{(}\PYG{n}{xs}\PYG{+w}{ }\PYG{o}{@}\PYG{+w}{ }\PYG{n}{xs}\PYG{o}{)}
-\end{MintedVerbatim}
