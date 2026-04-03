@@ -1,0 +1,116 @@
+\section*{A Sketch of Testify as a Deeply Embedded DSL}
+
+This note gives a compact, design-oriented sketch of the testing DSL exposed by \texttt{Testify}.
+It is intentionally not a full formal semantics and not a parser grammar for arbitrary F\# programs.
+Instead, it abstracts the public API into a few core syntactic categories that explain why the DSL is
+\emph{deeply embedded}: expectations are explicit F\# values, they can be composed inside the host
+language, and operators provide a readable concrete syntax for applying those embedded terms.
+
+\paragraph{Assert DSL.}
+The Assert side is expression-left: a quoted expression is validated against one reusable
+\texttt{AssertExpectation}.
+
+\[
+\begin{array}{rcl}
+AExpect & ::= & \textsf{EqualTo}(v)
+            \mid \textsf{NotEqualTo}(v)
+            \mid \textsf{LessThan}(v)
+            \mid \textsf{GreaterThan}(v)
+            \mid \textsf{Satisfy}(d, p)
+            \mid \textsf{Throws}
+            \mid \textsf{DoesNotThrow}
+            \mid \textsf{IsTrue}
+            \mid \textsf{IsFalse}
+            \mid \textsf{IsSome}
+            \mid \textsf{IsNone}
+            \mid \textsf{Not}(AExpect)
+            \mid AExpect \;\textsf{OrElse}\; AExpect
+            \mid AExpect \;\textsf{AndAlso}\; AExpect
+            \mid \textsf{Any}(AExpect^\ast)
+            \mid \textsf{All}(AExpect^\ast)
+\end{array}
+\]
+
+\[
+\begin{array}{rcl}
+AExp & ::= & \langle e \rangle \; \mid>? \; AExpect \\
+     & \mid & \langle e \rangle \; >>? \; AExpect \\
+     & \mid & \langle e \rangle \; =? \; v
+            \mid \langle e \rangle \; <>? \; v \\
+     & \mid & \langle e \rangle \; <? \; v
+            \mid \langle e \rangle \; <=? \; v
+            \mid \langle e \rangle \; >? \; v
+            \mid \langle e \rangle \; >=? \; v \\
+     & \mid & \langle e \rangle \; ^?
+            \mid \langle e \rangle \; ^!?
+            \mid \langle e \rangle \; ?
+            \mid \langle e \rangle \; !? \\
+     & \mid & \langle e \rangle \; ||? \; AExpect^\ast
+            \mid \langle e \rangle \; \&\&? \; AExpect^\ast
+\end{array}
+\]
+
+\paragraph{Check DSL.}
+The Check side describes relations between a quoted implementation and a reference implementation over
+generated inputs. The deeply embedded core is the reusable \texttt{CheckExpectation} value.
+
+\[
+\begin{array}{rcl}
+CExpect & ::= & \textsf{EqualToReference}
+            \mid \textsf{EqualTo}(v)
+            \mid \textsf{EqualToReferenceBy}(proj)
+            \mid \textsf{EqualToReferenceWith}(cmp)
+            \mid \textsf{ThrowsSameExceptionType}
+            \mid \textsf{SatisfyWith}(d, p)
+            \mid \textsf{SatisfyObservedWith}(d, p)
+            \mid CExpect \;\textsf{OrElse}\; CExpect
+            \mid CExpect \;\textsf{AndAlso}\; CExpect
+\end{array}
+\]
+
+\[
+\begin{array}{rcl}
+CExp & ::= & \langle f \rangle \; |=> \; r \\
+     & \mid & \langle f \rangle \; |=>> \; r \\
+     & \mid & \langle f \rangle \; |=>? \; (cfg, r) \\
+     & \mid & \langle f \rangle \; |=>?? \; (arb, r) \\
+     & \mid & \langle f \rangle \; |=>??? \; (CExpect, r) \\
+     & \mid & \langle f \rangle \; |=>>? \; (CExpect, r) \\
+     & \mid & \langle f \rangle \; ||=>? \; (cfg?, arb?, CExpect?, r)
+\end{array}
+\]
+
+\paragraph{Declaration layer.}
+At the test-hosting layer, Testify wraps MSTest declarations with attributes that trigger Testify's
+reporting and result persistence.
+
+\[
+\begin{array}{rcl}
+TestDecl & ::= & [\texttt{<TestifyClass>}] \; type \; T = \{ MethodDecl^\ast \} \\
+MethodDecl & ::= & [\texttt{<TestifyMethod>}] \; member \; m = Body
+\end{array}
+\]
+
+\paragraph{Mapping to the implementation.}
+This sketch corresponds to the current public API as follows.
+
+\begin{itemize}
+\item \texttt{AExpect} is represented by the record type \texttt{AssertExpectation<'T>}, whose fields
+      describe verification, formatting, explanations, and nested failure details.
+\item \texttt{CExpect} is represented by the record type
+      \texttt{CheckExpectation<'Args, 'Actual, 'Expected>}, which describes a relation between tested
+      and reference behavior for one generated case.
+\item The combinators \textsf{OrElse} and \textsf{AndAlso} correspond to
+      \texttt{orElse}/\texttt{andAlso} and are surfaced concretely by the operators
+      \texttt{<|>} and \texttt{<&>}.
+\item \texttt{|>?}, \texttt{|=>}, \texttt{|=>?}, and \texttt{||=>?} belong to the concrete syntax
+      layer: they apply embedded expectation values to quoted expressions or quoted implementations.
+\item The DSL is therefore ``deep'' mainly at the expectation level; the operators are a readable
+      facade over those embedded terms.
+\end{itemize}
+
+\paragraph{Interpretation note.}
+The grammar above should be read as a compact conceptual model of Testify's testing language. It
+captures the core families of terms and applications, but it intentionally omits many specialized
+builders such as string-, sequence-, and diff-specific expectations in order to keep the sketch small
+and thesis-friendly.
