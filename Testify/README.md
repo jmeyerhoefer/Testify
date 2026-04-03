@@ -5,9 +5,9 @@ and property-style checks with richer failure output than a plain assertion stac
 
 Current source version: `0.1.0`
 
-## Layout
+## What Is In Here
 
-Inside this folder:
+This folder contains three things that matter most:
 
 - [`Testify/Testify.fsproj`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify/Testify/Testify.fsproj)
   The library itself.
@@ -91,7 +91,7 @@ open Testify.AssertOperators
       AssertExpectation.endsWith "fy" ]              // all expectations pass
 ```
 
-### Assert Expectation Composition
+### Combining Expectations
 
 ```fsharp
 let positive = AssertExpectation.greaterThan 0
@@ -189,7 +189,8 @@ let relaxedExpectation =
 
 ### Named Check Helpers
 
-The bool-returning property helpers intentionally use named functions instead of dedicated operators.
+For bool-returning properties, the library deliberately uses named functions instead of more symbolic
+operators. That keeps this part of the API a bit easier to read.
 
 ```fsharp
 let config = CheckConfig.defaultConfig
@@ -379,7 +380,7 @@ Check.shouldEqualGroupedDependingOnUsingWith
     <@ fun x y -> x <= y @>
 ```
 
-## Choosing Between Operators And Named Functions
+## How I Would Choose Between Them
 
 - Use Assert operators when you are checking one quoted expression directly.
 - Use Check operators when you are comparing a quoted implementation against a reference function.
