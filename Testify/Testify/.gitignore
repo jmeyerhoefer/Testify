@@ -26,6 +26,3 @@ obj/
 /GdP23/Uploads/
 /GdP23/DockerResults/**
 !/GdP23/DockerResults/
-!/GdP23/DockerResults/selected-comparisons.csv
-!/GdP23/DockerResults/selected-failures-only.csv
-!/GdP23/DockerResults/comparisons.jsonl
