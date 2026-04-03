@@ -9,3 +9,11 @@
 !/Testify/**
 !/latex/
 !/latex/**
+
+# Keep allowed trees tracked, but still ignore IDE metadata inside them.
+Testify/.idea/
+Testify/**/.idea/
+Testify/.idea*/
+Testify/**/.idea*/
+latex/**/.idea/
+latex/**/.idea*/

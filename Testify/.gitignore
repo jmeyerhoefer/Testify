@@ -1,0 +1,17 @@
+.idea/
+**/.idea/
+.idea*/
+**/.idea*/
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+*.trx
+
+Testify/.cache/
+Testify/.dotnet-home/
+Testify/.docker-config/
+Testify/GdP23/DockerResults/
+Testify/GdP23/.workspaces/
+Testify/GdP23/.cache/
