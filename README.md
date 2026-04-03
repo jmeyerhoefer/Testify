@@ -26,15 +26,17 @@ infrastructure around them.
 ## Working With Testify
 
 If you want to work on the main project, start in [`Testify`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify).
-The commands I ended up using most often are:
+At the top level, it is probably more useful to show what using the library feels like than to list
+build commands:
 
-```powershell
-dotnet build .\Testify\Testify\Testify.fsproj --no-restore
-dotnet test .\Testify\Testify\Testify.ApiTests\Testify.ApiTests.fsproj --no-build --no-restore
-dotnet build .\Testify\Testify\GdP23\GdP23.fsproj --no-restore
+```fsharp
+open Testify
+open Testify.AssertOperators
+
+<@ 1 + 2 @> =? 3
 ```
 
-The more useful usage guide lives here:
+The more detailed usage guide lives here:
 
 - [`Testify/README.md`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify/README.md)
 
