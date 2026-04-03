@@ -6,6 +6,16 @@ obj/
 .cache/
 .docker-config/
 .dotnet-home/
+**/bin/
+**/obj/
+**/.cache/
+**/.dotnet-home/
+**/.docker-config/
+**/TestResults/
+**/*.dll
+**/*.exe
+**/*.pdb
+**/*.trx
 
 # GdP23 generated artifacts
 /GdP23/.cache/
