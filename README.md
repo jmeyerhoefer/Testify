@@ -23,31 +23,28 @@ infrastructure around them.
 - Generated result exports under `Testify/Testify/GdP23/DockerResults/` are intentionally kept as
   local analysis artifacts and are no longer versioned in git.
 
-## Working With Testify
+## What Testify Is For
 
 If you want to work on the main project, start in [`Testify`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify).
-At the top level, it is probably more useful to show what using the library feels like than to list
-build commands:
+At the root level, the more useful question is what the library is actually trying to do:
 
 ```fsharp
-open Testify
-open Testify.AssertOperators
-
-<@ 1 + 2 @> =? 3
+<@ Foo.add 1 2 @> =? 3
+<@ Foo.value @> |>? (AssertExpectation.greaterThan 0 <&> AssertExpectation.lessThan 10)
+<@ List.rev >> List.rev @> |=> id
+<@ fun x -> x = x @> |> Check.shouldBeTrue
 ```
+
+The idea is to keep tests compact while producing richer failure output than a plain assertion stack
+trace. Instead of only saying that something failed, `Testify` tries to show what expression was
+checked, what was expected, what actually happened, and, where possible, a short hint.
 
 The more detailed usage guide lives here:
 
 - [`Testify/README.md`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify/README.md)
 
-It includes:
-
-- installation/build instructions
-- a minimal `Testify` example
-- Assert DSL operator examples
-- Check DSL operator examples
-- named `Check.should*` helper examples
-- notes about replay/comparison work in `GdP23`
+It includes the fuller API tour, examples for the Assert and Check DSLs, and notes about the
+replay/comparison work in `GdP23`.
 
 ## Useful Local Outputs
 
