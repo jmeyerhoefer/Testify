@@ -1,23 +1,19 @@
 # Bachelor Thesis Workspace
 
-This repository grew over the course of the bachelor thesis, so it is a mix of the actual `Testify`
-implementation, older experiments, evaluation code, and thesis material. The center of gravity is
-the `Testify` project, but the surrounding folders are still useful for understanding where the final
-design came from and how it was evaluated.
+This repo is the trimmed-down working set for the thesis. At this point it keeps the parts that still
+matter day to day: the `Testify` codebase, the LaTeX sources, and the small amount of root-level project
+infrastructure around them.
 
-## Main Projects
+## What Is Kept Here
 
 - [`Testify`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify)
-  The main project. This is where the `Testify` library lives, together with its API tests, the
-  `GdP23` replay/comparison pipeline, and the current DSL notes.
-- [`error-pattern`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/error-pattern)
-  Earlier build/test-analysis pipeline that served as a reference point during the thesis work.
-- [`assertify`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/assertify)
-  Older experiments around assertion APIs and reporting.
+  The implementation work. This includes the `Testify` library, API tests, the `GdP23` comparison
+  pipeline, and the DSL notes used for the thesis.
 - [`latex`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/latex)
   Thesis sources and supporting LaTeX material.
-- [`evaluation`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/evaluation)
-  Evaluation scripts, notes, and intermediate analysis artifacts.
+- [`README.md`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/README.md), [`LICENSE`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/LICENSE), and
+  [`.gitlab-ci.yml`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/.gitlab-ci.yml)
+  The small amount of root-level documentation and pipeline configuration that still belongs with the repo.
 
 ## Current Status
 
@@ -53,7 +49,7 @@ It includes:
 
 ## Useful Local Outputs
 
-For the thesis work, these are the files I would open first:
+For the thesis work, these are the files I would open first locally:
 
 - [`selected-comparisons.csv`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify/Testify/GdP23/DockerResults/selected-comparisons.csv)
 - [`selected-failures-only.csv`](/D:/Bachelorarbeit/24-ba-jakob-meyerhoefer/Testify/Testify/GdP23/DockerResults/selected-failures-only.csv)
