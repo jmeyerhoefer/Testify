@@ -38,7 +38,7 @@ module Arbitraries =
     let fromConfig<'T> (config: FsCheck.Config) : FsCheck.Arbitrary<'T> =
         config.ArbMap.ArbFor<'T> ()
 
-    /// <summary>Looks up the arbitrary for a type from <c>CheckConfig.defaultConfig</c>.</summary>
+    /// <summary>Looks up the arbitrary for a type from the neutral <c>CheckConfig.defaultConfig</c>.</summary>
     let from<'T> : FsCheck.Arbitrary<'T> =
         fromConfig<'T> CheckConfig.defaultConfig
 

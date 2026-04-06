@@ -8,8 +8,52 @@ open Testify
 open Testify.AssertOperators
 open Testify.CheckOperators
 
+exception SampleCustomException
+
+type SampleRecord =
+    {
+        Count: int
+        Name: string
+    }
+
+type ConfigOnlyValue private (value: int) =
+    member _.Value = value
+
+    static member Create(value: int) =
+        ConfigOnlyValue(value)
+
+    override this.Equals(other: obj) =
+        match other with
+        | :? ConfigOnlyValue as value' -> this.Value = value'.Value
+        | _ -> false
+
+    override this.GetHashCode() =
+        hash this.Value
+
+type ConfigOnlyValueModifier =
+    static member ConfigOnlyValue() : FsCheck.Arbitrary<ConfigOnlyValue> =
+        FsCheck.FSharp.ArbMap.defaults
+        |> FsCheck.FSharp.ArbMap.arbitrary<int>
+        |> FsCheck.FSharp.Arb.convert ConfigOnlyValue.Create (fun value -> value.Value)
+
 [<TestClass>]
 type ApiConventionTests() =
+    member private _.WithConfiguration(config: TestifyConfig, action: unit -> unit) : unit =
+        let original = Testify.currentConfiguration()
+
+        try
+            Testify.configure config
+            action ()
+        finally
+            Testify.configure original
+
+    member private this.WithHintRules(rules: TestifyHintRule list, action: unit -> unit) : unit =
+        let configured =
+            Testify.currentConfiguration()
+            |> TestifyConfig.withHints rules
+
+        this.WithConfiguration(configured, action)
+
     [<TestMethod>]
     member _.``Assert check is pipe-friendly``() : unit =
         let result =
@@ -60,6 +104,130 @@ type ApiConventionTests() =
     member _.``Assert direct operator applies composed OR expectation``() : unit =
         <@ 5 @>
         |>? (AssertExpectation.equalTo 4 <|> AssertExpectation.equalTo 5)
+
+    [<TestMethod>]
+    member _.``Exception formatter suppresses redundant default message``() : unit =
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>(
+            "SampleCustomException",
+            Render.formatException SampleCustomException
+        )
+
+    [<TestMethod>]
+    member _.``Exception formatter keeps meaningful message``() : unit =
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>(
+            "Exception: TODO",
+            Render.formatException (Exception("TODO"))
+        )
+
+    [<TestMethod>]
+    member _.``Structural diff preserves wrapper formatting for Nat``() : unit =
+        let diff =
+            Diff.tryDescribeStructural
+                (Mini.Nat.Make 0)
+                (Mini.Nat.Make 1)
+
+        match diff with
+        | Some text ->
+            StringAssert.Contains(text, "Structural diff:")
+            StringAssert.Contains(text, "Expect = 0N")
+            StringAssert.Contains(text, "Actual = 1N")
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+                text.Contains("n Expect =", StringComparison.Ordinal))
+        | None ->
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                "Expected a structural diff for mismatched Nat values.")
+
+    [<TestMethod>]
+    member _.``Structural diff keeps clean scalar output for booleans``() : unit =
+        let diff =
+            Diff.tryDescribeWith
+                { Diff.defaultOptions with Mode = StructuralOnly }
+                false
+                true
+
+        match diff with
+        | Some text ->
+            StringAssert.Contains(text, "Expect = false")
+            StringAssert.Contains(text, "Actual = true")
+        | None ->
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                "Expected a structural diff for mismatched booleans.")
+
+    [<TestMethod>]
+    member _.``Structural diff preserves nested context for records``() : unit =
+        let diff =
+            Diff.tryDescribeWith
+                { Diff.defaultOptions with Mode = StructuralOnly }
+                { Count = 0; Name = "Alice" }
+                { Count = 1; Name = "Alice" }
+
+        match diff with
+        | Some text ->
+            StringAssert.Contains(text, "Count")
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+                text.Contains("Expect = { Count", StringComparison.Ordinal))
+        | None ->
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                "Expected a structural diff for mismatched records.")
+
+    [<TestMethod>]
+    member _.``Rendered assert mismatch omits structural diff``() : unit =
+        let ex =
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException<System.Exception>(fun () ->
+                <@ Mini.Nat.Make 1 @>
+                |> Assert.should (AssertExpectation.equalTo (Mini.Nat.Make 0))
+            )
+
+        StringAssert.StartsWith(ex.Message, "\n[EqualTo] Failed test:")
+        StringAssert.Contains(ex.Message, "Expected: be equal to 0N")
+        StringAssert.Contains(ex.Message, "Actual: 1N")
+        StringAssert.Contains(ex.Message, "Because: Expected 0N but got 1N.")
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+            ex.Message.Contains("Structural diff:", StringComparison.Ordinal))
+
+    [<TestMethod>]
+    member _.``Rendered property mismatch omits structural diff``() : unit =
+        let ex =
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException<System.Exception>(fun () ->
+                <@ fun (x: int) -> x + 1 @>
+                |> Check.shouldEqual (fun x -> x)
+            )
+
+        StringAssert.StartsWith(ex.Message, "\n[EqualToReference] Failed property case:")
+        StringAssert.Contains(ex.Message, "Because: Tested code returned 1 but the reference returned 0. Expected 0 but got 1.")
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+            ex.Message.Contains("Structural diff:", StringComparison.Ordinal))
+
+    [<TestMethod>]
+    member _.``Rendered string mismatch keeps informative fast diff``() : unit =
+        let ex =
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException<System.Exception>(fun () ->
+                <@ "adc" @>
+                |> Assert.should (AssertExpectation.equalTo "abc")
+            )
+
+        StringAssert.Contains(ex.Message, "First mismatch at index 1")
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+            ex.Message.Contains("Structural diff:", StringComparison.Ordinal))
+
+    [<TestMethod>]
+    member _.``Structural diff text remains available internally``() : unit =
+        let diff =
+            Diff.tryDescribeStructural
+                (Mini.Nat.Make 0)
+                (Mini.Nat.Make 1)
+
+        let extracted =
+            TestifyReport.diffText diff None
+
+        match extracted with
+        | Some text ->
+            StringAssert.Contains(text, "Structural diff:")
+            StringAssert.Contains(text, "Expect = 0N")
+            StringAssert.Contains(text, "Actual = 1N")
+        | None ->
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                "Expected internal diff extraction to keep structural diff text.")
 
     [<TestMethod>]
     member _.``Assert direct operator applies composed AND expectation``() : unit =
@@ -150,6 +318,124 @@ type ApiConventionTests() =
 
         <@ fun x -> x + 1 @>
         ||=>? (Some config, Some arbitrary, Some expectation, fun x -> x + 1)
+
+    [<TestMethod>]
+    member this.``Current configuration reflects installed values and reset restores defaults``() : unit =
+        let configured =
+            TestifyConfig.defaults
+            |> TestifyConfig.withReportOptions {
+                Verbosity = Verbosity.Quiet
+                MaxValueLines = 3
+            }
+            |> TestifyConfig.withHints [
+                MiniHints.placeholderTodo
+            ]
+            |> TestifyConfig.addCheckConfigTransformer CheckConfig.addMiniArbs
+
+        this.WithConfiguration(configured, fun () ->
+            let current = Testify.currentConfiguration()
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(Verbosity.Quiet, current.ReportOptions.Verbosity)
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(3, current.ReportOptions.MaxValueLines)
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(1, current.HintRules.Length)
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(1, current.CheckConfigTransformers.Length)
+        )
+
+        Testify.resetConfiguration()
+
+        let reset = Testify.currentConfiguration()
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(
+            TestifyReportOptions.Default.Verbosity,
+            reset.ReportOptions.Verbosity)
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(
+            TestifyReportOptions.Default.MaxValueLines,
+            reset.ReportOptions.MaxValueLines)
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(0, reset.HintRules.Length)
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<int>(0, reset.CheckConfigTransformers.Length)
+
+    [<TestMethod>]
+    member this.``Installed report options affect default rendering but explicit rendering still overrides them``() : unit =
+        let configured =
+            TestifyConfig.defaults
+            |> TestifyConfig.withReportOptions {
+                Verbosity = Verbosity.Quiet
+                MaxValueLines = 12
+            }
+
+        this.WithConfiguration(configured, fun () ->
+            let result =
+                <@ 1 + 1 @>
+                |> Assert.check (AssertExpectation.equalTo 3)
+
+            let defaultRendered = Assert.toDisplayString result
+            let explicitRendered =
+                Assert.toDisplayStringWith
+                    {
+                        Verbosity = Verbosity.Normal
+                        MaxValueLines = 12
+                    }
+                    result
+
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsFalse(
+                defaultRendered.Contains("Because:", StringComparison.Ordinal))
+            StringAssert.Contains(defaultRendered, "Hint: None")
+            StringAssert.Contains(explicitRendered, "Because: Expected 3 but got 2.")
+        )
+
+    [<TestMethod>]
+    member _.``Neutral default config does not include custom configured arbitraries``() : unit =
+        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException<System.Reflection.TargetInvocationException>(fun () ->
+            CheckConfig.defaultConfig.ArbMap.ArbFor<ConfigOnlyValue>() |> ignore
+        )
+        |> ignore
+
+    [<TestMethod>]
+    member this.``Installed check config transformers affect default Check behavior``() : unit =
+        let configured =
+            TestifyConfig.defaults
+            |> TestifyConfig.addCheckConfigTransformer (fun config ->
+                config.WithArbitrary [ typeof<ConfigOnlyValueModifier> ])
+
+        this.WithConfiguration(configured, fun () ->
+            let result =
+                <@ fun (value: ConfigOnlyValue) -> value @>
+                |> Check.checkEqual id
+
+            match result with
+            | CheckResult.Passed -> ()
+            | other ->
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                    $"Expected configured default check to pass but got {other}")
+        )
+
+    [<TestMethod>]
+    member this.``Explicit Check config overrides installed transformers``() : unit =
+        let configured =
+            TestifyConfig.defaults
+            |> TestifyConfig.addCheckConfigTransformer (fun config ->
+                config.WithArbitrary [ typeof<ConfigOnlyValueModifier> ])
+
+        this.WithConfiguration(configured, fun () ->
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.ThrowsException<System.Reflection.TargetInvocationException>(fun () ->
+                <@ fun (value: ConfigOnlyValue) -> value @>
+                |> Check.checkWith CheckConfig.defaultConfig CheckExpectation.equalToReference id
+                |> ignore
+            )
+            |> ignore
+        )
+
+    [<TestMethod>]
+    member this.``Mini preset enables Mini checks without changing neutral defaults``() : unit =
+        this.WithConfiguration(TestifyPresets.Mini.config, fun () ->
+            let result =
+                <@ fun (n: Mini.Nat) -> n @>
+                |> Check.checkEqual id
+
+            match result with
+            | CheckResult.Passed -> ()
+            | other ->
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(
+                    $"Expected Mini preset check to pass but got {other}")
+        )
 
     [<TestMethod>]
     member _.``Check shouldBeTrue passes for always-true bool properties``() : unit =
@@ -430,97 +716,192 @@ type ApiConventionTests() =
                 Directory.Delete(temporaryRoot, true)
 
     [<TestMethod>]
-    member _.``Hint is rendered in every verbosity mode``() : unit =
-        let report =
-            {
-                TestifyReport.create
-                    AssertionFailure
-                    (Some "EqualTo")
-                    "[EqualTo] Failed test: demo" with
-                    Expected = Some "be equal to 1"
-                    Actual = Some "1"
-            }
-            |> TestifyReport.withInferredHint
-
-        let verbosities =
-            [ Verbosity.Quiet
-              Verbosity.Normal
-              Verbosity.Detailed
-              Verbosity.Diagnostic ]
-
-        for verbosity in verbosities do
-            let rendered =
-                TestifyReport.renderWith
-                    {
-                        Verbosity = verbosity
-                        MaxValueLines = 12
-                    }
-                    report
-
-            StringAssert.Contains(rendered, "Hint: None")
-
-    [<TestMethod>]
-    member _.``Hint infers missing Nat suffix from code context``() : unit =
-        let location : Diagnostics.SourceLocation =
-            {
-                FilePath = "Zahlen.fs"
-                Line = 12
-                Column = None
-                Context =
-                    Some
-                        """
->   12: let result : Nat = 6
-    13: result
-"""
-            }
-
-        let report =
-            {
-                TestifyReport.create
-                    AssertionFailure
-                    (Some "EqualTo")
-                    "[EqualTo] Failed test: result" with
-                    Expected = Some "be equal to 6N"
-                    Actual = Some "6N"
-                    SourceLocation = Some location
-            }
-            |> TestifyReport.withInferredHint
-
-        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("Forgot N suffix", report.Hint)
-
-        let rendered =
-            TestifyReport.renderWith
+    member this.``Hint is rendered in every verbosity mode``() : unit =
+        this.WithHintRules([], fun () ->
+            let report =
                 {
-                    Verbosity = Verbosity.Normal
-                    MaxValueLines = 12
+                    TestifyReport.create
+                        AssertionFailure
+                        (Some "EqualTo")
+                        "[EqualTo] Failed test: demo" with
+                        Expected = Some "be equal to 1"
+                        Actual = Some "1"
                 }
-                report
+                |> TestifyReport.withResolvedHint
 
-        StringAssert.Contains(rendered, "Hint: Forgot N suffix")
+            let verbosities =
+                [ Verbosity.Quiet
+                  Verbosity.Normal
+                  Verbosity.Detailed
+                  Verbosity.Diagnostic ]
+
+            for verbosity in verbosities do
+                let rendered =
+                    TestifyReport.renderWith
+                        {
+                            Verbosity = verbosity
+                            MaxValueLines = 12
+                        }
+                        report
+
+                StringAssert.Contains(rendered, "Hint: None"))
 
     [<TestMethod>]
-    member _.``Hint does not infer missing Nat suffix from Nat-flavored values alone``() : unit =
-        let report =
-            {
-                TestifyReport.create
-                    AssertionFailure
-                    (Some "EqualTo")
-                    "[EqualTo] Failed test: Peano.mult3 1N" with
-                    Expected = Some "be equal to 3N"
-                    Actual = Some "0N"
-                    Because = Some "Expected 3N but got 0N."
-            }
-            |> TestifyReport.withInferredHint
+    member this.``Default hint inference no longer applies built-in heuristics``() : unit =
+        this.WithHintRules([], fun () ->
+            let report =
+                {
+                    TestifyReport.create
+                        AssertionFailure
+                        (Some "EqualTo")
+                        "[EqualTo] Failed test: sample" with
+                        Expected = Some "expected"
+                        Actual = Some "Exception: TODO"
+                        Because = Some "Expression raised an exception before producing a value: Exception: TODO"
+                }
+                |> TestifyReport.withResolvedHint
 
-        Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("None", report.Hint)
+            Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("None", report.Hint))
+
+    [<TestMethod>]
+    member this.``Custom hint rule can infer from report fields``() : unit =
+        this.WithHintRules(
+            [
+                TestifyHintRule.onFieldRegexPattern
+                    "todo"
+                    HintTextField.Actual
+                    "TODO"
+                    (fun _ -> "Implementation placeholder detected")
+            ],
+            fun () ->
+                let report =
+                    {
+                        TestifyReport.create
+                            AssertionFailure
+                            (Some "EqualTo")
+                            "[EqualTo] Failed test: sample" with
+                            Expected = Some "expected"
+                            Actual = Some "Exception: TODO"
+                            Because = Some "Expression raised an exception before producing a value: Exception: TODO"
+                    }
+                    |> TestifyReport.withResolvedHint
+
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>(
+                    "Implementation placeholder detected",
+                    report.Hint)
+
+                let rendered =
+                    TestifyReport.renderWith
+                        {
+                            Verbosity = Verbosity.Normal
+                            MaxValueLines = 12
+                        }
+                        report
+
+                StringAssert.Contains(rendered, "Hint: Implementation placeholder detected"))
+
+    [<TestMethod>]
+    member this.``Custom hint rules respect registration order``() : unit =
+        this.WithHintRules(
+            [
+                TestifyHintRule.onFieldRegexPattern
+                    "first"
+                    HintTextField.Actual
+                    "TODO"
+                    (fun _ -> "First rule")
+                TestifyHintRule.onFieldRegexPattern
+                    "second"
+                    HintTextField.Actual
+                    "TODO"
+                    (fun _ -> "Second rule")
+            ],
+            fun () ->
+                let report =
+                    {
+                        TestifyReport.create
+                            AssertionFailure
+                            (Some "EqualTo")
+                            "[EqualTo] Failed test: sample" with
+                            Actual = Some "Exception: TODO"
+                    }
+                    |> TestifyReport.withResolvedHint
+
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("First rule", report.Hint))
+
+    [<TestMethod>]
+    member this.``Explicit hint is preserved over configured rules``() : unit =
+        this.WithHintRules(
+            [
+                TestifyHintRule.onFieldRegexPattern
+                    "todo"
+                    HintTextField.Actual
+                    "TODO"
+                    (fun _ -> "Generated rule hint")
+            ],
+            fun () ->
+                let report =
+                    {
+                        TestifyReport.create
+                            AssertionFailure
+                            (Some "EqualTo")
+                            "[EqualTo] Failed test: sample" with
+                            Hint = "Keep this hint"
+                            Actual = Some "Exception: TODO"
+                    }
+                    |> TestifyReport.withResolvedHint
+
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("Keep this hint", report.Hint))
+
+    [<TestMethod>]
+    member this.``Hint line is rendered after Because``() : unit =
+        this.WithHintRules(
+            [
+                TestifyHintRule.create "exception" (fun report ->
+                    match report.Actual with
+                    | Some actual when actual.Contains("Div", StringComparison.Ordinal) ->
+                        Some "Code throws unexpectedly"
+                    | _ ->
+                        None)
+            ],
+            fun () ->
+                let report =
+                    {
+                        TestifyReport.create
+                            PropertyFailure
+                            (Some "EqualToReference")
+                            "[EqualToReference] Failed property case: Zahlen.avg3 0N 0N 0N" with
+                            Expected = Some "0N"
+                            Actual = Some "Div"
+                            Because = Some "Tested code threw Div but the reference returned 0N."
+                    }
+
+                let rendered =
+                    TestifyReport.renderWith
+                        {
+                            Verbosity = Verbosity.Normal
+                            MaxValueLines = 12
+                        }
+                        report
+
+                let expectedIndex = rendered.IndexOf("Expected:", StringComparison.Ordinal)
+                let actualIndex = rendered.IndexOf("Actual:", StringComparison.Ordinal)
+                let becauseIndex = rendered.IndexOf("Because:", StringComparison.Ordinal)
+                let hintIndex = rendered.IndexOf("Hint:", StringComparison.Ordinal)
+
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(expectedIndex >= 0)
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(actualIndex > expectedIndex)
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(becauseIndex > actualIndex)
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsTrue(hintIndex > becauseIndex))
 
     [<TestMethod>]
     member _.``Persisted XML includes Hint element``() : unit =
         let originalRoot = TestifySettings.ResultRootOverride
+        let originalConfig = Testify.currentConfiguration()
         let temporaryRoot = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"))
 
         try
             TestifySettings.ResultRootOverride <- Some temporaryRoot
+            Testify.configure TestifyConfig.defaults
 
             let state =
                 TestExecution.createState
@@ -555,11 +936,12 @@ type ApiConventionTests() =
                 let document = XDocument.Load(persistedResult.FilePath)
                 let hint = document.Root.Element(XName.Get "Hint")
                 Microsoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(hint)
-                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("Replace TODO placeholder", hint.Value)
+                Microsoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual<string>("None", hint.Value)
             | None ->
                 Microsoft.VisualStudio.TestTools.UnitTesting.Assert.Fail("Expected Testify to persist a result file.")
         finally
             TestifySettings.ResultRootOverride <- originalRoot
+            Testify.configure originalConfig
 
             if Directory.Exists temporaryRoot then
                 Directory.Delete(temporaryRoot, true)

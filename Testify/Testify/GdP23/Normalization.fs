@@ -75,6 +75,36 @@ module Normalization =
         let trimmed = sanitizeBuildErrorText value
         Regex.Replace(trimmed, @"^\d+>", String.Empty)
 
+    let private getMethodSlug (methodName: string) : string =
+        let slug =
+            methodName.ToLowerInvariant()
+            |> fun value -> Regex.Replace(value, "[^a-z0-9]+", "-")
+            |> fun value -> value.Trim('-')
+
+        if String.IsNullOrWhiteSpace slug then "unnamed" else slug
+
+    let private writeMessageFile (path: string) (content: string option) : unit =
+        let directory = Path.GetDirectoryName(path)
+
+        if not (String.IsNullOrWhiteSpace directory) then
+            ensureDirectory directory
+
+        File.WriteAllText(path, content |> Option.defaultValue String.Empty, Encoding.UTF8)
+
+    let private writeSnapshotMessageFiles (snapshot: SnapshotInfo) (rows: PairedMethodResult list) : unit =
+        let messagesRoot = Path.Combine(snapshot.ResultDirectory, "messages")
+
+        if Directory.Exists messagesRoot then
+            Directory.Delete(messagesRoot, true)
+
+        rows
+        |> List.iteri (fun index row ->
+            let rowDirectory =
+                Path.Combine(messagesRoot, sprintf "%03d-%s" (index + 1) (getMethodSlug row.MethodName))
+
+            writeMessageFile (Path.Combine(rowDirectory, "original-message.txt")) row.OriginalOutput
+            writeMessageFile (Path.Combine(rowDirectory, "testify-message.txt")) row.TestifyOutput)
+
     let private tryParseBuildErrorLine (line: string) : BuildErrorInfo option =
         let trimmed = line.Trim()
         let withLocation = buildErrorWithLocationPattern.Match trimmed
@@ -395,6 +425,8 @@ module Normalization =
                           buildErrorColumn = row.BuildErrorColumn
                           pairStatus = row.PairStatus
                           sourceFilePresent = row.SourceFilePresent |}) |}
+
+        writeSnapshotMessageFiles snapshot comparison.Rows
 
         comparison
 

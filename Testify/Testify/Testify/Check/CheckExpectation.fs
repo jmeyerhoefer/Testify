@@ -33,7 +33,7 @@ module CheckExpectation =
         : string =
         match Diff.tryDescribeWith diffOptions expected actual with
         | Some diff when diff.StartsWith("Structural diff:") ->
-            $"Expected {Render.formatValue expected} but got {Render.formatValue actual}.\n{diff}"
+            $"Expected {Render.formatValue expected} but got {Render.formatValue actual}."
         | Some diff ->
             diff
         | None ->

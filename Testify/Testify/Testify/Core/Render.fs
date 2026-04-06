@@ -152,7 +152,14 @@ module Render =
         | None -> "None"
 
     let formatException (ex: exn) : string =
-        $"{ex.GetType().Name}: {ex.Message}"
+        let typeName = ex.GetType().Name
+        let message = ex.Message
+
+        if System.String.IsNullOrWhiteSpace message
+           || System.String.Equals(typeName, message, System.StringComparison.Ordinal) then
+            typeName
+        else
+            $"{typeName}: {message}"
 
     let becauseExpressionThrew (ex: exn) : string =
         $"Expression raised an exception before producing a value: {formatException ex}"

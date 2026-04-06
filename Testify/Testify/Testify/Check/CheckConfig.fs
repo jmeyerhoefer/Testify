@@ -51,25 +51,23 @@ module CheckConfig =
             typeof<SmallNatModifier>
         ]
 
-    /// <summary><b>Includes Mini.fs</b><br/><br/>
-    /// The default FsCheck configuration used by Testify property checks.</summary>
+    /// <summary>The neutral FsCheck configuration used by Testify property checks before any installed transformers are applied.</summary>
     let defaultConfig : FsCheck.Config =
         FsCheck.Config.Quick.WithName "Testify Check Config"
-        |> addMiniArbs
 
     /// <summary>Looks up the arbitrary for a type from the supplied configuration.</summary>
     let fromConfig<'T> (config: FsCheck.Config) : FsCheck.Arbitrary<'T> =
         config.ArbMap.ArbFor<'T> ()
 
-    /// <summary>Looks up the arbitrary for a type from <c>defaultConfig</c>.</summary>
+    /// <summary>Looks up the arbitrary for a type from the neutral <c>defaultConfig</c>.</summary>
     let from<'T> : FsCheck.Arbitrary<'T> =
         fromConfig<'T> defaultConfig
 
-    /// <summary>A slower but more exhaustive configuration with a larger test count.</summary>
+    /// <summary>A slower but more exhaustive neutral configuration with a larger test count.</summary>
     let thorough : FsCheck.Config =
         defaultConfig.WithMaxTest 500
 
-    /// <summary>Creates a default configuration that replays a previously recorded FsCheck run.</summary>
+    /// <summary>Creates a neutral configuration that replays a previously recorded FsCheck run.</summary>
     let withReplay (replay: FsCheck.Replay) : FsCheck.Config =
         defaultConfig.WithReplay (Some replay)
 
@@ -100,10 +98,10 @@ module CheckConfig =
         tryParseReplay text
         |> Option.map withReplay
 
-    /// <summary>Creates a default configuration with the supplied maximum number of tests.</summary>
+    /// <summary>Creates a neutral configuration with the supplied maximum number of tests.</summary>
     let withMaxTest (count: int) : FsCheck.Config =
         defaultConfig.WithMaxTest count
 
-    /// <summary>Creates a default configuration with the supplied maximum generated size.</summary>
+    /// <summary>Creates a neutral configuration with the supplied maximum generated size.</summary>
     let withEndSize (size: int) : FsCheck.Config =
         defaultConfig.WithEndSize size

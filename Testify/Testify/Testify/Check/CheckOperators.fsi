@@ -139,9 +139,9 @@ module CheckOperators =
     /// <remarks>
     /// <para>This operator is a power-user shortcut rather than the primary recommended API.</para>
     /// <para>
-    /// When the configuration is omitted, Testify uses <c>CheckConfig.defaultConfig</c>. When the
-    /// arbitrary is omitted, Testify resolves the default arbitrary for the input type. When the
-    /// expectation is omitted, Testify uses <c>CheckExpectation.equalToReference</c>.
+    /// When the configuration is omitted, Testify uses the installed default check configuration.
+    /// When the arbitrary is omitted, Testify resolves the default arbitrary for the input type.
+    /// When the expectation is omitted, Testify uses <c>CheckExpectation.equalToReference</c>.
     /// </para>
     /// </remarks>
     /// <example id="check-operators-3">

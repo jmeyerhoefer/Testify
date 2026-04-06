@@ -8,7 +8,7 @@ module Generators =
     let fromConfig<'T> (config: FsCheck.Config) : FsCheck.Gen<'T> =
         config.ArbMap.ArbFor<'T>().Generator
 
-    /// <summary>Looks up the generator for a type from <c>CheckConfig.defaultConfig</c>.</summary>
+    /// <summary>Looks up the generator for a type from the neutral <c>CheckConfig.defaultConfig</c>.</summary>
     let from<'T> : FsCheck.Gen<'T> =
         fromConfig<'T> CheckConfig.defaultConfig
 

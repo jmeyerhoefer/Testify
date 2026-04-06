@@ -506,8 +506,8 @@ module Check =
             Results: ResizeArray<CheckResult<'Args, 'Actual, 'Expected>>
         }
 
-    let private configured (config: FsCheck.Config) : FsCheck.Config =
-        CheckConfig.addMiniArbs config
+    let private configuredDefaultConfig () : FsCheck.Config =
+        TestifySettings.ApplyCheckConfigTransformers CheckConfig.defaultConfig
 
     let private check2WithResolvedConfig
         (config: FsCheck.Config)
@@ -583,7 +583,7 @@ module Check =
         (reference: 'Args -> 'Expected)
         (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         CheckCore.run
             config
@@ -599,8 +599,6 @@ module Check =
         (reference: 'Args -> 'Expected)
         (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
-        let config = configured config
-
         CheckCore.run
             config
             (config.ArbMap.ArbFor<'Args> ())
@@ -614,8 +612,10 @@ module Check =
         (reference: 'Args -> 'Expected)
         (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
+        let config = configuredDefaultConfig ()
+
         CheckCore.run
-            CheckConfig.defaultConfig
+            config
             arbitrary
             actual
             reference
@@ -629,7 +629,7 @@ module Check =
         (actual: Expr<'Args -> 'Actual>)
         : CheckResult<'Args, 'Actual, 'Expected> =
         CheckCore.run
-            (configured config)
+            config
             arbitrary
             actual
             reference
@@ -641,7 +641,7 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         checkGroupedUsingWithResolvedConfig
             config
@@ -658,8 +658,6 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
-        let config = configured config
-
         checkGroupedUsingWithResolvedConfig
             config
             (config.ArbMap.ArbFor<'Group1> ())
@@ -675,8 +673,10 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
+        let config = configuredDefaultConfig ()
+
         checkGroupedUsingWithResolvedConfig
-            CheckConfig.defaultConfig
+            config
             arbitrary1
             arbitrary2
             actual
@@ -692,7 +692,7 @@ module Check =
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedUsingWithResolvedConfig
-            (configured config)
+            config
             arbitrary1
             arbitrary2
             actual
@@ -705,7 +705,7 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         checkGroupedDependingOnWithResolvedConfig
             config
@@ -722,8 +722,6 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
-        let config = configured config
-
         checkGroupedDependingOnWithResolvedConfig
             config
             (config.ArbMap.ArbFor<'Group1> ())
@@ -739,8 +737,10 @@ module Check =
         (reference: 'Group1 -> 'Group2 -> 'Expected)
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
+        let config = configuredDefaultConfig ()
+
         checkGroupedDependingOnWithResolvedConfig
-            CheckConfig.defaultConfig
+            config
             arbitrary1
             provideArbitrary2
             actual
@@ -756,7 +756,7 @@ module Check =
         (actual: Expr<'Group1 -> 'Group2 -> 'Actual>)
         : CheckResult<'Group1 * 'Group2, 'Actual, 'Expected> =
         checkGroupedDependingOnWithResolvedConfig
-            (configured config)
+            config
             arbitrary1
             provideArbitrary2
             actual
@@ -768,7 +768,7 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         check2WithResolvedConfig
             config
@@ -784,8 +784,6 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
-        let config = configured config
-
         check2WithResolvedConfig
             config
             (config.ArbMap.ArbFor<'Arg1> ())
@@ -800,7 +798,7 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         check2WithResolvedConfig
             config
@@ -817,8 +815,6 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2, 'Actual, 'Expected> =
-        let config = configured config
-
         check2WithResolvedConfig
             config
             arbitrary1
@@ -832,7 +828,7 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         check3WithResolvedConfig
             config
@@ -849,8 +845,6 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
-        let config = configured config
-
         check3WithResolvedConfig
             config
             (config.ArbMap.ArbFor<'Arg1> ())
@@ -866,7 +860,7 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
-        let config = CheckConfig.defaultConfig
+        let config = configuredDefaultConfig ()
 
         check3WithResolvedConfig
             config
@@ -884,8 +878,6 @@ module Check =
         (reference: 'Arg1 -> 'Arg2 -> 'Arg3 -> 'Expected)
         (actual: Expr<'Arg1 -> 'Arg2 -> 'Arg3 -> 'Actual>)
         : CheckResult<'Arg1 * 'Arg2 * 'Arg3, 'Actual, 'Expected> =
-        let config = configured config
-
         check3WithResolvedConfig
             config
             arbitrary1
@@ -1290,14 +1282,14 @@ module Check =
             |> toFailureReport
             |> Option.iter TestExecution.recordFailureReport
 
-            failwith (toDisplayString result)
+            failwith ("\n" + toDisplayString result)
         | Exhausted _
         | Errored _ ->
             result
             |> toFailureReport
             |> Option.iter TestExecution.recordFailureReport
 
-            failwith (toDisplayString result)
+            failwith ("\n" + toDisplayString result)
 
     [<RequireQualifiedAccess>]
     module Collect =
@@ -1379,7 +1371,7 @@ module Check =
                     |> String.concat "\n\n---\n\n"
 
                 failwith
-                    $"Collected {failures.Length} property failure(s).\n\n{message}"
+                    $"\nCollected {failures.Length} property failure(s).\n\n{message}"
 
     /// <summary>Raises an exception when a property-style check fails.</summary>
     let should

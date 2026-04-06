@@ -167,7 +167,7 @@ module Assert =
             |> toFailureReport
             |> Option.iter TestExecution.recordFailureReport
 
-            failwith (toDisplayString result)
+            failwith ("\n" + toDisplayString result)
 
     [<RequireQualifiedAccess>]
     module Collect =
@@ -222,7 +222,7 @@ module Assert =
                     |> String.concat "\n\n---\n\n"
 
                 failwith
-                    $"Collected {failures.Length} assertion failure(s).\n\n{message}"
+                    $"\nCollected {failures.Length} assertion failure(s).\n\n{message}"
 
     /// <summary>Runs an assertion and raises an exception when it fails.</summary>
     let should

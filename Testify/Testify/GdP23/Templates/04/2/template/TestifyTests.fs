@@ -9,8 +9,10 @@ module TestifyTests =
 
     [< TestifyClass  >]
     type TestifyTests () =
+        do TestifyPresets.Mini.install ()
+
         let config =
-            CheckConfig.defaultConfig
+            TestifyPresets.Mini.checkConfig
                 .WithEndSize(10000)
         let configFor methodName = ReplayCatalog.applyReplay methodName config
         let isPositive (year: Nat) : bool = 0N < year

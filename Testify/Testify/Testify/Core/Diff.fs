@@ -2,6 +2,7 @@ namespace Testify
 
 
 open System.Collections
+open System.Text.RegularExpressions
 open DEdge.Diffract
 open Microsoft.FSharp.Reflection
 
@@ -27,6 +28,10 @@ type DiffOptions =
 [<RequireQualifiedAccess>]
 module Diff =
     let private structuralPrefix = "Structural diff:"
+    let private wrapperExpectLinePattern =
+        Regex(@"^[A-Za-z_][A-Za-z0-9_]*\s+Expect\s*=\s*.+$", RegexOptions.Compiled)
+    let private actualLinePattern =
+        Regex(@"^\s*Actual\s*=\s*.+$", RegexOptions.Compiled)
 
     /// <summary>The default diff settings used by Testify expectations.</summary>
     let defaultOptions : DiffOptions =
@@ -40,8 +45,35 @@ module Diff =
     let private defaultStructuralPrintParams =
         Differ.AssertPrintParams
 
-    let private sanitizeStructuralDiff
+    let private tryRewriteWrapperScalarDiff<'T>
+        (expected: 'T)
+        (actual: 'T)
+        (lines: string array)
+        : string array option =
+        let valueType = typeof<'T>
+
+        if
+            not (FSharpType.IsUnion(valueType, true))
+            || lines.Length <> 2
+            || not (wrapperExpectLinePattern.IsMatch(lines[0]))
+            || not (actualLinePattern.IsMatch(lines[1]))
+        then
+            None
+        else
+            let unionCases = FSharpType.GetUnionCases(valueType, true)
+            if unionCases.Length <> 1 || unionCases[0].GetFields().Length <> 1 then
+                None
+            else
+                Some
+                    [|
+                        $"Expect = {Render.formatValue expected}"
+                        $"Actual = {Render.formatValue actual}"
+                    |]
+
+    let private sanitizeStructuralDiff<'T>
         (options: DiffOptions)
+        (expected: 'T)
+        (actual: 'T)
         (text: string)
         : string option =
         let trimmed =
@@ -54,13 +86,17 @@ module Diff =
                 trimmed.Split([| '\n' |], System.StringSplitOptions.None)
                 |> Array.map (fun line -> line.TrimEnd '\r')
 
+            let normalizedLines =
+                tryRewriteWrapperScalarDiff expected actual lines
+                |> Option.defaultValue lines
+
             let truncatedLines =
-                if lines.Length > options.MaxLines then
+                if normalizedLines.Length > options.MaxLines then
                     Array.append
-                        lines[0 .. options.MaxLines - 1]
+                        normalizedLines[0 .. options.MaxLines - 1]
                         [| "..." |]
                 else
-                    lines
+                    normalizedLines
 
             let combined = String.concat "\n" truncatedLines
 
@@ -88,7 +124,7 @@ module Diff =
                 Unchecked.defaultof<IDiffer<'T>>,
                 printParams
             )
-            |> sanitizeStructuralDiff options
+            |> sanitizeStructuralDiff options expected actual
         with _ ->
             None
 

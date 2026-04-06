@@ -8,8 +8,10 @@ module TestifyTests =
 
     [< TestifyClass >]
     type TestifyTests () =
+        do TestifyPresets.Mini.install ()
+
         let config =
-            CheckConfig.defaultConfig
+            TestifyPresets.Mini.checkConfig
                 .WithEndSize(100)
         let configFor methodName = ReplayCatalog.applyReplay methodName config
 

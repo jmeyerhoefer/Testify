@@ -22,7 +22,11 @@
 		<Compile Include="Testify\Core\Diff.fs" />
 		<Compile Include="Testify\Core\Expressions.fs" />
 		<Compile Include="Testify\Core\Diagnostics.fs" />
+		<Compile Include="Testify\Runtime\ReportTypes.fs" />
+		<Compile Include="Testify\Runtime\TestifyOptions.fs" />
+		<Compile Include="Testify\Runtime\TestifyConfiguration.fs" />
 		<Compile Include="Testify\Runtime\TestifySettings.fs" />
+		<Compile Include="Testify\Runtime\TestifyApi.fs" />
 		<Compile Include="Testify\Runtime\Reporting.fs" />
 		<Compile Include="Testify\Runtime\TestExecution.fs" />
 		<Compile Include="Testify\Runtime\TestResults.fs" />
@@ -37,6 +41,7 @@
 		<Compile Include="Testify\Check\CheckExpectation.fsi" />
 		<Compile Include="Testify\Check\CheckExpectation.fs" />
 		<Compile Include="Testify\Check\CheckConfig.fs" />
+		<Compile Include="Testify\Runtime\TestifyPresets.fs" />
 		<Compile Include="Testify\Check\Check.fsi" />
 		<Compile Include="Testify\Check\Check.fs" />
 		<Compile Include="Testify\Check\CheckOperators.fsi" />

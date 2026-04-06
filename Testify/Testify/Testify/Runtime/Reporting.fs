@@ -2,90 +2,10 @@ namespace Testify
 
 
 open System
-open System.Text.RegularExpressions
-
-
-type TestifyFailureKind =
-    | AssertionFailure
-    | PropertyFailure
-    | PropertyExhausted
-    | PropertyError
-
-
-type TestifyFailureReport =
-    {
-        Kind: TestifyFailureKind
-        Label: string option
-        Summary: string
-        Hint: string
-        Test: string option
-        Expectation: string option
-        Expected: string option
-        Actual: string option
-        ExpectedValue: string option
-        ActualValue: string option
-        Because: string option
-        DetailsText: string option
-        DiffText: string option
-        OriginalTest: string option
-        OriginalExpected: string option
-        OriginalActual: string option
-        ShrunkTest: string option
-        ShrunkExpected: string option
-        ShrunkActual: string option
-        NumberOfTests: int option
-        NumberOfShrinks: int option
-        Replay: string option
-        SourceLocation: Diagnostics.SourceLocation option
-    }
-
-
-type ReportField =
-    | Summary
-    | Hint
-    | Expectation
-    | Expected
-    | Actual
-    | ExpectedValue
-    | ActualValue
-    | Because
-    | Details
-    | Diff
-    | OriginalTest
-    | OriginalExpected
-    | OriginalActual
-    | ShrunkTest
-    | ShrunkExpected
-    | ShrunkActual
-    | NumberOfTests
-    | NumberOfShrinks
-    | Replay
-    | SourceLocation
 
 
 [<RequireQualifiedAccess>]
 module TestifyReport =
-    let private todoPattern =
-        Regex(@"\bTODO\b", RegexOptions.Compiled ||| RegexOptions.IgnoreCase)
-
-    let private bareIntPattern =
-        Regex(@"(?<![\w])\d+(?![\wN])", RegexOptions.Compiled)
-
-    let private suffixedNatPattern =
-        Regex(@"\b\d+N\b", RegexOptions.Compiled)
-
-    let private natWordPattern =
-        Regex(@"\bNat\b", RegexOptions.Compiled)
-
-    let private numericLiteralNPattern =
-        Regex(@"\bNumericLiteralN\b", RegexOptions.Compiled ||| RegexOptions.IgnoreCase)
-
-    let private contextPrefixPattern =
-        Regex(@"^[> ]\s*\d+:\s*", RegexOptions.Compiled)
-
-    let private weekdayPattern =
-        Regex(@"weekday\s*=\s*([A-Za-z]+)", RegexOptions.Compiled)
-
     let private truncateTextLines
         (maxLines: int)
         (text: string)
@@ -128,155 +48,42 @@ module TestifyReport =
         : bool =
         value.IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0
 
-    let private cleanCodeContext
-        (context: string)
-        : string =
-        context
-        |> Render.splitLines
-        |> List.map (fun line -> contextPrefixPattern.Replace(line, ""))
-        |> String.concat "\n"
-
-    let private reportTexts
-        (report: TestifyFailureReport)
-        : string list =
-        [
-            Some report.Summary
-            report.Test
-            report.Expectation
-            report.Expected
-            report.Actual
-            report.ExpectedValue
-            report.ActualValue
-            report.Because
-            report.DetailsText
-            report.DiffText
-            report.OriginalTest
-            report.OriginalExpected
-            report.OriginalActual
-            report.ShrunkTest
-            report.ShrunkExpected
-            report.ShrunkActual
-            report.SourceLocation
-            |> Option.bind (fun location -> location.Context)
-            |> Option.map cleanCodeContext
-        ]
-        |> List.choose id
-
-    let private natHintFragments
-        (report: TestifyFailureReport)
-        : string list =
-        [
-            report.Test
-            report.Expectation
-            report.Expected
-            report.Actual
-            report.ExpectedValue
-            report.ActualValue
-            report.SourceLocation
-            |> Option.bind (fun location -> location.Context)
-            |> Option.map cleanCodeContext
-        ]
-        |> List.choose id
-
-    let private hasNatSignal
-        (text: string)
-        : bool =
-        numericLiteralNPattern.IsMatch text
-        || natWordPattern.IsMatch text
-        || suffixedNatPattern.IsMatch text
-
-    let private hasNearbyNatLiteralPattern
-        (text: string)
-        : bool =
-        let lines = Render.splitLines text
-
-        let windows =
-            if List.isEmpty lines then
-                [ text ]
+    let private normalizeHintCandidate
+        (hint: string option)
+        : string option =
+        hint
+        |> Option.bind (fun value ->
+            if String.IsNullOrWhiteSpace value
+               || String.Equals(value, "None", StringComparison.OrdinalIgnoreCase) then
+                None
             else
-                lines
-                |> List.mapi (fun index _ ->
-                    let startIndex = max 0 (index - 1)
-                    let endIndex = min (lines.Length - 1) (index + 1)
-
-                    [ startIndex .. endIndex ]
-                    |> List.map (fun lineIndex -> lines[lineIndex])
-                    |> String.concat " ")
-
-        windows
-        |> List.exists (fun fragment ->
-            bareIntPattern.IsMatch fragment
-            && hasNatSignal fragment)
-
-    let private tryInferNatSuffixHint
-        (report: TestifyFailureReport)
-        : string option =
-        let fragments = natHintFragments report
-
-        if fragments |> List.exists hasNearbyNatLiteralPattern then
-            Some "Forgot N suffix"
-        else
-            None
-
-    let private tryInferWeekdayHint
-        (texts: string list)
-        : string option =
-        let weekdays =
-            texts
-            |> List.collect (fun text ->
-                weekdayPattern.Matches(text)
-                |> Seq.cast<Match>
-                |> Seq.choose (fun captured ->
-                    if captured.Success && captured.Groups.Count > 1 then
-                        Some captured.Groups[1].Value
-                    else
-                        None)
-                |> Seq.toList)
-            |> List.distinct
-
-        if weekdays.Length >= 2 then
-            Some "Check weekday logic"
-        else
-            None
+                Some value)
 
     let inferHint
         (report: TestifyFailureReport)
         : string =
-        let texts = reportTexts report
+        let inferred =
+            TestifySettings.HintRules
+            |> List.tryPick (fun rule ->
+                rule.TryInfer report
+                |> normalizeHintCandidate)
 
-        if texts |> List.exists todoPattern.IsMatch then
-            "Replace TODO placeholder"
-        elif texts |> List.exists (containsOrdinalIgnoreCase "Expected true but got false") then
-            "Check boolean condition"
-        elif texts |> List.exists (containsOrdinalIgnoreCase "Expected false but got true") then
-            "Check boolean condition"
-        else
-            match tryInferWeekdayHint texts with
-            | Some hint -> hint
-            | None when texts |> List.exists (containsOrdinalIgnoreCase "Expression raised an exception before producing a value") ->
-                "Code throws unexpectedly"
-            | None when texts |> List.exists (containsOrdinalIgnoreCase "Tested code threw") ->
-                "Code throws unexpectedly"
-            | None ->
-                match tryInferNatSuffixHint report with
-                | Some hint -> hint
-                | None when texts |> List.exists (containsOrdinalIgnoreCase "reference returned") ->
-                    "Logic differs from reference"
-                | None ->
-                    "None"
+        inferred
+        |> Option.defaultValue "None"
+
+    let withResolvedHint
+        (report: TestifyFailureReport)
+        : TestifyFailureReport =
+        let normalizedHint =
+            normalizeHintCandidate (Some report.Hint)
+            |> Option.defaultWith (fun () -> inferHint report)
+
+        { report with Hint = normalizedHint }
 
     let withInferredHint
         (report: TestifyFailureReport)
         : TestifyFailureReport =
-        let normalizedHint =
-            if String.IsNullOrWhiteSpace report.Hint then
-                inferHint report
-            elif String.Equals(report.Hint, "None", StringComparison.OrdinalIgnoreCase) then
-                inferHint report
-            else
-                report.Hint
-
-        { report with Hint = normalizedHint }
+        withResolvedHint report
 
     // This is the single edit point for what each verbosity contains.
     let rec fieldsForVerbosity
@@ -430,15 +237,9 @@ module TestifyReport =
         (options: TestifyReportOptions)
         (report: TestifyFailureReport)
         : string =
-        let report = withInferredHint report
+        let report = withResolvedHint report
         let resolvedOptions = TestifyReportOptions.normalize options
         let fields = resolveFields resolvedOptions
-
-        let distinctDiff =
-            match report.DiffText with
-            | Some diff when report.Because = Some diff -> None
-            | Some diff when report.DetailsText = Some diff -> None
-            | value -> value
 
         let valueFirstLines =
             match report.ExpectedValue, report.ActualValue with
@@ -466,7 +267,6 @@ module TestifyReport =
         let detailLines =
             []
             |> appendFieldValue fields Details "Details" report.DetailsText resolvedOptions.MaxValueLines
-            |> appendFieldValue fields Diff "Diff" distinctDiff resolvedOptions.MaxValueLines
 
         let originalLines =
             []
@@ -496,10 +296,10 @@ module TestifyReport =
         [
             report.Summary
         ]
-        |> appendMaybeLines hintLines
         |> appendMaybeLines valueFirstLines
         |> appendMaybeLines detailLines
         |> appendMaybeLines becauseLines
+        |> appendMaybeLines hintLines
         |> appendMaybeLines originalLines
         |> appendMaybeLines shrunkLines
         |> appendMaybeLines locationLines

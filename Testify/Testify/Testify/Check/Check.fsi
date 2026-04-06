@@ -74,7 +74,7 @@ module Check =
     /// the check cannot complete normally.
     /// </returns>
     /// <remarks>
-    /// This overload uses <c>CheckConfig.defaultConfig</c> and the default arbitrary resolved for
+    /// This overload uses the installed Testify defaults and the default arbitrary resolved for
     /// <c>'Args</c>.
     /// </remarks>
     ///
