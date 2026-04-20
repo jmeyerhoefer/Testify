@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1360" height="520" viewBox="0 0 1360 520" role="img" aria-labelledby="title desc">
+  <title id="title">Property check pipeline visual spec</title>
+  <desc id="desc">Prompt-ready SVG spec: show generated arguments flowing through tested quotation and reference implementation into a CheckExpectation, then into shrinking, replay, result, and report rendering.</desc>
+  <rect width="1360" height="520" fill="#f7fbfd"/>
+  <text x="50" y="70" font-family="Georgia, serif" font-size="34" fill="#173042">Property check pipeline</text>
+  <text x="50" y="108" font-family="Arial, sans-serif" font-size="18" fill="#4a6272">Prompt/spec asset: refine later into a polished explainer if desired.</text>
+
+  <g font-family="Arial, sans-serif" font-size="20" fill="#173042">
+    <rect x="60" y="190" width="170" height="100" rx="20" fill="#fff8e8" stroke="#b78900" stroke-width="3"/>
+    <text x="92" y="248">Generated</text>
+    <text x="99" y="276">arguments</text>
+
+    <rect x="290" y="190" width="190" height="100" rx="20" fill="#eef7ff" stroke="#1f6fb2" stroke-width="3"/>
+    <text x="334" y="248">Quoted</text>
+    <text x="325" y="276">tested code</text>
+
+    <rect x="540" y="190" width="190" height="100" rx="20" fill="#eef7ff" stroke="#1f6fb2" stroke-width="3"/>
+    <text x="576" y="248">Reference</text>
+    <text x="592" y="276">code</text>
+
+    <rect x="790" y="190" width="210" height="100" rx="20" fill="#f4ecff" stroke="#7752aa" stroke-width="3"/>
+    <text x="819" y="248">CheckExpectation</text>
+    <text x="850" y="276">relation</text>
+
+    <rect x="1060" y="150" width="220" height="80" rx="20" fill="#fff2ef" stroke="#c55146" stroke-width="3"/>
+    <text x="1091" y="198">Shrink / replay</text>
+
+    <rect x="1060" y="260" width="220" height="80" rx="20" fill="#eefaf0" stroke="#33864b" stroke-width="3"/>
+    <text x="1120" y="308">CheckResult</text>
+
+    <rect x="1060" y="370" width="220" height="80" rx="20" fill="#fff8e8" stroke="#b78900" stroke-width="3"/>
+    <text x="1097" y="418">Rendered report</text>
+  </g>
+
+  <g stroke="#5c7380" stroke-width="5" fill="none" marker-end="url(#arrow)">
+    <path d="M230 240 L290 240"/>
+    <path d="M230 270 L540 270"/>
+    <path d="M480 240 L540 240"/>
+    <path d="M730 240 L790 240"/>
+    <path d="M1000 240 L1060 190"/>
+    <path d="M1000 240 L1060 300"/>
+    <path d="M1170 340 L1170 370"/>
+  </g>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5c7380"/>
+    </marker>
+  </defs>
+</svg>

@@ -1,28 +1,49 @@
 # Testify
 
-`Testify` is a beginner-friendly F# testing library built around quotations, reusable expectations,
-and property-style checks with richer failure output than a plain assertion stack trace.
+`Testify` is a beginner-friendly F# testing library built around quotations, reusable expectations, and property-style checks with readable failure output.
 
-Current source version: `0.1.0`
+> [!WARNING]
+> Testify and these docs are still under active development. Treat the current public surface as the intended direction, not as a claim that every edge case is already fully verified and battle-tested.
 
-## What Is In Here
+The public API is intentionally split into:
 
-This folder contains three things that matter most:
+- `Assert` for one quoted expression right now
+- `AssertExpectation` for reusable example-based semantics
+- `Check` for generated property checks against a reference implementation
+- `CheckExpectation` for reusable property relations
+- `AssertOperators` and `CheckOperators` for concise fail-fast DSL syntax
 
-- [`Testify/Testify.fsproj`](./Testify/Testify.fsproj)
-  The library itself.
-- [`Testify/Testify.ApiTests/Testify.ApiTests.fsproj`](./Testify/Testify.ApiTests/Testify.ApiTests.fsproj)
-  API and output-shape tests for the library.
-- [`Testify/docs`](./Testify/docs)
-  Design notes and compact DSL sketches that explain the embedded testing model.
+## Docs Site
+
+Testify now ships with a local FsDocs site in `site-docs/`.
+
+From the repository root:
+
+```powershell
+.\build-docs.ps1
+```
+
+That will:
+
+- restore the pinned local FsDocs tool
+- build the library and XML documentation
+- verify the main API-doc coverage rules
+- generate the site into `output/docs/`
+
+For local live preview:
+
+```powershell
+.\watch-docs.ps1
+```
 
 ## Build And Test
 
-From the repo root:
+From the repository root:
 
 ```powershell
-dotnet build .\Testify\Testify.fsproj --no-restore
-dotnet test .\Testify\Testify.ApiTests\Testify.ApiTests.fsproj --no-build --no-restore
+dotnet build .\src\Testify\Testify.fsproj --no-restore
+dotnet test .\tests\Testify.ApiTests\Testify.ApiTests.fsproj --no-build --no-restore
+dotnet build .\samples\Testify.Expecto.Sample\Testify.Expecto.Sample.fsproj --no-restore
 ```
 
 ## Minimal Example
@@ -32,6 +53,7 @@ namespace Demo
 
 open Microsoft.VisualStudio.TestTools.UnitTesting
 open Testify
+open Testify.MSTest
 open Testify.AssertOperators
 open Testify.CheckOperators
 
@@ -50,344 +72,11 @@ type DemoTests() =
         <@ List.rev >> List.rev @> |=> id
 ```
 
-## Assert DSL
-
-The Assert DSL is expression-left: you keep the quoted expression on the left and apply one or more
-expectations on the right.
-
-Typical imports:
-
-```fsharp
-open Testify
-open Testify.AssertOperators
-```
-
-### Assert Operators
-
-```fsharp
-<@ 1 + 2 @> |>? AssertExpectation.equalTo 3          // apply one reusable expectation
-<@ 5 @> >>? AssertExpectation.greaterThan 0 |> ignore // chain and keep the quotation
-
-<@ 1 + 2 @> =? 3    // equals
-<@ 1 + 2 @> <>? 4   // not equal
-<@ 1 + 2 @> <? 4    // less than
-<@ 1 + 2 @> <=? 3   // less than or equal
-<@ 1 + 2 @> >? 2    // greater than
-<@ 1 + 2 @> >=? 3   // greater than or equal
-
-<@ failwith "boom" @> ^?   // throws
-<@ 1 + 2 @> ^!?            // does not throw
-
-<@ 1 + 2 = 3 @> ?          // boolean is true
-<@ 1 + 2 = 4 @> !?         // boolean is false
-
-<@ 5 @> ||?
-    [ AssertExpectation.equalTo 4
-      AssertExpectation.equalTo 5 ]                  // at least one expectation passes
-
-<@ "Testify" @> &&?
-    [ AssertExpectation.startsWith "Test"
-      AssertExpectation.endsWith "fy" ]              // all expectations pass
-```
-
-### Combining Expectations
-
-```fsharp
-let positive = AssertExpectation.greaterThan 0
-let small = AssertExpectation.lessThan 10
-
-let positiveAndSmall = positive <&> small
-let edgeCase = AssertExpectation.equalTo 0 <|> positiveAndSmall
-
-<@ 5 @> |>? positiveAndSmall
-<@ 0 @> |>? edgeCase
-```
-
-### Common Assert Expectation Builders
-
-```fsharp
-<@ 1 + 2 @> |>? AssertExpectation.equalTo 3
-<@ 1 + 2 @> |>? AssertExpectation.equalToWithDiff Diff.defaultOptions 3
-<@ 1 + 2 @> |>? AssertExpectation.notEqualTo 4
-
-<@ "Testify" @> |>? AssertExpectation.satisfy "contain y" (fun s -> s.Contains "y")
-<@ 1 / 0 @> |>? AssertExpectation.satisfyObserved "throw" (function Result.Error _ -> true | _ -> false)
-
-<@ 1 + 2 @> |>? AssertExpectation.doesNotThrow
-<@ failwith "boom" @> |>? AssertExpectation.throwsAny
-<@ 1 / 0 @> |>? AssertExpectation.throws<int, System.DivideByZeroException>
-
-<@ 5 @> |>? AssertExpectation.lessThan 10
-<@ 5 @> |>? AssertExpectation.lessThanOrEqualTo 5
-<@ 5 @> |>? AssertExpectation.greaterThan 0
-<@ 5 @> |>? AssertExpectation.greaterThanOrEqualTo 5
-<@ 5 @> |>? AssertExpectation.between 0 10
-
-<@ "Testify" @> |>? AssertExpectation.equalBy String.length 7
-<@ "Testify" @> |>? AssertExpectation.equalWith (fun a b -> a.ToLower() = b.ToLower()) "testify"
-<@ [1; 2; 3] @> |>? AssertExpectation.sequenceEqual [1; 2; 3]
-
-<@ true @> |>? AssertExpectation.isTrue
-<@ false @> |>? AssertExpectation.isFalse
-<@ Some 3 @> |>? AssertExpectation.isSome
-<@ None @> |>? AssertExpectation.isNone<int>
-<@ Ok 3 @> |>? AssertExpectation.isOk<int, string>
-<@ Error "boom" @> |>? AssertExpectation.isError<int, string>
-
-<@ [1; 2; 3] @> |>? AssertExpectation.contains 2
-<@ "Testify" @> |>? AssertExpectation.startsWith "Test"
-<@ "Testify" @> |>? AssertExpectation.endsWith "fy"
-<@ [1; 2; 3] @> |>? AssertExpectation.hasLength 3
-
-<@ 5 @> |>? AssertExpectation.not (AssertExpectation.equalTo 0)
-<@ 5 @> |>? AssertExpectation.orElse (AssertExpectation.equalTo 4) (AssertExpectation.equalTo 5)
-<@ 5 @> |>? AssertExpectation.andAlso (AssertExpectation.greaterThan 0) (AssertExpectation.lessThan 10)
-<@ 5 @> |>? AssertExpectation.any [ AssertExpectation.equalTo 4; AssertExpectation.equalTo 5 ]
-<@ 5 @> |>? AssertExpectation.all [ AssertExpectation.greaterThan 0; AssertExpectation.lessThan 10 ]
-```
-
-## Check DSL
-
-The Check DSL compares a quoted implementation against a reference implementation over generated
-inputs. It can also express bool-returning properties directly.
-
-Typical imports:
-
-```fsharp
-open Testify
-open Testify.CheckOperators
-open Testify.ArbitraryOperators
-```
-
-### Check Operators
-
-```fsharp
-let config = CheckConfig.defaultConfig
-let intArb = Arbitraries.from<int>
-let pairArb = intArb <.> intArb
-
-let expectation =
-    CheckExpectation.equalToReference
-    <&> CheckExpectation.throwsSameExceptionType
-
-let relaxedExpectation =
-    CheckExpectation.equalToReference
-    <|> CheckExpectation.throwsSameExceptionType
-
-<@ List.rev >> List.rev @> |=> id
-<@ List.rev >> List.rev @> |=>> id |> ignore
-
-<@ List.sort @> |=>? (config, List.sort)
-<@ List.sort @> |=>?? (Arbitraries.from<int list>, List.sort)
-<@ List.sort @> |=>??? (CheckExpectation.equalToReference, List.sort)
-<@ List.sort @> |=>>? (CheckExpectation.equalToReference, List.sort) |> ignore
-
-<@ List.rev >> List.rev @>
-||=>? (Some config, Some (Arbitraries.from<int list>), Some CheckExpectation.equalToReference, id)
-```
-
-### Named Check Helpers
-
-For bool-returning properties, the library deliberately uses named functions instead of more symbolic
-operators. That keeps this part of the API a bit easier to read.
-
-```fsharp
-let config = CheckConfig.defaultConfig
-let intArb = Arbitraries.from<int>
-```
-
-#### General `Check.should*`
-
-```fsharp
-<@ List.sort @>
-|> Check.should CheckExpectation.equalToReference List.sort
-
-Check.shouldWith config CheckExpectation.equalToReference List.sort <@ List.sort @>
-Check.shouldUsing intArb CheckExpectation.equalToReference (fun x -> x) <@ fun x -> x @>
-Check.shouldUsingWith config intArb CheckExpectation.equalToReference (fun x -> x) <@ fun x -> x @>
-```
-
-#### Bool-returning Properties
-
-```fsharp
-<@ fun x -> x = x @> |> Check.shouldBeTrue
-Check.shouldBeTrueWith config <@ fun x -> x = x @>
-<@ fun x -> x = x @> |> Check.shouldBeTrueUsing intArb
-Check.shouldBeTrueUsingWith config intArb <@ fun x -> x = x @>
-
-<@ fun x -> x <> x @> |> Check.shouldBeFalse
-Check.shouldBeFalseWith config <@ fun x -> x <> x @>
-<@ fun x -> x <> x @> |> Check.shouldBeFalseUsing intArb
-Check.shouldBeFalseUsingWith config intArb <@ fun x -> x <> x @>
-```
-
-#### Equality-to-reference Shortcuts
-
-```fsharp
-<@ List.sort @> |> Check.shouldEqual List.sort
-<@ List.sort @> |> Check.shouldEqualUsing (Arbitraries.from<int list>) List.sort
-Check.shouldEqualWith config List.sort <@ List.sort @>
-Check.shouldEqualUsingWith config (Arbitraries.from<int list>) List.sort <@ List.sort @>
-```
-
-#### Two- and Three-argument Equality Shortcuts
-
-```fsharp
-<@ fun x y -> x + y @> |> Check.shouldEqual2 (+)
-Check.shouldEqual2With config (+) <@ fun x y -> x + y @>
-<@ fun x y -> x + y @> |> Check.shouldEqual2Using intArb (+)
-Check.shouldEqual2UsingWith config intArb (+) <@ fun x y -> x + y @>
-
-<@ fun x y z -> x + y + z @> |> Check.shouldEqual3 (fun x y z -> x + y + z)
-Check.shouldEqual3With config (fun x y z -> x + y + z) <@ fun x y z -> x + y + z @>
-<@ fun x y z -> x + y + z @> |> Check.shouldEqual3Using intArb (fun x y z -> x + y + z)
-Check.shouldEqual3UsingWith config intArb (fun x y z -> x + y + z) <@ fun x y z -> x + y + z @>
-```
-
-#### Projection, Diff, and Comparer Variants
-
-```fsharp
-<@ List.sort @> |> Check.shouldEqualBy List.length List.sort
-<@ List.sort @> |> Check.shouldEqualUsingBy List.length (Arbitraries.from<int list>) List.sort
-
-<@ List.sort @> |> Check.shouldEqualWithDiff Diff.defaultOptions List.sort
-<@ List.sort @> |> Check.shouldEqualUsingWithDiff Diff.defaultOptions (Arbitraries.from<int list>) List.sort
-
-<@ fun s -> s.Trim() @>
-|> Check.shouldEqualUsingComparer
-    (fun a b -> a.ToLowerInvariant() = b.ToLowerInvariant())
-    (fun s -> s.Trim())
-
-<@ fun s -> s.Trim() @>
-|> Check.shouldEqualUsingComparerUsing
-    (fun a b -> a.ToLowerInvariant() = b.ToLowerInvariant())
-    (Arbitraries.from<string>)
-    (fun s -> s.Trim())
-```
-
-#### Grouped / Dependent-input Checks
-
-```fsharp
-let listArb = Arbitraries.from<int list>
-
-Check.shouldGroupedUsing
-    listArb
-    CheckExpectation.equalToReference
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldGroupedUsingWith
-    config
-    listArb
-    CheckExpectation.equalToReference
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldGroupedUsingBoth
-    intArb
-    listArb
-    CheckExpectation.equalToReference
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldGroupedUsingBothWith
-    config
-    intArb
-    listArb
-    CheckExpectation.equalToReference
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldGroupedDependingOn
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    CheckExpectation.equalToReference
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldGroupedDependingOnWith
-    config
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    CheckExpectation.equalToReference
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldGroupedDependingOnUsing
-    intArb
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    CheckExpectation.equalToReference
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldGroupedDependingOnUsingWith
-    config
-    intArb
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    CheckExpectation.equalToReference
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-```
-
-#### Equality Grouped Variants
-
-```fsharp
-Check.shouldEqualGroupedUsing
-    listArb
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldEqualGroupedUsingWith
-    config
-    listArb
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldEqualGroupedUsingBoth
-    intArb
-    listArb
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldEqualGroupedUsingBothWith
-    config
-    intArb
-    listArb
-    (fun x xs -> List.replicate x xs)
-    <@ fun x xs -> List.replicate x xs @>
-
-Check.shouldEqualGroupedDependingOn
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldEqualGroupedDependingOnWith
-    config
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldEqualGroupedDependingOnUsing
-    intArb
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-
-Check.shouldEqualGroupedDependingOnUsingWith
-    config
-    intArb
-    (fun x -> Arbitraries.filter (fun y -> y >= x) intArb)
-    (fun x y -> x <= y)
-    <@ fun x y -> x <= y @>
-```
-
-## How I Would Choose Between Them
-
-- Use Assert operators when you are checking one quoted expression directly.
-- Use Check operators when you are comparing a quoted implementation against a reference function.
-- Use named `Check.shouldBeTrue*` / `Check.shouldBeFalse*` helpers for bool-returning properties.
-- Prefer named helpers over inventing more symbolic operators for bool properties; the current API is
-  intentionally explicit there.
-
-## Related Docs
-
-- [`docs/TestifyDslSketch.tex`](./Testify/docs/TestifyDslSketch.tex)
-- [`docs/TestifyDslSketch.md`](./Testify/docs/TestifyDslSketch.md)
+## Where To Start
+
+- Read the generated site landing page under `output/docs/` after running `.\build-docs.ps1`
+- Use `Assert.should` or `=?` for direct examples
+- Use `Assert.result` when you want to inspect or render failures yourself
+- Use `Check.should` or `|=>` for fail-fast property checks against a trusted reference
+- Use `Check.result` when you want a structured `CheckResult`
+- Reach for `Check.resultBy` / `Check.shouldBy` when you need nested or dependent `FsCheck` quantification

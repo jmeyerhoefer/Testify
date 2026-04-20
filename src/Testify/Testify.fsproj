@@ -1,0 +1,72 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>Testify</AssemblyName>
+		<PackageId>Testify</PackageId>
+		<RootNamespace>Testify</RootNamespace>
+		<TargetFramework>net10.0</TargetFramework>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<ImplicitUsings>false</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<Description>Beginner-friendly F# testing library with quotation-based assertions and property-style checks.</Description>
+		<Version>0.1.0</Version>
+		<RepositoryUrl>https://github.com/jmeyerhoefer/Testify</RepositoryUrl>
+		<FsDocsLogoSrc>assets/logo-dino.png</FsDocsLogoSrc>
+		<FsDocsLicenseLink>https://github.com/jmeyerhoefer/Testify/blob/main/LICENSE</FsDocsLicenseLink>
+		<FsDocsReleaseNotesLink>https://github.com/jmeyerhoefer/Testify/releases</FsDocsReleaseNotesLink>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="Mini.fs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="Core\Render.fs" />
+		<Compile Include="Core\ObservedInfo.fs" />
+		<Compile Include="Core\Common.fs" />
+		<Compile Include="Core\Diff.fs" />
+		<Compile Include="Core\Expressions.fs" />
+		<Compile Include="Core\Diagnostics.fs" />
+		<Compile Include="Runtime\FailureReport.fs" />
+		<Compile Include="Runtime\Hints\HintRule.fs" />
+		<Compile Include="Runtime\Hints\HintPack.fs" />
+		<Compile Include="Runtime\TestifyOptions.fs" />
+		<Compile Include="Runtime\TestifyConfiguration.fs" />
+		<Compile Include="Runtime\TestifySettings.fs" />
+		<Compile Include="Runtime\Hints\HintInference.fs" />
+		<Compile Include="Runtime\TestifyApi.fs" />
+		<Compile Include="Runtime\RunnerContext.fs" />
+		<Compile Include="Runtime\Hints\BuiltInHints.fs" />
+		<Compile Include="Runtime\Reporting.fs" />
+		<Compile Include="Runtime\TestExecution.fs" />
+		<Compile Include="Runtime\TestResults.fs" />
+		<Compile Include="Integrations\MSTestIntegration.fs" />
+		<Compile Include="Integrations\ExpectoIntegration.fs" />
+		<Compile Include="Assert\AssertExpectation.fsi" />
+		<Compile Include="Assert\AssertExpectation.fs" />
+		<Compile Include="Assert\AssertAsync.fs" />
+		<Compile Include="Assert\Assert.fsi" />
+		<Compile Include="Assert\Assert.fs" />
+		<Compile Include="Assert\AssertOperators.fsi" />
+		<Compile Include="Assert\AssertOperators.fs" />
+		<Compile Include="Check\CheckExpectation.fsi" />
+		<Compile Include="Check\CheckExpectation.fs" />
+		<Compile Include="Check\CheckConfig.fs" />
+		<Compile Include="Presets\TestifyPresets.fs" />
+		<Compile Include="Check\Check.fsi" />
+		<Compile Include="Check\Check.fs" />
+		<Compile Include="Check\CheckOperators.fsi" />
+		<Compile Include="Check\CheckOperators.fs" />
+		<Compile Include="Check\Generators.fs" />
+		<Compile Include="Check\Arbitraries.fs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DEdge.Diffract" Version="0.5.0" />
+		<PackageReference Include="Expecto" Version="10.2.1" />
+		<PackageReference Include="FsCheck" Version="3.3.2" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.10.4" />
+		<PackageReference Update="FSharp.Core" Version="10.0.103" />
+		<PackageReference Include="Unquote" Version="7.0.1" />
+	</ItemGroup>
+</Project>

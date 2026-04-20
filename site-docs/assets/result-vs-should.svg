@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Result versus should decision flow</title>
+  <desc id="desc">Prompt-ready SVG spec: a decision flow that starts with 'Do you need to inspect or collect the failure?' and branches to result or should. Emphasize that operators map to should.</desc>
+  <rect width="1200" height="760" fill="#f4f1fb"/>
+  <text x="60" y="80" font-family="Georgia, serif" font-size="34" fill="#20223a">When to use result vs should</text>
+  <text x="60" y="118" font-family="Arial, sans-serif" font-size="18" fill="#555a73">Prompt/spec asset: keep the final version crisp and decision-oriented.</text>
+
+  <rect x="390" y="170" width="420" height="110" rx="20" fill="#ffffff" stroke="#4b4f7c" stroke-width="3"/>
+  <text x="425" y="228" font-family="Arial, sans-serif" font-size="24" fill="#20223a">Do you need to inspect, render, or collect the failure?</text>
+
+  <path d="M600 280 L600 360" stroke="#4b4f7c" stroke-width="5"/>
+  <path d="M600 360 L280 360" stroke="#4b4f7c" stroke-width="5"/>
+  <path d="M600 360 L920 360" stroke="#4b4f7c" stroke-width="5"/>
+
+  <text x="330" y="345" font-family="Arial, sans-serif" font-size="20" fill="#20223a">yes</text>
+  <text x="845" y="345" font-family="Arial, sans-serif" font-size="20" fill="#20223a">no</text>
+
+  <rect x="90" y="390" width="380" height="180" rx="24" fill="#eefaf0" stroke="#2f8f46" stroke-width="3"/>
+  <text x="120" y="445" font-family="Consolas, monospace" font-size="30" fill="#1c5c2e">result</text>
+  <text x="120" y="490" font-family="Arial, sans-serif" font-size="20" fill="#33423b">Use when you want a structured value back.</text>
+  <text x="120" y="525" font-family="Arial, sans-serif" font-size="20" fill="#33423b">Examples: render text, store reports, collect many failures.</text>
+
+  <rect x="730" y="390" width="380" height="180" rx="24" fill="#fff0ef" stroke="#b33f36" stroke-width="3"/>
+  <text x="760" y="445" font-family="Consolas, monospace" font-size="30" fill="#7d231d">should</text>
+  <text x="760" y="490" font-family="Arial, sans-serif" font-size="20" fill="#473635">Use when the test should fail immediately.</text>
+  <text x="760" y="525" font-family="Arial, sans-serif" font-size="20" fill="#473635">All operator DSL forms are shorthand for this path.</text>
+</svg>

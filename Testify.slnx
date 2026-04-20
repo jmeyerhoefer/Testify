@@ -1,4 +1,5 @@
 <Solution>
-  <Project Path="Testify/Testify.fsproj" />
-  <Project Path="Testify/Testify.ApiTests/Testify.ApiTests.fsproj" />
+  <Project Path="src/Testify/Testify.fsproj" />
+  <Project Path="tests/Testify.ApiTests/Testify.ApiTests.fsproj" />
+  <Project Path="samples/Testify.Expecto.Sample/Testify.Expecto.Sample.fsproj" />
 </Solution>

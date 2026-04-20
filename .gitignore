@@ -4,11 +4,17 @@
 **/.idea*/
 **/bin/
 **/obj/
+output/
 *.dll
 *.exe
 *.pdb
 *.trx
 
-Testify/.cache/
-Testify/.dotnet-home/
-Testify/.docker-config/
+/.cache/
+/.dotnet-home/
+/.appdata/
+/.nuget/
+/.fsdocs/
+/.docker-config/
+/src/Testify/TestResults/
+/Testify/
