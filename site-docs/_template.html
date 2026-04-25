@@ -18,7 +18,20 @@
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <link href="{{root}}{{fsdocs-favicon-src}}" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="{{root}}assets/logo-dino.png" rel="icon" sizes="32x32" type="image/png"/>
+    <link href="{{root}}assets/logo-dino.png" rel="apple-touch-icon"/>
+    <script>
+        (function () {
+            var savedTheme = localStorage.getItem('theme');
+            var theme = savedTheme || 'dark';
+            if (!savedTheme) {
+                localStorage.setItem('theme', theme);
+            }
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        }());
+    </script>
     <script type="application/javascript" src="{{root}}content/fsdocs-theme-set-dark.js"></script>
     <script type="application/javascript" src="{{root}}content/fsdocs-details-set-expanded.js"></script>
     <link href="{{root}}content/fsdocs-default.css" rel="stylesheet" type="text/css"/>
